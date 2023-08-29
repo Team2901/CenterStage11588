@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-//test
 @Autonomous(name="Playback Auto", group="11588")
 public class PlaybackAutonomous extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
