@@ -39,25 +39,49 @@ public class PlaybackAutonomous extends LinearOpMode {
 
     private void autoLoop() throws IOException {
         int currentMiliseconds = (int) Math.floor(timer.milliseconds());
-        double ry = 0;
-        double rx = 0;
-        double ly = 0;
-        double lx = 0;
+        double rightStickY = 0;
+        double rightStickX = 0;
+        double leftStickY = 0;
+        double leftStickX = 0;
+        boolean aButton;
+        boolean bButton;
+        boolean xButton;
+        boolean yButton;
+        boolean dpadUp;
+        boolean dpadDown;
+        boolean dpadLeft;
+        boolean dpadRight;
+        boolean rightBumper;
+        boolean leftBumper;
+        float rightTrigger = 0;
+        float leftTrigger = 0;
         if (currentMiliseconds > lastKnownMilisecond) {
             lastKnownMilisecond = currentMiliseconds;
-            ry = readFile.readFloat();
-            rx = readFile.readFloat();
-            ly = readFile.readFloat();
-            lx = readFile.readFloat();
-            turningPower = .75 * rx;
-            double y = .75 * ly;
-            double x = .75 * lx;
-            double rightX = turningPower;
+            rightStickY = readFile.readFloat();
+            rightStickX = readFile.readFloat();
+            leftStickY = readFile.readFloat();
+            leftStickX = readFile.readFloat();
+            aButton = readFile.readBoolean();
+            bButton = readFile.readBoolean();
+            xButton = readFile.readBoolean();
+            yButton = readFile.readBoolean();
+            dpadUp = readFile.readBoolean();
+            dpadDown = readFile.readBoolean();
+            dpadLeft = readFile.readBoolean();
+            dpadRight = readFile.readBoolean();
+            rightBumper = readFile.readBoolean();
+            leftBumper = readFile.readBoolean();
+            rightTrigger = readFile.readFloat();
+            leftTrigger = readFile.readFloat();
+            turningPower = .75 * rightStickX;
+            double y = .75 * leftStickY;
+            double x = .75 * leftStickX;
+            double rx = turningPower;
 
-            robot.frontLeft.setPower(y + x + rightX);
-            robot.frontRight.setPower(y - x - rightX);
-            robot.backLeft.setPower(y - x + rightX);
-            robot.backRight.setPower(y + x - rightX);
+            robot.frontLeft.setPower(y + x + rx);
+            robot.frontRight.setPower(y - x - rx);
+            robot.backLeft.setPower(y - x + rx);
+            robot.backRight.setPower(y + x - rx);
         }
     }
 

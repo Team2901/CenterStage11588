@@ -89,12 +89,24 @@ public class RecordingTeleop extends OpMode {
     public void recordInput() throws IOException {
         int currentMiliseconds = (int) Math.floor(timer.milliseconds());
         if (currentMiliseconds > lastKnownMilisecond && isOpen) {
-            // ry rx ly lx
+            // ry rx ly lx a b x y up down left right r_bumper l_bumper r_trigger l_trigger
             lastKnownMilisecond = currentMiliseconds;
             writeFile.writeFloat(gamepad.right_stick_y.getValue());
             writeFile.writeFloat(gamepad.right_stick_x.getValue());
             writeFile.writeFloat(gamepad.left_stick_y.getValue());
             writeFile.writeFloat(gamepad.left_stick_x.getValue());
+            writeFile.writeBoolean(gamepad.a.isPressed());
+            writeFile.writeBoolean(gamepad.b.isPressed());
+            writeFile.writeBoolean(gamepad.x.isPressed());
+            writeFile.writeBoolean(gamepad.y.isPressed());
+            writeFile.writeBoolean(gamepad.dpad_up.isPressed());
+            writeFile.writeBoolean(gamepad.dpad_down.isPressed());
+            writeFile.writeBoolean(gamepad.dpad_left.isPressed());
+            writeFile.writeBoolean(gamepad.dpad_left.isPressed());
+            writeFile.writeBoolean(gamepad.right_bumper.isPressed());
+            writeFile.writeBoolean(gamepad.left_bumper.isPressed());
+            writeFile.writeFloat(gamepad.right_trigger.getValue());
+            writeFile.writeFloat(gamepad.left_trigger.getValue());
             telemetry.addData("Data was written", true);
             writeFile.flush();
         }
