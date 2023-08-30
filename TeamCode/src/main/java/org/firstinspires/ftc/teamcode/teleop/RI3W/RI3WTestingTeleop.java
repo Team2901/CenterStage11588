@@ -41,7 +41,7 @@ public class RI3WTestingTeleop extends OpMode {
             robot.frontLeft.setPower(1);
         } else {
             robot.frontLeft.setPower(0);
-        }//this code was made by Joe
+        }
         if (gamepad.dpad_down.isPressed()) {
             robot.frontRight.setPower(-1);
         } else {
