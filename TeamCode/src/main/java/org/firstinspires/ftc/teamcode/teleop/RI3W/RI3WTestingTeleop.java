@@ -62,6 +62,13 @@ public class RI3WTestingTeleop extends OpMode {
         } else {
             robot.frontLeft.setPower(0);
         }
+        if (gamepad.right_bumper.isPressed()) {
+            robot.lift.setPower(0.5);
+        } else if (gamepad.left_bumper.isPressed()) {
+            robot.lift.setPower(-0.5);
+        }else {
+            robot.lift.setPower(0);
+        }
         telemetry.update();
     }
 }
