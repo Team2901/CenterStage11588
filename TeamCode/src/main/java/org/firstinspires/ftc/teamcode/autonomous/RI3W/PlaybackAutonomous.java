@@ -14,6 +14,8 @@ import java.io.IOException;
 @Autonomous(name="Playback Auto", group="11588")
 public class PlaybackAutonomous extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
+    Boolean checkedTimer = false;
+    //I put this variable so we don't keep reading the timer on each time we check if we reached the right ms
     ElapsedTime timer = new ElapsedTime();
     FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.log");
     DataInputStream readFile = new DataInputStream(fileInputStream);
@@ -38,7 +40,8 @@ public class PlaybackAutonomous extends LinearOpMode {
     }
 
     private void autoLoop() throws IOException {
-        int currentMiliseconds = (int) Math.floor(timer.milliseconds());
+        double currentMiliseconds = timer.milliseconds();
+        double fileMiliseconds = 0;
         double rightStickY = 0;
         double rightStickX = 0;
         double leftStickY = 0;
@@ -55,8 +58,19 @@ public class PlaybackAutonomous extends LinearOpMode {
         boolean leftBumper;
         float rightTrigger = 0;
         float leftTrigger = 0;
-        if (currentMiliseconds > lastKnownMilisecond) {
-            lastKnownMilisecond = currentMiliseconds;
+
+        if (checkedTimer == false) {
+           fileMiliseconds = readFile.readDouble();
+           checkedTimer = true;
+        }
+        /*I wrote the above statement to keep it from reading the next byte before the time for those
+        instructions has been executed. I don't want it to keep reading the next double before it
+        executes the instructions that come after that double, because in sequence the next instruction
+        is not a double, but a float(Because it should be the joystick value at that ms)
+         */
+        if (currentMiliseconds >= fileMiliseconds) {
+            //fileMiliseconds means the double value read for the ms that all the joystick and button-
+            //values were recorded at
             rightStickY = readFile.readFloat();
             rightStickX = readFile.readFloat();
             leftStickY = readFile.readFloat();
@@ -82,6 +96,7 @@ public class PlaybackAutonomous extends LinearOpMode {
             robot.frontRight.setPower(y - x - rx);
             robot.backLeft.setPower(y - x + rx);
             robot.backRight.setPower(y + x - rx);
+            checkedTimer = false;
         }
     }
 
