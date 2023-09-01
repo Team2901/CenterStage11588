@@ -13,6 +13,14 @@ public class RI3WTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    public enum Height{INTAKE, LOW, MID,HIGH]}
+    Height currentLiftHeight = Height.INTAKE
+    int liftTarget = 10;
+    Height lastLiftHeight = currentLiftHeight;
+    int intakeLiftPosition = 5;
+    int lowLiftPosition = 10;
+    int midLiftPosition = 15;
+    int highLiftPosition = 20;
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
@@ -29,6 +37,21 @@ public class RI3WTeleop extends OpMode {
         }else{
             turningPower = .75 * gamepad.right_stick_x.getValue();
         }
+
+        if(gamepad.dpad_left.isInitialPress()) {
+            liftTarget = intakeLiftPosition;
+            currentLiftHeight = Height.INTAKE;
+        } else if (gamepad.dpad_down.isInitialPress()) {
+            liftTarget = lowLiftPosition;
+            currentLiftHeight = Height.LOW;
+        } else if (gamepad.dpad_right.isInitialPress()) {
+            liftTarget = midLiftPosition;
+            currentLiftHeight = Height.MID;
+        } else if (gamepad.dpad_up.isInitialPress()) {
+            liftTarget = highLiftPosition;
+            currentLiftHeight = Height.HIGH;
+        }
+
         double y = .75 * gamepad.left_stick_y.getValue();
         double x = .75 * gamepad.left_stick_x.getValue();
         double rx = turningPower;
