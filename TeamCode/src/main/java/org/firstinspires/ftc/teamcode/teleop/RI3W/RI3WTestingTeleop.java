@@ -26,37 +26,43 @@ public class RI3WTestingTeleop extends OpMode {
             robot.frontRight.setPower(1);
         } else if (gamepad.dpad_down.isPressed()) {
             robot.frontRight.setPower(-1);
-        }else {
+        } else {
             robot.frontRight.setPower(0);
         }
         if (gamepad.b.isPressed()) {
             robot.backRight.setPower(1);
         } else if (gamepad.dpad_right.isPressed()) {
             robot.backRight.setPower(-1);
-        }else {
+        } else {
             robot.backRight.setPower(0);
         }
         if (gamepad.x.isPressed()) {
             robot.backLeft.setPower(1);
         } else if (gamepad.dpad_left.isPressed()) {
             robot.backLeft.setPower(-1);
-        }else {
+        } else {
             robot.backLeft.setPower(0);
         }
         if (gamepad.y.isPressed()) {
             robot.frontLeft.setPower(1);
         } else if (gamepad.dpad_up.isPressed()) {
             robot.frontLeft.setPower(-1);
-        }else {
+        } else {
             robot.frontLeft.setPower(0);
         }
         if (gamepad.right_bumper.isPressed()) {
             robot.lift.setPower(0.5);
         } else if (gamepad.left_bumper.isPressed()) {
             robot.lift.setPower(-0.5);
-        }else {
+        } else {
             robot.lift.setPower(0);
         }
+        telemetry.update();
+        telemetryStuff();
+    }
+
+    public void telemetryStuff() {
+        telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
         telemetry.update();
     }
 }
