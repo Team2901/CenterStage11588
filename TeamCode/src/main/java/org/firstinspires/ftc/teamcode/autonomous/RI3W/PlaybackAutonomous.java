@@ -15,7 +15,6 @@ import java.io.IOException;
 public class PlaybackAutonomous extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
     Boolean checkedTimer = false;
-    //I put this variable so we don't keep reading the timer on each time we check if we reached the right ms
     ElapsedTime timer = new ElapsedTime();
     FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.log");
     DataInputStream readFile = new DataInputStream(fileInputStream);
@@ -68,7 +67,9 @@ public class PlaybackAutonomous extends LinearOpMode {
         executes the instructions that come after that double, because in sequence the next instruction
         is not a double, but a float(Because it should be the joystick value at that ms)
          */
-        if (currentMiliseconds >= fileMiliseconds) {
+        while (currentMiliseconds < fileMiliseconds) {
+            currentMiliseconds = timer.milliseconds();
+        }
             //fileMiliseconds means the double value read for the ms that all the joystick and button-
             //values were recorded at
             rightStickY = readFile.readFloat();
@@ -97,7 +98,6 @@ public class PlaybackAutonomous extends LinearOpMode {
             robot.backLeft.setPower(y - x + rx);
             robot.backRight.setPower(y + x - rx);
             checkedTimer = false;
-        }
     }
 
 }
