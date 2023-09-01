@@ -57,7 +57,6 @@ public class RI3WTestingTeleop extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
-        telemetry.update();
         telemetryStuff();
     }
 
