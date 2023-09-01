@@ -63,6 +63,10 @@ public class RI3WTestingTeleop extends OpMode {
 
     public void telemetryStuff() {
         telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
+        telemetry.addData("Front Right Motor", robot.frontRight.getCurrentPosition());
+        telemetry.addData("Back Right Motor", robot.backRight.getCurrentPosition());
+        telemetry.addData("Front Left Motor", robot.frontLeft.getCurrentPosition());
+        telemetry.addData("Back Left Motor", robot.backLeft.getCurrentPosition());
         telemetry.update();
     }
 }
