@@ -40,12 +40,16 @@ public class RI3WTeleop extends OpMode {
 
         if(gamepad.dpad_left.isInitialPress()) {
             robot.lift.setTargetPosition(intakeLiftPosition);
+            robot.lift.setPower(1);
         } else if (gamepad.dpad_down.isInitialPress()) {
             robot.lift.setTargetPosition(lowLiftPosition);
+            robot.lift.setPower(1);
         } else if (gamepad.dpad_right.isInitialPress()) {
             robot.lift.setTargetPosition(midLiftPosition);
+            robot.lift.setPower(1);
         } else if (gamepad.dpad_up.isInitialPress()) {
             robot.lift.setTargetPosition(highLiftPosition);
+            robot.lift.setPower(1);
         }
 
         double y = .75 * gamepad.left_stick_y.getValue();
