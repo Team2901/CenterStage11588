@@ -59,7 +59,7 @@ public class RI3WTestingTeleop extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
-
+//claw related stuff
         switch (currentClawPosition) {
             case Open:
                 robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
@@ -84,6 +84,7 @@ public class RI3WTestingTeleop extends OpMode {
         telemetry.addData("Back Left Motor", robot.backLeft.getCurrentPosition());
         telemetry.addData("Servo", robot.claw.getPosition());
         telemetry.addData("Servo Direction", robot.claw.getDirection());
+        telemetry.addData("Claw State", currentClawPosition);
         telemetry.update();
     }
 }
