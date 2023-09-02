@@ -13,6 +13,8 @@ public class RI3WTestingTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    public static final double OPEN_POSITION = 0.5;
+    public static final double CLOSED_POSITION = 0.15;
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
@@ -56,6 +58,9 @@ public class RI3WTestingTeleop extends OpMode {
             robot.lift.setPower(-0.5);
         } else {
             robot.lift.setPower(0);
+        }
+        if (gamepad.right_trigger.isInitialPress()) {
+            robot.claw.setPosition();
         }
         telemetryStuff();
     }
