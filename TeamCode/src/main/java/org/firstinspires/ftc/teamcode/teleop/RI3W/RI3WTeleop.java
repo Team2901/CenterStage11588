@@ -39,17 +39,13 @@ public class RI3WTeleop extends OpMode {
         }
 
         if(gamepad.dpad_left.isInitialPress()) {
-            liftTarget = intakeLiftPosition;
-            currentLiftHeight = Height.INTAKE;
+            robot.lift.setTargetPosition(intakeLiftPosition);
         } else if (gamepad.dpad_down.isInitialPress()) {
-            liftTarget = lowLiftPosition;
-            currentLiftHeight = Height.LOW;
+            robot.lift.setTargetPosition(lowLiftPosition);
         } else if (gamepad.dpad_right.isInitialPress()) {
-            liftTarget = midLiftPosition;
-            currentLiftHeight = Height.MID;
+            robot.lift.setTargetPosition(midLiftPosition);
         } else if (gamepad.dpad_up.isInitialPress()) {
-            liftTarget = highLiftPosition;
-            currentLiftHeight = Height.HIGH;
+            robot.lift.setTargetPosition(highLiftPosition);
         }
 
         double y = .75 * gamepad.left_stick_y.getValue();
@@ -63,6 +59,8 @@ public class RI3WTeleop extends OpMode {
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
+        telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
+        telemetry.addData("Target Lift Motor", robot.lift.getTargetPosition());
         telemetry.update();
     }
 }
