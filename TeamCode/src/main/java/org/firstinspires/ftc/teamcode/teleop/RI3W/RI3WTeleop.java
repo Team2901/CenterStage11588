@@ -20,7 +20,7 @@ public class RI3WTeleop extends OpMode {
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 10;
     Height lastLiftHeight = currentLiftHeight;
-    int liftSpeed = 0.5;
+    double liftSpeed = 0.5;
     int intakeLiftPosition = 50;
     int lowLiftPosition = 1557;
     int midLiftPosition = 2757;
