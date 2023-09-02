@@ -89,5 +89,13 @@ public class RI3WHardware {
     public double getAngle(){
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.normalizeDegrees(orientation.firstAngle);
+
+    }
+
+    public enum Height {
+        INTAKE,
+        LOW,
+        MID,
+        HIGH
     }
 }
