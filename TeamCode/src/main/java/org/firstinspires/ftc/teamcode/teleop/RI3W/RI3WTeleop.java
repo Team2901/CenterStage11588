@@ -22,7 +22,7 @@ public class RI3WTeleop extends OpMode {
     int lowLiftPosition = 1557;
     int midLiftPosition = 2757;
     int highLiftPosition = 3939;
-    int maxLiftPosition = 4170
+    int maxLiftPosition = 4170;
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
