@@ -13,6 +13,8 @@ public class RI3WTestingTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    public enum ClawPosition{Open, Closed}
+    ClawPosition currentClawPosition = ClawPosition.Closed
     public static final double openClawPosition = 0.5;
     public static final double closedClawPosition = 0.15;
     @Override
@@ -59,10 +61,18 @@ public class RI3WTestingTeleop extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
-        if (gamepad.right_trigger.isInitialPress()) {
-            robot.claw.setPosition(openClawPosition);
-        } else if (gamepad.left_trigger.isInitialPress()) {
-            robot.claw.setPosition(closedClawPosition);
+        switch (currentClawPosition) {
+            case Open:
+                robot.claw.setPosition(RI3WTestingTeleop.openClawPosition);
+                if (gamepad.right_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Closed;
+                }
+                break;
+            case Closed:
+                robot.claw.setPosition(RI3WTestingTeleop.closedClawPosition);
+                if (gamepad.left_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Open;
+                }
         }
         telemetryStuff();
     }
