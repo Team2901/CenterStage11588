@@ -65,7 +65,7 @@ public class RI3WTeleop extends OpMode {
                 break;
             case Closed:
                 robot.claw.setPosition(robot.CLOSED_POSITION);
-                if (gamepad.b.isInitialPress()) {
+                if (gamepad.y.isInitialPress()) {
                     currentClawPosition = ClawPosition.Open;
                 }
         }
