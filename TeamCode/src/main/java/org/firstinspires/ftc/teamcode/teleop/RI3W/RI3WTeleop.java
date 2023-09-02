@@ -14,11 +14,12 @@ public class RI3WTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    ElapsedTime PIDTimer = new ElapsedTime();
     public enum ClawPosition{Open, Closed}
     ClawPosition currentClawPosition = ClawPosition.Closed;
     public enum Height{INTAKE, LOW, MID,HIGH}
     Height currentLiftHeight = Height.INTAKE;
-    int liftTarget = 10;
+    int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
     double liftSpeed = 0.5;
     int liftEncoderValue = robot.lift.getCurrentPosition();
