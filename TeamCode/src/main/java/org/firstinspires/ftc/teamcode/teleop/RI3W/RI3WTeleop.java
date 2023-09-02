@@ -58,6 +58,7 @@ public class RI3WTeleop extends OpMode {
         robot.frontRight.setPower(y - x - rx);
         robot.backLeft.setPower(y - x + rx);
         robot.backRight.setPower(y + x - rx);
+        robot.lift.setPower(0.5);
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
