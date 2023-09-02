@@ -14,6 +14,8 @@ public class RI3WTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    public enum ClawPosition{Open, Closed}
+    ClawPosition currentClawPosition = ClawPosition.Closed;
     public enum Height{INTAKE, LOW, MID,HIGH}
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 10;
@@ -53,6 +55,20 @@ public class RI3WTeleop extends OpMode {
             robot.lift.setTargetPosition(maxLiftPosition);
         }
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        switch (currentClawPosition) {
+            case Open:
+                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
+                if (gamepad.right_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Closed;
+                }
+                break;
+            case Closed:
+                robot.claw.setPosition(robot.CLOSED_POSITION);
+                if (gamepad.left_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Open;
+                }
+        }
 
         double y = .75 * gamepad.left_stick_y.getValue();
         double x = .75 * gamepad.left_stick_x.getValue();
