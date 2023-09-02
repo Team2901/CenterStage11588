@@ -13,14 +13,14 @@ public class RI3WTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
-    public enum Height{INTAKE, LOW, MID,HIGH]}
-    Height currentLiftHeight = Height.INTAKE
+    public enum Height{INTAKE, LOW, MID,HIGH}
+    Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 10;
     Height lastLiftHeight = currentLiftHeight;
-    int intakeLiftPosition = 5;
-    int lowLiftPosition = 10;
-    int midLiftPosition = 15;
-    int highLiftPosition = 20;
+    int intakeLiftPosition = 50;
+    int lowLiftPosition = 1557;
+    int midLiftPosition = 2757;
+    int highLiftPosition = 3939;
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
