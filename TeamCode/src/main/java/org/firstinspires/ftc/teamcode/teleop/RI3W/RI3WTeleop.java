@@ -22,6 +22,7 @@ public class RI3WTeleop extends OpMode {
     int lowLiftPosition = 1557;
     int midLiftPosition = 2757;
     int highLiftPosition = 3939;
+    int maxLiftPosition = 4170
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
@@ -48,10 +49,8 @@ public class RI3WTeleop extends OpMode {
             robot.lift.setTargetPosition(midLiftPosition);
         } else if (gamepad.dpad_up.isInitialPress()) {
             robot.lift.setTargetPosition(highLiftPosition);
-        } else if (gamepad.y.isPressed()) {
-            robot.lift.setPower(0.5);
-        } else if (gamepad.a.isPressed()) {
-            robot.lift.setPower(-0.5);
+        } else if (gamepad.b.isInitialPress()) {
+            robot.lift.setTargetPosition(maxLiftPosition);
         }
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
