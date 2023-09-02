@@ -31,8 +31,6 @@ public class RI3WTeleop extends OpMode {
         robot.init(this.hardwareMap);
         robot.lift.setTargetPosition(50);
 
-        if (robot.lift.getCurrentPosition(50))
-            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
