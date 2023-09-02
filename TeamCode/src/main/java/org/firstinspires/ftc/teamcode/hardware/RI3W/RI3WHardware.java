@@ -22,6 +22,11 @@ public class RI3WHardware {
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
     public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
+    public static final double INTAKE_ENCODER_VALUE = 80;
+    public static final  double LOW_POLE_ENCODER_VALUE = 1557;
+    public static final double MID_POLE_ENCODER_VALUE = 2757;
+    public static final double HIGH_POLE_ENCODER_VALUE = 3939;
+    public static final double MAX_HEIGHT_ENCODER_VALUE = 4350;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
