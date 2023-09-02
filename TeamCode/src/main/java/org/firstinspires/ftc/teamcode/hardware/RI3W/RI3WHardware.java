@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -25,6 +26,7 @@ public class RI3WHardware {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
+    public Servo claw;
     public BNO055IMU imu;
 
     public void init(HardwareMap hardwareMap){
@@ -33,6 +35,7 @@ public class RI3WHardware {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
