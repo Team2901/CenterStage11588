@@ -21,7 +21,7 @@ public class RI3WTeleop extends OpMode {
     int liftTarget = 10;
     Height lastLiftHeight = currentLiftHeight;
     double liftSpeed = 0.5;
-    int intakeLiftPosition = 50;
+    int intakeLiftPosition = 80;
     int lowLiftPosition = 1557;
     int midLiftPosition = 2757;
     int highLiftPosition = 3939;
@@ -30,7 +30,7 @@ public class RI3WTeleop extends OpMode {
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap);
-        robot.lift.setTargetPosition(50);
+        robot.lift.setTargetPosition(intakeLiftPosition);
 
     }
 
