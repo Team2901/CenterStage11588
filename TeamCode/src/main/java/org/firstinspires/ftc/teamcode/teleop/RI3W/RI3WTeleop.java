@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop.RI3W;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
@@ -47,6 +48,7 @@ public class RI3WTeleop extends OpMode {
         } else if (gamepad.dpad_up.isInitialPress()) {
             robot.lift.setTargetPosition(highLiftPosition);
         }
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         double y = .75 * gamepad.left_stick_y.getValue();
         double x = .75 * gamepad.left_stick_x.getValue();
