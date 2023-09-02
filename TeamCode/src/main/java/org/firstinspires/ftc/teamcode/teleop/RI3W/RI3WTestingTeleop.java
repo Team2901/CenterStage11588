@@ -14,7 +14,7 @@ public class RI3WTestingTeleop extends OpMode {
     public ImprovedGamepad gamepad;
     double turningPower = 0;
     public enum ClawPosition{Open, Closed}
-    ClawPosition currentClawPosition = ClawPosition.Closed
+    ClawPosition currentClawPosition = ClawPosition.Closed;
     public static final double openClawPosition = 0.5;
     public static final double closedClawPosition = 0.15;
     @Override
