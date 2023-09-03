@@ -56,15 +56,11 @@ public abstract class PIDTuner extends OpMode {
     }
     @Override
     public void loop() {
-        try {
-            previousGamepad1.copy(currentGamepad1);
-            previousGamepad2.copy(currentGamepad2);
+        previousGamepad1.copy(currentGamepad1);
+        previousGamepad2.copy(currentGamepad2);
 
-            currentGamepad1.copy(gamepad1);
-            currentGamepad2.copy(gamepad2);
-        } catch (RobotCoreException e) {
-            e.printStackTrace();
-        }
+        currentGamepad1.copy(gamepad1);
+        currentGamepad2.copy(gamepad2);
 
         if(gamepad2.dpad_up || gamepad1.dpad_right){
             liftTarget = midLiftPosition;
@@ -79,11 +75,11 @@ public abstract class PIDTuner extends OpMode {
             liftTarget = highLiftPosition;
         }
         if(gamepad2.b || gamepad1.b){
-            liftTarget = maxLiftPosition
+            liftTarget = maxLiftPosition;
         }
 
         if(gamepad1.left_trigger > .5){
-            tuneMotor.setPower(pidPower());
+            tuneMotor.setPower(liftPower());
         }
 
         liftTarget += gamepad1.right_stick_y*10;
@@ -120,7 +116,7 @@ public abstract class PIDTuner extends OpMode {
         telemetry.addData("Cos Gain", kCos);
         telemetry.addData("Target Position", liftTarget);
         telemetry.addData("Motor Power", tuneMotor.getPower());
-        telemetry.addData("Total", pidPower());
+        telemetry.addData("Total", liftPower());
         telemetry.addData("pArm", pLift);
         telemetry.addData("P Value", pLift * kp);
         telemetry.addData("iArm", iLift);
@@ -129,10 +125,9 @@ public abstract class PIDTuner extends OpMode {
         telemetry.addData("D Value", dLift * kd);
         telemetry.addData("cosArm", cosLift);
         telemetry.addData("Cos Value", cosLift * kCos);
-        telemetry.addData("Position", tuneMotor.getCurrentPosition());
     }
-    public double pidPower(int target){
-        error = target - (liftTarget-tuneMotor.getCurrentPosition());
+    public double liftPower(){
+        error = (liftTarget-tuneMotor.getCurrentPosition());
         dLift = (error - pLift) / PIDTimer.seconds();
         iLift = iLift + (error * PIDTimer.seconds());
         pLift = error;
