@@ -128,6 +128,7 @@ public class RI3WTeleop extends OpMode {
         dLift = (error - pLift) / PIDTimer.seconds();
         iLift = iLift + (error * PIDTimer.seconds());
         pLift = error;
+        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100
         PIDTimer.reset();
 
 
