@@ -88,6 +88,8 @@ public class RI3WTeleop extends OpMode {
         }
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        robot.lift.setPower(liftPower(liftTarget));
+
         switch (currentClawPosition) {
             case Open:
                 robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
@@ -119,7 +121,6 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("Claw", robot.claw.getPosition());
         telemetry.addData("Claw State", currentClawPosition);
         telemetry.update();
-        liftPower();
 
     }
 
@@ -128,7 +129,7 @@ public class RI3WTeleop extends OpMode {
         dLift = (error - pLift) / PIDTimer.seconds();
         iLift = iLift + (error * PIDTimer.seconds());
         pLift = error;
-        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100
+        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100;
         PIDTimer.reset();
 
 
