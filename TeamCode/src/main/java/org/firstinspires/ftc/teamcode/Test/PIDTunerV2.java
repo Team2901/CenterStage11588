@@ -2,21 +2,21 @@ package org.firstinspires.ftc.teamcode.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 
-@TeleOp(name ="PID Tuner", group ="Test")
-public class PIDTuner extends OpMode {
+
+@TeleOp(name="PIDTunerV2", group="Test")
+public class PIDTunerV2 extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
-    private ElapsedTime PIDTimer = new ElapsedTime();
+    double turningPower = 0;
+    ElapsedTime PIDTimer = new ElapsedTime();
+    public enum ClawPosition{Open, Closed}
+    ClawPosition currentClawPosition = ClawPosition.Closed;
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
@@ -41,14 +41,23 @@ public class PIDTuner extends OpMode {
     double iLiftMax = 0.0;
     double liftHeight = 0;
 
-    //Rename the motor u want to tune
+
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap);
     }
+
     @Override
     public void loop() {
+        gamepad.update();
+        if(gamepad.right_trigger.getValue() > 0){
+            turningPower = .3 * gamepad.right_trigger.getValue();
+        }else if(gamepad.left_trigger.getValue() > 0){
+            turningPower = -.3 * gamepad.left_trigger.getValue();
+        }else{
+            turningPower = .75 * gamepad.right_stick_x.getValue();
+        }
 
         if(gamepad.dpad_left.isInitialPress()) {
             //Sets Lift to intake level
@@ -68,10 +77,7 @@ public class PIDTuner extends OpMode {
             currentLiftHeight = Height.HIGH;
         }
 
-        liftTarget += gamepad1.right_stick_y*10;
-
-
-        robot.lift.setPower(liftSpeed);
+        robot.lift.setPower(liftPower(liftTarget));
 
         if(gamepad.y.isInitialPress()){
             kp += .01;
@@ -91,20 +97,39 @@ public class PIDTuner extends OpMode {
             kd -= .01;
         }
         telemetry.addData("D Gain", kd);
-        telemetry.addData("Cos Gain", kCos);
-        telemetry.addData("Current Position", robot.lift.getCurrentPosition());
-        telemetry.addData("Target Position", liftTarget);
-        telemetry.addData("Motor Power", robot.lift.getPower());
-        telemetry.addData("Total", total);
-        telemetry.addData("pArm", pLift);
-        telemetry.addData("P Value", pLift * kp);
-        telemetry.addData("iArm", iLift);
-        telemetry.addData("I Value", iLift * ki);
-        telemetry.addData("dArm", dLift);
-        telemetry.addData("D Value", dLift * kd);
-        telemetry.addData("cosArm", cosLift);
-        telemetry.addData("Cos Value", cosLift * kCos);
+
+        double y = .75 * gamepad.left_stick_y.getValue();
+        double x = .75 * gamepad.left_stick_x.getValue();
+        double rx = turningPower;
+
+        robot.frontLeft.setPower(y + x + rx);
+        robot.frontRight.setPower(y - x - rx);
+        robot.backLeft.setPower(y - x + rx);
+        robot.backRight.setPower(y + x - rx);
+        robot.lift.setPower(liftSpeed);
+
+        telemetry.addData("Right", gamepad.right_stick_y.getValue());
+        telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
+        telemetry.addData("Claw", robot.claw.getPosition());
+        telemetry.addData("Claw State", currentClawPosition);
+        telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
+        telemetry.addData("Current Target Height", currentLiftHeight);
+        telemetry.addData("Intake Position", intakeLiftPosition);
+        telemetry.addData("Low Position", lowLiftPosition);
+        telemetry.addData("Medium Position", midLiftPosition);
+        telemetry.addData("High Position", highLiftPosition);
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Cos Arm", cosLift);
+        telemetry.addData("Proportional Stuff", pLift * kp);
+        telemetry.addData("Integral Stuff", iLift * ki);
+        telemetry.addData("Derivative Stuff", dLift * kd);
+        telemetry.update();
+
     }
+
     public double liftPower(int target){
         error = target - robot.lift.getCurrentPosition();
         dLift = (error - pLift) / PIDTimer.seconds();
@@ -130,4 +155,5 @@ public class PIDTuner extends OpMode {
 
         return total;
     }
+
 }
