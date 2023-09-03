@@ -51,13 +51,6 @@ public class PIDTunerV2 extends OpMode {
     @Override
     public void loop() {
         gamepad.update();
-        if(gamepad.right_trigger.getValue() > 0){
-            turningPower = .3 * gamepad.right_trigger.getValue();
-        }else if(gamepad.left_trigger.getValue() > 0){
-            turningPower = -.3 * gamepad.left_trigger.getValue();
-        }else{
-            turningPower = .75 * gamepad.right_stick_x.getValue();
-        }
 
         if(gamepad.dpad_left.isInitialPress()) {
             //Sets Lift to intake level
