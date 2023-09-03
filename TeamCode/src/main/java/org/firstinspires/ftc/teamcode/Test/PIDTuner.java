@@ -13,14 +13,14 @@ import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 
 @TeleOp(name ="PID Tuner", group ="Test")
 public class PIDTuner extends OpMode {
-    public DcMotorEx tuneMotor;
+    public DcMotorEx lift;
 
     private ElapsedTime PIDTimer = new ElapsedTime();
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
     int liftTarget = 80;
     RI3WTeleop.Height lastLiftHeight = currentLiftHeight;
-    double liftSpeed = 0.5;
+    double liftSpeed = 0.1;
     int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
     int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
     int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
@@ -45,14 +45,15 @@ public class PIDTuner extends OpMode {
     Gamepad previousGamepad1 = new Gamepad();
     Gamepad previousGamepad2 = new Gamepad();
 
+    //Rename the motor u want to tune
     @Override
     public void init() {
-        tuneMotor = hardwareMap.get(DcMotorEx.class, "tune motor");
-        tuneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tuneMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        tuneMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         //tuneMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        tuneMotor.setPower(0);
+        lift.setPower(0);
     }
     @Override
     public void loop() {
@@ -62,33 +63,34 @@ public class PIDTuner extends OpMode {
         currentGamepad1.copy(gamepad1);
         currentGamepad2.copy(gamepad2);
 
-        if(gamepad2.dpad_up || gamepad1.dpad_right){
-            liftTarget = midLiftPosition;
+        if(gamepad2.dpad_up || gamepad1.dpad_up){
+            liftTarget = highLiftPosition;
         }
-        if(gamepad2.dpad_down || gamepad1.dpad_up){
+        if(gamepad2.dpad_down || gamepad1.dpad_down){
             liftTarget = lowLiftPosition;
         }
-        if(gamepad2.dpad_left || gamepad1.dpad_down){
+        if(gamepad2.dpad_left || gamepad1.dpad_left){
             liftTarget = intakeLiftPosition;
         }
-        if(gamepad2.dpad_right || gamepad1.dpad_left){
-            liftTarget = highLiftPosition;
+        if(gamepad2.dpad_right || gamepad1.dpad_right){
+            liftTarget = midLiftPosition;
         }
         if(gamepad2.b || gamepad1.b){
             liftTarget = maxLiftPosition;
         }
 
         if(gamepad1.left_trigger > .5){
-            tuneMotor.setPower(liftPower());
+            lift.setPower(liftPower());
         }
 
         liftTarget += gamepad1.right_stick_y*10;
 
 
         if(gamepad1.right_trigger > .5){
-            tuneMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
+        lift.setPower(liftSpeed);
 
         if(gamepad1.y && !previousGamepad1.y){
             kp += .01;
@@ -115,7 +117,7 @@ public class PIDTuner extends OpMode {
         }
         telemetry.addData("Cos Gain", kCos);
         telemetry.addData("Target Position", liftTarget);
-        telemetry.addData("Motor Power", tuneMotor.getPower());
+        telemetry.addData("Motor Power", lift.getPower());
         telemetry.addData("Total", liftPower());
         telemetry.addData("pArm", pLift);
         telemetry.addData("P Value", pLift * kp);
@@ -127,7 +129,7 @@ public class PIDTuner extends OpMode {
         telemetry.addData("Cos Value", cosLift * kCos);
     }
     public double liftPower(){
-        error = (liftTarget-tuneMotor.getCurrentPosition());
+        error = (liftTarget-lift.getCurrentPosition());
         dLift = (error - pLift) / PIDTimer.seconds();
         iLift = iLift + (error * PIDTimer.seconds());
         pLift = error;
