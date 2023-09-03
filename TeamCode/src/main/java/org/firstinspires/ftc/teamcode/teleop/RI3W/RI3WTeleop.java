@@ -40,6 +40,8 @@ public class RI3WTeleop extends OpMode {
     double dLift = 0.0;
     double cosLift = 0.0;
     double iLiftMax = 0.0;
+    double liftHeight = 0;
+
 
     @Override
     public void init() {
@@ -117,5 +119,33 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("Claw", robot.claw.getPosition());
         telemetry.addData("Claw State", currentClawPosition);
         telemetry.update();
+        liftPower();
+
     }
+
+    public double liftPower(int target){
+        error = target - robot.lift.getCurrentPosition();
+        dLift = (error - pLift) / PIDTimer.seconds();
+        iLift = iLift + (error * PIDTimer.seconds());
+        pLift = error;
+        PIDTimer.reset();
+
+
+        if(currentLiftHeight != lastLiftHeight){
+            iLift = 0;
+        }
+        if(iLift > iLiftMax){
+            iLift = iLiftMax;
+        }else if(iLift < -iLiftMax){
+            iLift = -iLiftMax;
+        }
+        if(total > .5){
+            total = .5;
+        }
+
+        lastLiftHeight = currentLiftHeight;
+
+        return total;
+    }
+
 }
