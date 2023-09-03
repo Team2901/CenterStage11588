@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
 import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 
 @TeleOp(name ="PID Tuner", group ="Test")
-public abstract class PIDTuner extends OpMode {
+public class PIDTuner extends OpMode {
     public DcMotorEx tuneMotor;
 
     private ElapsedTime PIDTimer = new ElapsedTime();
