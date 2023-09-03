@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "PID Tuner", group = "11588")
-public class PIDTuner extends OpMode {
+@TeleOp(name ="PID Tuner", group ="11588")
+public abstract class PIDTuner extends OpMode {
     public DcMotorEx tuneMotor;
+
     private ElapsedTime PIDTimer = new ElapsedTime();
     double error = 0.0;
     double total = 0.0;
