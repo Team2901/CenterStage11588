@@ -111,6 +111,7 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
         telemetry.addData("Claw", robot.claw.getPosition());
         telemetry.addData("Claw State", currentClawPosition);
+        telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
         telemetry.addData("Current Target Height", currentLiftHeight);
         telemetry.addData("Intake Position", intakeLiftPosition);
         telemetry.addData("Low Position", lowLiftPosition);
