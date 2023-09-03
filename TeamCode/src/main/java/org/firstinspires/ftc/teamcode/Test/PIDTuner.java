@@ -16,21 +16,17 @@ import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 public class PIDTuner extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
-
-    public DcMotorEx lift;
-
     private ElapsedTime PIDTimer = new ElapsedTime();
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
-    RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
+    Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
-    RI3WTeleop.Height lastLiftHeight = currentLiftHeight;
-    double liftSpeed = -0.2;
+    Height lastLiftHeight = currentLiftHeight;
+    double liftSpeed = 0.2;
     int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
     int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
     int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
     int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
     int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
-    int target;
 
     double error = 0.0;
     double total = 0.0;
@@ -55,13 +51,6 @@ public class PIDTuner extends OpMode {
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap);
-
-        lift = hardwareMap.get(DcMotorEx.class, "lift");
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        //tuneMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setPower(0);
     }
     @Override
     public void loop() {
@@ -71,30 +60,26 @@ public class PIDTuner extends OpMode {
         currentGamepad1.copy(gamepad1);
         currentGamepad2.copy(gamepad2);
 
-        if(gamepad1.dpad_left) {
+        if(gamepad.dpad_left.isInitialPress()) {
             //Sets Lift to intake level
             liftTarget = intakeLiftPosition;
-            currentLiftHeight = RI3WTeleop.Height.INTAKE;
-        } else if (gamepad1.dpad_down) {
+            currentLiftHeight = Height.INTAKE;
+        } else if (gamepad.dpad_down.isInitialPress()) {
             //Sets Lift to Low level
             liftTarget = lowLiftPosition;
-            currentLiftHeight = RI3WTeleop.Height.LOW;
-        } else if (gamepad1.dpad_right) {
+            currentLiftHeight = Height.LOW;
+        } else if (gamepad.dpad_right.isInitialPress()) {
             //Sets Lift to Mid level
             liftTarget = midLiftPosition;
-            currentLiftHeight = RI3WTeleop.Height.MID;
-        } else if (gamepad1.dpad_up) {
+            currentLiftHeight = Height.MID;
+        } else if (gamepad.dpad_up.isInitialPress()) {
             //Sets Lift to High level
             liftTarget = highLiftPosition;
-            currentLiftHeight = RI3WTeleop.Height.HIGH;
+            currentLiftHeight = Height.HIGH;
         }
 
         liftTarget += gamepad1.right_stick_y*10;
 
-
-        if(gamepad1.right_trigger > .5){
-            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
 
         robot.lift.setPower(liftSpeed);
 
@@ -120,7 +105,7 @@ public class PIDTuner extends OpMode {
         telemetry.addData("Current Position", robot.lift.getCurrentPosition());
         telemetry.addData("Target Position", liftTarget);
         telemetry.addData("Motor Power", robot.lift.getPower());
-        telemetry.addData("Total", liftPower());
+        telemetry.addData("Total", total);
         telemetry.addData("pArm", pLift);
         telemetry.addData("P Value", pLift * kp);
         telemetry.addData("iArm", iLift);
@@ -130,7 +115,7 @@ public class PIDTuner extends OpMode {
         telemetry.addData("cosArm", cosLift);
         telemetry.addData("Cos Value", cosLift * kCos);
     }
-    public double liftPower(){
+    public double liftPower(int target){
         error = target - robot.lift.getCurrentPosition();
         dLift = (error - pLift) / PIDTimer.seconds();
         iLift = iLift + (error * PIDTimer.seconds());
