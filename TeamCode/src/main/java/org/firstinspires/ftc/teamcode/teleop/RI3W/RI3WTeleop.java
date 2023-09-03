@@ -22,11 +22,11 @@ public class RI3WTeleop extends OpMode {
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
     double liftSpeed = 0.5;
-    int intakeLiftPosition = 80;
-    int lowLiftPosition = 1557;
-    int midLiftPosition = 2757;
-    int highLiftPosition = 3939;
-    int maxLiftPosition = 4350;
+    int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
+    int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
+    int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
+    int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
+    int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
     double error = 0.0;
     double total = 0.0;
