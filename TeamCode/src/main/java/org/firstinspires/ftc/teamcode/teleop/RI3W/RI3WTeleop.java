@@ -22,7 +22,6 @@ public class RI3WTeleop extends OpMode {
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
     double liftSpeed = 0.5;
-    int liftEncoderValue = robot.lift.getCurrentPosition();
     int intakeLiftPosition = 80;
     int lowLiftPosition = 1557;
     int midLiftPosition = 2757;
@@ -47,12 +46,7 @@ public class RI3WTeleop extends OpMode {
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap);
-        init();{
-            liftTarget = intakeLiftPosition;
-            currentLiftHeight = Height.INTAKE;
         }
-
-    }
 
     @Override
     public void loop() {
@@ -86,7 +80,6 @@ public class RI3WTeleop extends OpMode {
             liftTarget = maxLiftPosition;
             currentLiftHeight = Height.MAX;
         }
-        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         robot.lift.setPower(liftPower(liftTarget));
 
@@ -116,7 +109,7 @@ public class RI3WTeleop extends OpMode {
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
-        telemetry.addData("Lift Motor", liftEncoderValue);
+        telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
         telemetry.addData("Target Lift Motor", robot.lift.getTargetPosition());
         telemetry.addData("Claw", robot.claw.getPosition());
         telemetry.addData("Claw State", currentClawPosition);
