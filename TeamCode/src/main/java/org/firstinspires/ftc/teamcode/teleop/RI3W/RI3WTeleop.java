@@ -30,7 +30,7 @@ public class RI3WTeleop extends OpMode {
 
     double error = 0.0;
     double total = 0.0;
-    double kp = 0.0;
+    double kp = 0.5;
     double ki = 0.0;
     double kd = 0.0;
     double kCos = 0.0;
