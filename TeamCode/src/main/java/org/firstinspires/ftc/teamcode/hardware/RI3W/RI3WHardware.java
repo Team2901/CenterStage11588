@@ -96,6 +96,7 @@ public class RI3WHardware {
         INTAKE,
         LOW,
         MID,
-        HIGH
+        HIGH,
+        MAX
     }
 }

@@ -17,7 +17,7 @@ public class RI3WTeleop extends OpMode {
     ElapsedTime PIDTimer = new ElapsedTime();
     public enum ClawPosition{Open, Closed}
     ClawPosition currentClawPosition = ClawPosition.Closed;
-    public enum Height{INTAKE, LOW, MID,HIGH}
+    public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
@@ -45,7 +45,10 @@ public class RI3WTeleop extends OpMode {
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap);
-        robot.lift.setTargetPosition(intakeLiftPosition);
+        init();{
+            liftTarget = intakeLiftPosition;
+            currentLiftHeight = Height.INTAKE;
+        }
 
     }
 
@@ -61,15 +64,25 @@ public class RI3WTeleop extends OpMode {
         }
 
         if(gamepad.dpad_left.isInitialPress()) {
-            robot.lift.setTargetPosition(intakeLiftPosition);
+            //Sets Lift to intake level
+            liftTarget = intakeLiftPosition;
+            currentLiftHeight = Height.INTAKE;
         } else if (gamepad.dpad_down.isInitialPress()) {
-            robot.lift.setTargetPosition(lowLiftPosition);
+            //Sets Lift to Low level
+            liftTarget = lowLiftPosition;
+            currentLiftHeight = Height.LOW;
         } else if (gamepad.dpad_right.isInitialPress()) {
-            robot.lift.setTargetPosition(midLiftPosition);
+            //Sets Lift to Mid level
+            liftTarget = midLiftPosition;
+            currentLiftHeight = Height.MID;
         } else if (gamepad.dpad_up.isInitialPress()) {
-            robot.lift.setTargetPosition(highLiftPosition);
+            //Sets Lift to High level
+            liftTarget = highLiftPosition;
+            currentLiftHeight = Height.HIGH;
         } else if (gamepad.b.isInitialPress()) {
-            robot.lift.setTargetPosition(maxLiftPosition);
+            //Sets Lift to Max level
+            liftTarget = maxLiftPosition;
+            currentLiftHeight = Height.MAX;
         }
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
