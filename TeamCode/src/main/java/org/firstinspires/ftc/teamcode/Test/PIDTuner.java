@@ -20,7 +20,7 @@ public class PIDTuner extends OpMode {
     RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
     int liftTarget = 80;
     RI3WTeleop.Height lastLiftHeight = currentLiftHeight;
-    double liftSpeed = 0.1;
+    double liftSpeed = 0.5;
     int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
     int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
     int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
@@ -116,6 +116,7 @@ public class PIDTuner extends OpMode {
             kCos -= .01;
         }
         telemetry.addData("Cos Gain", kCos);
+        telemetry.addData("Current Position", lift.getCurrentPosition());
         telemetry.addData("Target Position", liftTarget);
         telemetry.addData("Motor Power", lift.getPower());
         telemetry.addData("Total", liftPower());
