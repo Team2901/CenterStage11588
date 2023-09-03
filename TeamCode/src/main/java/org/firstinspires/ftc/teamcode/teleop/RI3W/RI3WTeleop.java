@@ -109,10 +109,21 @@ public class RI3WTeleop extends OpMode {
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
-        telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
-        telemetry.addData("Target Lift Motor", robot.lift.getTargetPosition());
         telemetry.addData("Claw", robot.claw.getPosition());
         telemetry.addData("Claw State", currentClawPosition);
+        telemetry.addData("Current Target Height", currentLiftHeight);
+        telemetry.addData("Intake Position", intakeLiftPosition);
+        telemetry.addData("Low Position", lowLiftPosition);
+        telemetry.addData("Medium Position", midLiftPosition);
+        telemetry.addData("High Position", highLiftPosition);
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Cos Arm", cosLift);
+        telemetry.addData("Proportional Stuff", pLift * kp);
+        telemetry.addData("Integral Stuff", iLift * ki);
+        telemetry.addData("Derivative Stuff", dLift * kd);
         telemetry.update();
 
     }
