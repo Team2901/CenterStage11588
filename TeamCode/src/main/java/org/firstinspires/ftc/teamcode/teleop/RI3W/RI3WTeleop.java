@@ -96,6 +96,12 @@ public class RI3WTeleop extends OpMode {
                 }
         }
 
+        if(gamepad.left_bumper.isInitialPress()) {
+            liftTarget -= 10;
+        } else if(gamepad.right_bumper.isInitialPress()) {
+            liftTarget += 10;
+        }
+
         double y = .75 * gamepad.left_stick_y.getValue();
         double x = .75 * gamepad.left_stick_x.getValue();
         double rx = turningPower;
