@@ -21,7 +21,7 @@ public class PIDTunerV2 extends OpMode {
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
-    double liftSpeed = 0.1;
+    double liftSpeed = 0.2;
     int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
     int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
     int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
@@ -32,9 +32,10 @@ public class PIDTunerV2 extends OpMode {
     int reference = 0;
     int lastReference = reference;
     double total = 0.0;
-    double kp = 0.0001;
-    double ki = 0.0042;
-    double kd = 0.0011;
+    double kg = 0;
+    double kp = 0.0;
+    double ki = 0.0;
+    double kd = 0.0;
     double kCos = 0.0;
     double pLift = 0.0;
     double iLift = 0.0;
@@ -92,8 +93,14 @@ public class PIDTunerV2 extends OpMode {
             kd -= .0001;
         }
         telemetry.addData("D Gain", kd);
+        if(gamepad.right_bumper.isInitialPress()){
+            kg += .0000001;
+        } else if(gamepad.left_bumper.isInitialPress()){
+            kg -= .0000001;
+        }
+        telemetry.addData("KG", kg);
 
-        robot.lift.setPower(liftSpeed);
+        //robot.lift.setPower(liftPower());
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
@@ -137,6 +144,8 @@ public class PIDTunerV2 extends OpMode {
         if(total > .5){
             total = .5;
         }
+
+        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100 +kg;
 
         lastLiftHeight = currentLiftHeight;
 
