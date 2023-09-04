@@ -23,10 +23,14 @@ public class RI3WHardware {
     public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
     public static final double INTAKE_ENCODER_VALUE = 80;
-    public static final  double LOW_POLE_ENCODER_VALUE = 1557;
-    public static final double MID_POLE_ENCODER_VALUE = 2757;
-    public static final double HIGH_POLE_ENCODER_VALUE = 3939;
+    public static final  double LOW_POLE_ENCODER_VALUE = 1800;
+    public static final double MID_POLE_ENCODER_VALUE = 2976;
+    public static final double HIGH_POLE_ENCODER_VALUE = 3945;
     public static final double MAX_HEIGHT_ENCODER_VALUE = 4350;
+    public static final double KG = 0.046;
+    public static final double KP = 0.566;
+    public static final double KI = 0.011;
+    public static final double KD = 0.008;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;

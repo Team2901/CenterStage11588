@@ -32,10 +32,10 @@ public class PIDTunerV2 extends OpMode {
     int reference = 0;
     int lastReference = reference;
     double total = 0.0;
-    double kg = 0.046;
-    double kp = 0.5;
-    double ki = 0.0;
-    double kd = 0.0;
+    double kg = RI3WHardware.KG;
+    double kp = RI3WHardware.KP;
+    double ki = RI3WHardware.KI;
+    double kd = RI3WHardware.KD;
     double kCos = 0.0;
     double pLift = 0.0;
     double iLift = 0.0;

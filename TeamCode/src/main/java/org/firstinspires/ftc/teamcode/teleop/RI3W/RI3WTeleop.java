@@ -28,12 +28,12 @@ public class RI3WTeleop extends OpMode {
     int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
     int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
-    double kg = 0.046;
     double error = 0.0;
     double total = 0.0;
-    double kp = 0.5;
-    double ki = 0.0;
-    double kd = 0.0;
+    double kg = RI3WHardware.KG;
+    double kp = RI3WHardware.KP;
+    double ki = RI3WHardware.KI;
+    double kd = RI3WHardware.KD;
     double pLift = 0.0;
     double iLift = 0.0;
     double dLift = 0.0;
