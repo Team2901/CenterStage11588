@@ -28,10 +28,12 @@ public class RI3WTeleop extends OpMode {
     int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
     int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
-    double output = K * reference;
-    double output = (Kv * velocityReference) + (Ka * accelerationReference);
+    //double output = K * reference;
+    //double output = (Kv * velocityReference) + (Ka * accelerationReference);
     double error = 0.0;
     double total = 0.0;
+    int reference = 0;
+    int lastReference = reference;
     double Kg;
     double output = PID(reference, state) + Kg;
     double kp = 0.0;
@@ -140,12 +142,6 @@ public class RI3WTeleop extends OpMode {
         pLift = error;
         total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100;
         PIDTimer.reset();
-
-        while (liftTarget) {
-
-            double output = PID(referenceSpeed, currentSpeed) + Kv * (referenceSpeed) + Ka * referenceAccel;
-
-        }
 
 
         if(currentLiftHeight != lastLiftHeight){

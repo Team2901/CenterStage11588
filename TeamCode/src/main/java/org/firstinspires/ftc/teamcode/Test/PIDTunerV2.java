@@ -29,6 +29,8 @@ public class PIDTunerV2 extends OpMode {
     int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
     double error = 0.0;
+    int reference = 0;
+    int lastReference = reference;
     double total = 0.0;
     double kp = 0.0001;
     double ki = 0.0042;
@@ -91,14 +93,6 @@ public class PIDTunerV2 extends OpMode {
         }
         telemetry.addData("D Gain", kd);
 
-        double y = .75 * gamepad.left_stick_y.getValue();
-        double x = .75 * gamepad.left_stick_x.getValue();
-        double rx = turningPower;
-
-        robot.frontLeft.setPower(y + x + rx);
-        robot.frontRight.setPower(y - x - rx);
-        robot.backLeft.setPower(y - x + rx);
-        robot.backRight.setPower(y + x - rx);
         robot.lift.setPower(liftSpeed);
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
