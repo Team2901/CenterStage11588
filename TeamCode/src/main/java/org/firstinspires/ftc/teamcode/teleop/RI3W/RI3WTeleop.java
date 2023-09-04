@@ -28,7 +28,7 @@ public class RI3WTeleop extends OpMode {
     int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
     int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
-    double kg = 0;
+    double kg = 0.046;
     double error = 0.0;
     double total = 0.0;
     double kp = 0.5;
@@ -104,7 +104,7 @@ public class RI3WTeleop extends OpMode {
         robot.frontRight.setPower(y - x - rx);
         robot.backLeft.setPower(y - x + rx);
         robot.backRight.setPower(y + x - rx);
-        robot.lift.setPower(liftSpeed);
+        robot.lift.setPower(liftPower(liftTarget));
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
