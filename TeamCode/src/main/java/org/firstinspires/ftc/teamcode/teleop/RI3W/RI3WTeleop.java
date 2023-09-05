@@ -118,6 +118,7 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("Claw State", currentClawPosition);
         telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
         telemetry.addData("Current Target Height", currentLiftHeight);
+        telemetry.addData("Lift Target", liftTarget);
         telemetry.addData("Intake Position", intakeLiftPosition);
         telemetry.addData("Low Position", lowLiftPosition);
         telemetry.addData("Medium Position", midLiftPosition);
@@ -126,7 +127,6 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("P Arm", pLift);
         telemetry.addData("I Arm", iLift);
         telemetry.addData("D Arm", dLift);
-        telemetry.addData("Cos Arm", cosLift);
         telemetry.addData("Proportional Stuff", pLift * kp);
         telemetry.addData("Integral Stuff", iLift * ki);
         telemetry.addData("Derivative Stuff", dLift * kd);
