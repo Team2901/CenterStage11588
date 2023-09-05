@@ -74,7 +74,7 @@ public class RI3WTeleop extends OpMode {
             //Sets Lift to High level
             liftTarget = highLiftPosition;
             currentLiftHeight = Height.HIGH;
-        } else if (gamepad.b.isInitialPress()) {
+        } else if (gamepad.x.isInitialPress()) {
             //Sets Lift to Max level
             liftTarget = maxLiftPosition;
             currentLiftHeight = Height.MAX;
@@ -85,21 +85,21 @@ public class RI3WTeleop extends OpMode {
         switch (currentClawPosition) {
             case Open:
                 robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
-                if (gamepad.a.isInitialPress()) {
+                if (gamepad.bisInitialPress()) {
                     currentClawPosition = ClawPosition.Closed;
                 }
                 break;
             case Closed:
                 robot.claw.setPosition(robot.CLOSED_POSITION);
-                if (gamepad.a.isInitialPress()) {
+                if (gamepad.b.isInitialPress()) {
                     currentClawPosition = ClawPosition.Open;
                 }
         }
 
-        if(gamepad.left_bumper.isInitialPress()) {
-            liftTarget -= 10;
-        } else if(gamepad.right_bumper.isInitialPress()) {
+        if(gamepad.y.isInitialPress()) {
             liftTarget += 10;
+        } else if(gamepad.a.isInitialPress()) {
+            liftTarget -= 10;
         }
 
         double y = .75 * gamepad.left_stick_y.getValue();
