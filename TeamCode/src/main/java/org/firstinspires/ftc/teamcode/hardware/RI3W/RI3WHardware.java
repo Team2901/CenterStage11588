@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -22,15 +23,22 @@ public class RI3WHardware {
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
     public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
-    public static final double INTAKE_ENCODER_VALUE = 80;
-    public static final  double LOW_POLE_ENCODER_VALUE = 1635;
-    public static final double MID_POLE_ENCODER_VALUE = 2800;
-    public static final double HIGH_POLE_ENCODER_VALUE = 3853;
-    public static final double MAX_HEIGHT_ENCODER_VALUE = 4350;
+    public static final int INTAKE_ENCODER_VALUE = 80;
+    public static final int LOW_POLE_ENCODER_VALUE = 1635;
+    public static final int MID_POLE_ENCODER_VALUE = 2800;
+    public static final int HIGH_POLE_ENCODER_VALUE = 3853;
+    public static final int MAX_HEIGHT_ENCODER_VALUE = 4350;
     public static final double KG = 0.046;
     public static final double KP = 0.566;
     public static final double KI = 0.011;
     public static final double KD = 0.008;
+
+    public static double error = 0.0;
+    public static double total = 0.0;
+    public static double pLift = 0.0;
+    public static double iLift = 0.0;
+    public static double dLift = 0.0;
+    public double iLiftMax = 0.0;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
@@ -94,6 +102,16 @@ public class RI3WHardware {
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.normalizeDegrees(orientation.firstAngle);
 
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Proportional Stuff", pLift * KP);
+        telemetry.addData("Integral Stuff", iLift * KI);
+        telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
     public enum Height {

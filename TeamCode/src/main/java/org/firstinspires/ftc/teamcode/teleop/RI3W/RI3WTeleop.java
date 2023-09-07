@@ -21,25 +21,7 @@ public class RI3WTeleop extends OpMode {
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
-    double liftSpeed = 0.5;
-    int intakeLiftPosition = (int) RI3WHardware.INTAKE_ENCODER_VALUE;
-    int lowLiftPosition = (int) RI3WHardware.LOW_POLE_ENCODER_VALUE;
-    int midLiftPosition = (int) RI3WHardware.MID_POLE_ENCODER_VALUE;
-    int highLiftPosition = (int) RI3WHardware.HIGH_POLE_ENCODER_VALUE;
-    int maxLiftPosition = (int) RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
 
-    double error = 0.0;
-    double total = 0.0;
-    double kg = RI3WHardware.KG;
-    double kp = RI3WHardware.KP;
-    double ki = RI3WHardware.KI;
-    double kd = RI3WHardware.KD;
-    double pLift = 0.0;
-    double iLift = 0.0;
-    double dLift = 0.0;
-    double cosLift = 0.0;
-    double iLiftMax = 0.0;
-    double liftHeight = 0;
 
     @Override
     public void init() {
@@ -59,24 +41,19 @@ public class RI3WTeleop extends OpMode {
         }
 
         if(gamepad.dpad_left.isInitialPress()) {
-            //Sets Lift to intake level
-            liftTarget = intakeLiftPosition;
+            liftTarget = RI3WHardware.INTAKE_ENCODER_VALUE;
             currentLiftHeight = Height.INTAKE;
         } else if (gamepad.dpad_down.isInitialPress()) {
-            //Sets Lift to Low level
-            liftTarget = lowLiftPosition;
+            liftTarget = RI3WHardware.LOW_POLE_ENCODER_VALUE;
             currentLiftHeight = Height.LOW;
         } else if (gamepad.dpad_right.isInitialPress()) {
-            //Sets Lift to Mid level
-            liftTarget = midLiftPosition;
+            liftTarget = RI3WHardware.MID_POLE_ENCODER_VALUE;
             currentLiftHeight = Height.MID;
         } else if (gamepad.dpad_up.isInitialPress()) {
-            //Sets Lift to High level
-            liftTarget = highLiftPosition;
+            liftTarget = RI3WHardware.HIGH_POLE_ENCODER_VALUE;
             currentLiftHeight = Height.HIGH;
         } else if (gamepad.x.isInitialPress()) {
-            //Sets Lift to Max level
-            liftTarget = maxLiftPosition;
+            liftTarget = RI3WHardware.MAX_HEIGHT_ENCODER_VALUE;
             currentLiftHeight = Height.MAX;
         }
 
@@ -85,7 +62,7 @@ public class RI3WTeleop extends OpMode {
         switch (currentClawPosition) {
             case Open:
                 robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
-                if (gamepad.bisInitialPress()) {
+                if (gamepad.b.isInitialPress()) {
                     currentClawPosition = ClawPosition.Closed;
                 }
                 break;
@@ -119,47 +96,38 @@ public class RI3WTeleop extends OpMode {
         telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
         telemetry.addData("Current Target Height", currentLiftHeight);
         telemetry.addData("Lift Target", liftTarget);
-        telemetry.addData("Intake Position", intakeLiftPosition);
-        telemetry.addData("Low Position", lowLiftPosition);
-        telemetry.addData("Medium Position", midLiftPosition);
-        telemetry.addData("High Position", highLiftPosition);
-        telemetry.addData("PID Total", total);
-        telemetry.addData("P Arm", pLift);
-        telemetry.addData("I Arm", iLift);
-        telemetry.addData("D Arm", dLift);
-        telemetry.addData("Proportional Stuff", pLift * kp);
-        telemetry.addData("Integral Stuff", iLift * ki);
-        telemetry.addData("Derivative Stuff", dLift * kd);
+        telemetry.addData("Intake Position", RI3WHardware.INTAKE_ENCODER_VALUE);
+        robot.telemetry(telemetry);
         telemetry.update();
 
     }
 
     public double liftPower(int target){
-        error = target - robot.lift.getCurrentPosition();
-        dLift = (error - pLift) / PIDTimer.seconds();
-        iLift = iLift + (error * PIDTimer.seconds());
-        pLift = error;
-        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100;
+        robot.error = target - robot.lift.getCurrentPosition();
+        robot.dLift = (robot.error - robot.pLift) / PIDTimer.seconds();
+        robot.iLift = robot.iLift + (robot.error * PIDTimer.seconds());
+        robot.pLift = robot.error;
+        robot.total = ((robot.pLift * RI3WHardware.KP) + (robot.iLift * RI3WHardware.KI) + (robot.dLift * RI3WHardware.KD))/100;
         PIDTimer.reset();
 
 
         if(currentLiftHeight != lastLiftHeight){
-            iLift = 0;
+            robot.iLift = 0;
         }
-        if(iLift > iLiftMax){
-            iLift = iLiftMax;
-        }else if(iLift < -iLiftMax){
-            iLift = -iLiftMax;
+        if(robot.iLift > robot.iLiftMax){
+            robot.iLift = robot.iLiftMax;
+        }else if(robot.iLift < -robot.iLiftMax){
+            robot.iLift = -robot.iLiftMax;
         }
-        if(total > .5){
-            total = .5;
+        if(robot.total > .5){
+            robot.total = .5;
         }
 
-        total = ((pLift * kp) + (iLift * ki) + (dLift * kd))/100 +kg;
+        robot.total = ((robot.pLift * RI3WHardware.KP) + (robot.iLift * RI3WHardware.KI) + (robot.dLift * RI3WHardware.KD))/100 +RI3WHardware.KG;
 
         lastLiftHeight = currentLiftHeight;
 
-        return total;
+        return robot.total;
     }
 
 }
