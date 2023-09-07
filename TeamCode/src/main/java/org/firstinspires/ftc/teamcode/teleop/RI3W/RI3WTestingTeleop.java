@@ -13,6 +13,8 @@ public class RI3WTestingTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
+    public enum ClawPosition{Open, Closed}
+    ClawPosition currentClawPosition = ClawPosition.Closed;
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
@@ -57,6 +59,20 @@ public class RI3WTestingTeleop extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
+//claw related stuff
+        switch (currentClawPosition) {
+            case Open:
+                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
+                if (gamepad.right_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Closed;
+                }
+                break;
+            case Closed:
+                robot.claw.setPosition(robot.CLOSED_POSITION);
+                if (gamepad.left_trigger.isInitialPress()) {
+                    currentClawPosition = ClawPosition.Open;
+                }
+        }
         telemetryStuff();
     }
 
@@ -66,6 +82,9 @@ public class RI3WTestingTeleop extends OpMode {
         telemetry.addData("Back Right Motor", robot.backRight.getCurrentPosition());
         telemetry.addData("Front Left Motor", robot.frontLeft.getCurrentPosition());
         telemetry.addData("Back Left Motor", robot.backLeft.getCurrentPosition());
+        telemetry.addData("Servo", robot.claw.getPosition());
+        telemetry.addData("Servo Direction", robot.claw.getDirection());
+        telemetry.addData("Claw", currentClawPosition);
         telemetry.update();
     }
 }

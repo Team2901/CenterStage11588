@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -19,12 +21,30 @@ public class RI3WHardware {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
+    public static final double OPENED_POSITION = 0.5;
+    public static final double CLOSED_POSITION = 0.15;
+    public static final int INTAKE_ENCODER_VALUE = 80;
+    public static final int LOW_POLE_ENCODER_VALUE = 1635;
+    public static final int MID_POLE_ENCODER_VALUE = 2800;
+    public static final int HIGH_POLE_ENCODER_VALUE = 3853;
+    public static final int MAX_HEIGHT_ENCODER_VALUE = 4350;
+    public static final double KG = 0.046;
+    public static final double KP = 0.566;
+    public static final double KI = 0.011;
+    public static final double KD = 0.008;
 
+    public static double error = 0.0;
+    public static double total = 0.0;
+    public static double pLift = 0.0;
+    public static double iLift = 0.0;
+    public static double dLift = 0.0;
+    public double iLiftMax = 0.0;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
+    public Servo claw;
     public BNO055IMU imu;
 
     public void init(HardwareMap hardwareMap){
@@ -33,6 +53,7 @@ public class RI3WHardware {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
+        claw = hardwareMap.get(Servo.class, "claw");
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,7 +67,7 @@ public class RI3WHardware {
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Making the drive motors break at 0 so they stop better
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -63,6 +84,7 @@ public class RI3WHardware {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        claw.setPosition(CLOSED_POSITION);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -79,5 +101,24 @@ public class RI3WHardware {
     public double getAngle(){
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.normalizeDegrees(orientation.firstAngle);
+
+    }
+
+    public void telemetry(Telemetry telemetry) {
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Proportional Stuff", pLift * KP);
+        telemetry.addData("Integral Stuff", iLift * KI);
+        telemetry.addData("Derivative Stuff", dLift * KD);
+    }
+
+    public enum Height {
+        INTAKE,
+        LOW,
+        MID,
+        HIGH,
+        MAX
     }
 }
