@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.hardware.controller;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 
 
 public class ImprovedGamepad {
@@ -94,6 +96,26 @@ public class ImprovedGamepad {
 
     }
 
+    // rx ry lx ly a b x y up down left right r_bumper l_bumper r_trigger l_trigger
+    public void updateFromFile(DataInputStream readFile) throws IOException {
+        double time = timer.time();
+        right_stick_x.update(readFile.readFloat(), time);
+        right_stick_y.update(-readFile.readFloat(), time);
+        left_stick_x.update(readFile.readFloat(), time);
+        left_stick_y.update(-readFile.readFloat(), time);
+        a.update(readFile.readBoolean(), time);
+        b.update(readFile.readBoolean(), time);
+        x.update(readFile.readBoolean(), time);
+        y.update(readFile.readBoolean(), time);
+        dpad_up.update(readFile.readBoolean(), time);
+        dpad_down.update(readFile.readBoolean(), time);
+        dpad_left.update(readFile.readBoolean(), time);
+        dpad_right.update(readFile.readBoolean(), time);
+        right_bumper.update(readFile.readBoolean(), time);
+        left_bumper.update(readFile.readBoolean(), time);
+        right_trigger.update(readFile.readFloat(), time);
+        left_trigger.update(readFile.readFloat(), time);
+    }
     public void update() {
 
         double time = timer.time();
