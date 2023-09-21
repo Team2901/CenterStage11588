@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
+import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,7 +28,7 @@ public class PlaybackAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(this.hardwareMap);
+        robot.init(this.hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
         timer.reset();
         while (true) {
