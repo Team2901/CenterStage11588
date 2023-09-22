@@ -28,12 +28,10 @@ public class CameraSubMat {
         //Core.inRange(subMat, new Scalar(100, 50, 50), new Scalar(255, 100, 155), redMask);
         //Core.inRange(subMat, new Scalar(0, 0, 0), new Scalar(255, 255, 255), blueMask);
         Core.inRange(lastImage, new Scalar(100, 50, 50), new Scalar(255, 100, 155), redMask);
-        Core.inRange(lastImage, new Scalar(0, 0, 0), new Scalar(255, 255, 255), blueMask);
-        blueAmount = Core.countNonZero(redMask);
-        redAmount = Core.countNonZero(blueMask);
-        telemetry.addData("submatProcessed", submatProcess++);
+        Core.inRange(lastImage, new Scalar(0, 0, 80), new Scalar(70, 70, 255), blueMask);
+        blueAmount = Core.countNonZero(blueMask);
+        redAmount = Core.countNonZero(redMask);
     }
-    int submatProcess = 0;
 
     public android.graphics.Rect createAndroidRect(double scaleFactor) {
         int right = (int)((rect.width + rect.x) * scaleFactor);

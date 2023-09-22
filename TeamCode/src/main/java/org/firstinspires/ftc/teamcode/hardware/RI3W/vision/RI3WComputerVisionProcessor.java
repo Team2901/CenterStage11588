@@ -26,14 +26,13 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
     Telemetry telemetry;
     Size targetSize;
     Mat inputFrameGray;
-    CameraSubMat leftMat = new CameraSubMat(new Rect(10, 10, 50, 50));
-    CameraSubMat rightMat = new CameraSubMat(new Rect(40, 10, 50, 50));
-    CameraSubMat middleMat = new CameraSubMat(new Rect(100, 10, 50, 50));
+    CameraSubMat leftMat = new CameraSubMat(new Rect(10, 10, 30, 30));
+    CameraSubMat rightMat = new CameraSubMat(new Rect(300, 10, 30, 30));
+    CameraSubMat middleMat = new CameraSubMat(new Rect(100, 10, 30, 30));
 
     public RI3WComputerVisionProcessor(Telemetry telemetry) {
 //        allianceColor = color;
         this.telemetry = telemetry;
-        leftMat.telemetry = telemetry;
     }
 
     @Override
@@ -54,10 +53,7 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
         rightMat.update(inputFrameRGB);
         middleMat.update(inputFrameRGB);
         framesProcessed++;
-        telemetry.addData("Blue amount", leftMat.blueAmount);
-        telemetry.addData("Red amount", leftMat.redAmount);
-        telemetry.addData("Frames Processed", framesProcessed);
-        telemetry.update();
+        cameraTelemetry();
         return inputFrameRGB; // Don't think this does anything
     }
 
@@ -95,14 +91,9 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        //telemetry.addData("CanvasWidth", canvas.getWidth());
-        //telemetry.addData("onscreenWidth", onscreenWidth);
-        //telemetry.addData("matWidth", targetSize.width);
-        //telemetry.update();
         double scaleFactor = Math.min(
                 canvas.getWidth() / targetSize.width,
                 canvas.getHeight() / targetSize.height);
-        //telemetry.addData("scaleFactor", scaleFactor);
         android.graphics.Rect leftRect = leftMat.createAndroidRect(scaleFactor);
         android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
         android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
@@ -116,9 +107,10 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
         telemetry.addData("Blue amount Left", leftMat.blueAmount);
         telemetry.addData("Blue amount Right", rightMat.blueAmount);
         telemetry.addData("Blue amount Middle", middleMat.blueAmount);
-        telemetry.addData("Red amount Left", leftMat.blueAmount);
-        telemetry.addData("Red amount Right", rightMat.blueAmount);
-        telemetry.addData("Red amount Middle", middleMat.blueAmount);
+        telemetry.addData("Red amount Left", leftMat.redAmount);
+        telemetry.addData("Red amount Right", rightMat.redAmount);
+        telemetry.addData("Red amount Middle", middleMat.redAmount);
         telemetry.addData("Frames Processed", framesProcessed);
+        telemetry.update();
     }
 }
