@@ -22,7 +22,6 @@ public class RecordingTeleop extends OpMode {
     public ImprovedGamepad gamepad;
     ElapsedTime PIDTimer = new ElapsedTime();
     public enum ClawPosition{Open, Closed}
-    RI3WTeleop.ClawPosition currentClawPosition = RI3WTeleop.ClawPosition.Closed;
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
     int liftTarget = 80;
@@ -70,19 +69,6 @@ public class RecordingTeleop extends OpMode {
 
         robot.lift.setPower(liftPower(liftTarget));
 
-        switch (currentClawPosition) {
-            case Open:
-                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = RI3WTeleop.ClawPosition.Closed;
-                }
-                break;
-            case Closed:
-                robot.claw.setPosition(robot.CLOSED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = RI3WTeleop.ClawPosition.Open;
-                }
-        }
 
         if(gamepad.y.isInitialPress()) {
             liftTarget += 10;
@@ -111,8 +97,7 @@ public class RecordingTeleop extends OpMode {
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
-        telemetry.addData("Claw", robot.claw.getPosition());
-        telemetry.addData("Claw State", currentClawPosition);
+        telemetry.addData("Claw", robot.hopper.getPosition());
         telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
         telemetry.addData("Current Target Height", currentLiftHeight);
         telemetry.addData("Lift Target", liftTarget);

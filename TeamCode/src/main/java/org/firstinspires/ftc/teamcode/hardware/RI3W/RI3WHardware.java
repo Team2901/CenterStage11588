@@ -21,8 +21,6 @@ public class RI3WHardware {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    public static final double OPENED_POSITION = 0.5;
-    public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
     public static final int LOW_POLE_ENCODER_VALUE = 1635;
     public static final int MID_POLE_ENCODER_VALUE = 2800;
@@ -32,7 +30,8 @@ public class RI3WHardware {
     public static final double KP = 0.566;
     public static final double KI = 0.011;
     public static final double KD = 0.008;
-
+    public static final double  SERVO_OPEN_POSITION = 0.75;
+    public static final double SERVO_CLOSED_POSITION = 0;
     public static double error = 0.0;
     public static double total = 0.0;
     public static double pLift = 0.0;
@@ -44,16 +43,24 @@ public class RI3WHardware {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
-    public Servo claw;
+    public Servo hopper;
+    public enum IntakeState {ON, OFF};
+    public IntakeState intakeState = IntakeState.OFF;
     public BNO055IMU imu;
+    public DcMotorEx intakeMotor;
+    public DcMotorEx transfer;
+    public enum HopperState{OPEN, CLOSED}
+    public HopperState hopperState = HopperState.CLOSED;
 
     public void init(HardwareMap hardwareMap){
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
-        claw = hardwareMap.get(Servo.class, "claw");
+        hopper = hardwareMap.get(Servo.class, "hopper");
+        transfer = hardwareMap.get(DcMotorEx.class, "transfer");
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -75,7 +82,7 @@ public class RI3WHardware {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Reversing the left motors so the robot goes straigh
+        //Reversing the left motors so the robot goes straight
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -84,7 +91,9 @@ public class RI3WHardware {
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        claw.setPosition(CLOSED_POSITION);
+        intakeMotor.setPower(0);
+        transfer.setPower(0);
+        hopper.setPosition(SERVO_CLOSED_POSITION);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;

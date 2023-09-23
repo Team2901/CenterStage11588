@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.teleop.RI3W;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
@@ -15,8 +14,7 @@ public class RI3WTeleop extends OpMode {
     public ImprovedGamepad gamepad;
     double turningPower = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
-    public enum ClawPosition{Open, Closed}
-    ClawPosition currentClawPosition = ClawPosition.Closed;
+    double motorDirection = 1;
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     Height currentLiftHeight = Height.INTAKE;
     int liftTarget = 80;
@@ -59,18 +57,38 @@ public class RI3WTeleop extends OpMode {
 
         robot.lift.setPower(liftPower(liftTarget));
 
-        switch (currentClawPosition) {
-            case Open:
-                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = ClawPosition.Closed;
-                }
-                break;
-            case Closed:
-                robot.claw.setPosition(robot.CLOSED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = ClawPosition.Open;
-                }
+        if(gamepad.left_bumper.isInitialPress()){
+            if(robot.intakeState == RI3WHardware.IntakeState.OFF){
+                robot.intakeState = RI3WHardware.IntakeState.ON;
+
+            }else {
+                robot.intakeState = RI3WHardware.IntakeState.OFF;
+            }
+
+        }
+        if(robot.intakeState == RI3WHardware.IntakeState.OFF){
+            robot.intakeMotor.setPower(0);
+            robot.transfer.setPower(0);
+
+        }else {
+            robot.intakeMotor.setPower(1 * motorDirection);
+            robot.transfer.setPower(1);
+        }
+        if(gamepad.b.isPressed()){
+            motorDirection = -1;
+        }else{
+            motorDirection = 1;
+        }
+        if(gamepad.right_bumper.isInitialPress()){
+            if(robot.hopperState == RI3WHardware.HopperState.CLOSED){
+                robot.hopper.setPosition(RI3WHardware.SERVO_OPEN_POSITION);
+                robot.hopperState = RI3WHardware.HopperState.OPEN;
+
+            }else {
+                robot.hopperState = RI3WHardware.HopperState.CLOSED;
+                robot.hopper.setPosition(RI3WHardware.SERVO_CLOSED_POSITION);
+            }
+
         }
 
         if(gamepad.y.isInitialPress()) {
@@ -91,8 +109,7 @@ public class RI3WTeleop extends OpMode {
 
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Lrft", gamepad.left_stick_y.getValue());
-        telemetry.addData("Claw", robot.claw.getPosition());
-        telemetry.addData("Claw State", currentClawPosition);
+        telemetry.addData("Claw", robot.hopper.getPosition());
         telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
         telemetry.addData("Current Target Height", currentLiftHeight);
         telemetry.addData("Lift Target", liftTarget);

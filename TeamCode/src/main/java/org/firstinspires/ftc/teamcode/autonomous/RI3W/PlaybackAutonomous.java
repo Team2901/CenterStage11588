@@ -25,7 +25,6 @@ public class PlaybackAutonomous extends LinearOpMode {
     double turningPower = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
     public enum ClawPosition{Open, Closed}
-    RI3WTeleop.ClawPosition currentClawPosition = RI3WTeleop.ClawPosition.Closed;
     public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
     int liftTarget = 80;
@@ -88,19 +87,6 @@ public class PlaybackAutonomous extends LinearOpMode {
 
         robot.lift.setPower(liftPower(liftTarget));
 
-        switch (currentClawPosition) {
-            case Open:
-                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = RI3WTeleop.ClawPosition.Closed;
-                }
-                break;
-            case Closed:
-                robot.claw.setPosition(robot.CLOSED_POSITION);
-                if (gamepad.b.isInitialPress()) {
-                    currentClawPosition = RI3WTeleop.ClawPosition.Open;
-                }
-        }
 
         if(gamepad.y.isInitialPress()) {
             liftTarget += 10;
