@@ -14,6 +14,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class RI3WComputerVisionProcessor implements VisionProcessor {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
+    public PropPosition propPosition = null;
 
     public enum AllianceColor {BLUE, RED}
 
@@ -21,17 +22,20 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
     private Mat lastImage = null;
 
     public int framesProcessed = 0;
-    private boolean propFound = false;
+    public boolean propFound = false;
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
-    Mat inputFrameGray;
     CameraSubMat leftMat = new CameraSubMat(new Rect(10, 10, 30, 30));
     CameraSubMat rightMat = new CameraSubMat(new Rect(300, 10, 30, 30));
     CameraSubMat middleMat = new CameraSubMat(new Rect(100, 10, 30, 30));
 
+    public RI3WComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
+        this.allianceColor = allianceColor;
+        this.telemetry = telemetry;
+    }
     public RI3WComputerVisionProcessor(Telemetry telemetry) {
-//        allianceColor = color;
+        this.allianceColor = AllianceColor.BLUE;
         this.telemetry = telemetry;
     }
 
@@ -39,7 +43,6 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
     public void init(int width, int height, CameraCalibration calibration) {
         telemetry.addLine("init...");
         targetSize = new Size(width, height);
-        inputFrameGray = new Mat(targetSize, CvType.CV_8UC1);
         telemetry.update();
     }
 
@@ -53,36 +56,47 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
         rightMat.update(inputFrameRGB);
         middleMat.update(inputFrameRGB);
         framesProcessed++;
-        cameraTelemetry();
+        setPropLocation();
         return inputFrameRGB; // Don't think this does anything
     }
 
-    public PropPosition getPropLocation() {
+    public void setPropLocation() {
+        if (propPosition != null) {
+            return;
+        }
         if (allianceColor == AllianceColor.BLUE) {
+            if (leftMat.blueAmount == 0 && rightMat.blueAmount == 0 && middleMat.blueAmount == 0) {
+                telemetry.addData("No data yet", true);
+                return;
+            }
             if (leftMat.blueAmount > rightMat.blueAmount && leftMat.blueAmount > middleMat.blueAmount) {
                 propFound = true;
-                return PropPosition.LEFT;
+                propPosition = PropPosition.LEFT;
             } else if (rightMat.blueAmount > leftMat.blueAmount && rightMat.blueAmount > middleMat.blueAmount) {
                 propFound = true;
-                return PropPosition.RIGHT;
+                propPosition = PropPosition.RIGHT;
             } else if (middleMat.blueAmount > rightMat.blueAmount && middleMat.blueAmount > leftMat.blueAmount) {
                 propFound = true;
-                return PropPosition.MIDDLE;
+                propPosition = PropPosition.MIDDLE;
             } else {
-                throw new RuntimeException("No prop placement could be determined");
+                telemetry.addData("Prop placement detected", false);
             }
         } else if (allianceColor == AllianceColor.RED){
+            if (leftMat.redAmount == 0 && rightMat.redAmount == 0 && middleMat.redAmount == 0) {
+                telemetry.addData("No data yet", true);
+                return;
+            }
             if (leftMat.redAmount > rightMat.redAmount && leftMat.redAmount > middleMat.redAmount) {
                 propFound = true;
-                return PropPosition.LEFT;
+                propPosition = PropPosition.LEFT;
             } else if (rightMat.redAmount > leftMat.redAmount && rightMat.redAmount > middleMat.redAmount) {
                 propFound = true;
-                return PropPosition.RIGHT;
+                propPosition = PropPosition.RIGHT;
             } else if (middleMat.redAmount > rightMat.redAmount && middleMat.redAmount > leftMat.redAmount) {
                 propFound = true;
-                return PropPosition.MIDDLE;
+                propPosition = PropPosition.MIDDLE;
             } else {
-                throw new RuntimeException("No prop placement could be determined");
+                telemetry.addData("Prop placement detected", false);
             }
         } else {
             throw new RuntimeException("There should be a team color defined at this point");
@@ -111,6 +125,7 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
         telemetry.addData("Red amount Right", rightMat.redAmount);
         telemetry.addData("Red amount Middle", middleMat.redAmount);
         telemetry.addData("Frames Processed", framesProcessed);
+        telemetry.addData("Prop Position", propPosition);
         telemetry.update();
     }
 }

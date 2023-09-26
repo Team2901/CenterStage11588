@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionPro
 @Autonomous(name="Camera Test Auto", group="11588")
 public class CameraTestingAutonomous extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
+    RI3WComputerVisionProcessor.PropPosition propPosition;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
@@ -20,6 +21,6 @@ public class CameraTestingAutonomous extends LinearOpMode {
     }
 
     private void autoLoop() {
-
+        robot.pipeline.cameraTelemetry();
     }
 }

@@ -52,7 +52,7 @@ public class RI3WHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx lift;
     public Servo claw;
     public BNO055IMU imu;
-    VisionProcessor pipeline;
+    public RI3WComputerVisionProcessor pipeline;
 
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
