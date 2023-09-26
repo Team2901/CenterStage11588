@@ -9,12 +9,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
-public class RI3WHardware {
+public class RI3WHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //Math for drive motor encoders
     public static final double TICKS_PER_MOTOR_REV = 537.7;
     public static final double DRIVE_GEAR_RATIO = 1.0/1.0;
@@ -46,14 +52,30 @@ public class RI3WHardware {
     public DcMotorEx lift;
     public Servo claw;
     public BNO055IMU imu;
+    public RI3WComputerVisionProcessor pipeline;
 
-    public void init(HardwareMap hardwareMap){
+    public OpenCvCamera camera;
+    public VisionPortal visionPortal;
+    private RI3WComputerVisionProcessor visionProcessor;
+
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+        init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, RI3WComputerVisionProcessor.AllianceColor allianceColor){
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         claw = hardwareMap.get(Servo.class, "claw");
+//        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
+//
+//
+         pipeline = new RI3WComputerVisionProcessor(telemetry);
+
+        // Create the vision portal the easy way.
+        VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -112,6 +134,16 @@ public class RI3WHardware {
         telemetry.addData("Proportional Stuff", pLift * KP);
         telemetry.addData("Integral Stuff", iLift * KI);
         telemetry.addData("Derivative Stuff", dLift * KD);
+    }
+
+    @Override
+    public void onOpened() {
+        camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+    }
+
+    @Override
+    public void onError(int errorCode) {
+        throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
     public enum Height {

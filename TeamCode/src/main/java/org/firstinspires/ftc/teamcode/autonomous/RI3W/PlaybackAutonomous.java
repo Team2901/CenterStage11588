@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
+import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 
@@ -39,7 +40,7 @@ public class PlaybackAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(this.hardwareMap);
+        robot.init(this.hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
         timer.reset();
         while (true) {
