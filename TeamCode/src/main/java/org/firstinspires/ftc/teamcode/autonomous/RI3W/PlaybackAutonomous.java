@@ -20,18 +20,14 @@ import java.io.IOException;
 public class PlaybackAutonomous extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
     ImprovedGamepad gamepad = new ImprovedGamepad(new Gamepad(), new ElapsedTime(), "Gamepad");
-    Boolean checkedTimer = false;
     ElapsedTime timer = new ElapsedTime();
-
     double turningPower = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
-    public enum ClawPosition{Open, Closed}
-    public enum Height{INTAKE, LOW, MID, HIGH, MAX}
     RI3WTeleop.Height currentLiftHeight = RI3WTeleop.Height.INTAKE;
     int liftTarget = 80;
     RI3WTeleop.Height lastLiftHeight = currentLiftHeight;
 
-    FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.log");
+    FileInputStream fileInputStream;
     DataInputStream readFile = new DataInputStream(fileInputStream);
 
     public PlaybackAutonomous() throws FileNotFoundException {
@@ -42,6 +38,32 @@ public class PlaybackAutonomous extends LinearOpMode {
         robot.init(this.hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
         timer.reset();
+        while (robot.pipeline.propPosition == null) {
+            telemetry.addLine("PROP LOCATION HAS NOT BEEN DETERMINED...");
+            telemetry.update();
+        }
+        if (robot.pipeline.propPosition == RI3WComputerVisionProcessor.PropPosition.LEFT) {
+            try {
+                fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/left.log");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (robot.pipeline.propPosition == RI3WComputerVisionProcessor.PropPosition.MIDDLE) {
+            try {
+                fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/middle.log");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (robot.pipeline.propPosition == RI3WComputerVisionProcessor.PropPosition.RIGHT) {
+            try {
+                fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/right.log");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new RuntimeException("PROP POSITION WAS NOT DEFINED");
+        }
+
         while (true) {
             try {
                 autoLoop();

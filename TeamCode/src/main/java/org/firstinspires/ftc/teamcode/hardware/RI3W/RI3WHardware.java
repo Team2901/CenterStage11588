@@ -27,8 +27,6 @@ public class RI3WHardware {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    public static final double OPENED_POSITION = 0.5;
-    public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
     public static final int LOW_POLE_ENCODER_VALUE = 1635;
     public static final int MID_POLE_ENCODER_VALUE = 2800;
@@ -77,7 +75,6 @@ public class RI3WHardware {
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         hopper = hardwareMap.get(Servo.class, "hopper");
         transfer = hardwareMap.get(DcMotorEx.class, "transfer");
-        claw = hardwareMap.get(Servo.class, "claw");
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -148,21 +145,4 @@ public class RI3WHardware {
         telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
-    @Override
-    public void onOpened() {
-        camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-    }
-
-    @Override
-    public void onError(int errorCode) {
-        throw new RuntimeException("Something with the camera went wrong - Nick");
-    }
-
-    public enum Height {
-        INTAKE,
-        LOW,
-        MID,
-        HIGH,
-        MAX
-    }
 }
