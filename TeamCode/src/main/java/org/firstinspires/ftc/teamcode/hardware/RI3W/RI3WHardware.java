@@ -9,10 +9,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class RI3WHardware {
     //Math for drive motor encoders
@@ -21,6 +27,8 @@ public class RI3WHardware {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
+    public static final double OPENED_POSITION = 0.5;
+    public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
     public static final int LOW_POLE_ENCODER_VALUE = 1635;
     public static final int MID_POLE_ENCODER_VALUE = 2800;
@@ -51,8 +59,16 @@ public class RI3WHardware {
     public DcMotorEx transfer;
     public enum HopperState{OPEN, CLOSED}
     public HopperState hopperState = HopperState.CLOSED;
+    public RI3WComputerVisionProcessor pipeline;
 
-    public void init(HardwareMap hardwareMap){
+    public OpenCvCamera camera;
+    public VisionPortal visionPortal;
+    private RI3WComputerVisionProcessor visionProcessor;
+
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+        init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, RI3WComputerVisionProcessor.AllianceColor allianceColor){
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -61,6 +77,15 @@ public class RI3WHardware {
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         hopper = hardwareMap.get(Servo.class, "hopper");
         transfer = hardwareMap.get(DcMotorEx.class, "transfer");
+        claw = hardwareMap.get(Servo.class, "claw");
+//        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
+//
+//
+         pipeline = new RI3WComputerVisionProcessor(telemetry);
+
+        // Create the vision portal the easy way.
+        VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -121,6 +146,16 @@ public class RI3WHardware {
         telemetry.addData("Proportional Stuff", pLift * KP);
         telemetry.addData("Integral Stuff", iLift * KI);
         telemetry.addData("Derivative Stuff", dLift * KD);
+    }
+
+    @Override
+    public void onOpened() {
+        camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+    }
+
+    @Override
+    public void onError(int errorCode) {
+        throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
     public enum Height {

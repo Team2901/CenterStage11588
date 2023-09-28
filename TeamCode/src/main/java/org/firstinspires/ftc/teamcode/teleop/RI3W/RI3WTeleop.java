@@ -24,7 +24,7 @@ public class RI3WTeleop extends OpMode {
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
-        robot.init(this.hardwareMap);
+        robot.init(this.hardwareMap, telemetry);
         }
 
     @Override
