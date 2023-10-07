@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.teleop.RI3W.RI3WTeleop;
 
@@ -17,7 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Autonomous(name="Playback Auto", group="11588")
-public class PlaybackAutonomous extends LinearOpMode {
+public class PlaybackAutonomousRI3W extends LinearOpMode {
     RI3WHardware robot = new RI3WHardware();
     ImprovedGamepad gamepad = new ImprovedGamepad(new Gamepad(), new ElapsedTime(), "Gamepad");
     Boolean checkedTimer = false;
@@ -35,12 +35,12 @@ public class PlaybackAutonomous extends LinearOpMode {
     FileInputStream fileInputStream = new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.log");
     DataInputStream readFile = new DataInputStream(fileInputStream);
 
-    public PlaybackAutonomous() throws FileNotFoundException {
+    public PlaybackAutonomousRI3W() throws FileNotFoundException {
     }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(this.hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(this.hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
         timer.reset();
         while (true) {
