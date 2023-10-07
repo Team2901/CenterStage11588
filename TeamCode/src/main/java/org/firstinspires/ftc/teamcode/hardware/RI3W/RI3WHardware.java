@@ -67,13 +67,6 @@ public class RI3WHardware implements OpenCvCamera.AsyncCameraOpenListener {
         VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
 
-        //Resetting encoders so they start at 0
-
-        //Running without encoders because it makes pid work better
-
-        //Making the drive motors break at 0 so they stop better
-
-        //Reversing the left motors so the robot goes straigh
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;

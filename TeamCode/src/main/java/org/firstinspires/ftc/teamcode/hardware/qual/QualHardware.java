@@ -10,17 +10,18 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 
 public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener{
-    public ComputerVisionProcessor pipeline;
 
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
     private ComputerVisionProcessor visionProcessor;
     public AprilTagProcessor aprilTag;
 
-    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor allianceColor) {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+        visionProcessor = new ComputerVisionProcessor(telemetry, allianceColor);
         visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag);
+                hardwareMap.get(WebcamName.class, "Webcam 1"), aprilTag, visionProcessor);
 
     }
     @Override
