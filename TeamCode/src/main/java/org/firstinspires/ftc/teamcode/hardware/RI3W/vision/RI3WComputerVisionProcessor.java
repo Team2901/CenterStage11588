@@ -26,9 +26,8 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
-    CameraSubMat leftMat = new CameraSubMat(new Rect(10, 10, 30, 30));
-    CameraSubMat rightMat = new CameraSubMat(new Rect(300, 10, 30, 30));
-    CameraSubMat middleMat = new CameraSubMat(new Rect(100, 10, 30, 30));
+    CameraSubMat leftMat = new CameraSubMat(new Rect(10, 300, 150, 150));
+    CameraSubMat middleMat = new CameraSubMat(new Rect(300, 300, 150, 150));
 
     public RI3WComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
@@ -53,7 +52,6 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
             Imgproc.cvtColor(inputFrameRGB, inputFrameRGB, Imgproc.COLOR_RGBA2RGB);
         }
         leftMat.update(inputFrameRGB);
-        rightMat.update(inputFrameRGB);
         middleMat.update(inputFrameRGB);
         framesProcessed++;
         setPropLocation();
@@ -62,41 +60,23 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
 
     public void setPropLocation() {
         if (propPosition != null) {
+            propFound = true;
             return;
         }
+        if (framesProcessed > 50) {
+            propPosition = PropPosition.RIGHT;
+        }
         if (allianceColor == AllianceColor.BLUE) {
-            if (leftMat.blueAmount == 0 && rightMat.blueAmount == 0 && middleMat.blueAmount == 0) {
-                telemetry.addData("No data yet", true);
-                return;
-            }
-            if (leftMat.blueAmount > rightMat.blueAmount && leftMat.blueAmount > middleMat.blueAmount) {
-                propFound = true;
+            if (leftMat.blueAmount > middleMat.blueAmount) {
                 propPosition = PropPosition.LEFT;
-            } else if (rightMat.blueAmount > leftMat.blueAmount && rightMat.blueAmount > middleMat.blueAmount) {
-                propFound = true;
-                propPosition = PropPosition.RIGHT;
-            } else if (middleMat.blueAmount > rightMat.blueAmount && middleMat.blueAmount > leftMat.blueAmount) {
-                propFound = true;
+            } else if (middleMat.blueAmount > leftMat.blueAmount) {
                 propPosition = PropPosition.MIDDLE;
-            } else {
-                telemetry.addData("Prop placement detected", false);
             }
         } else if (allianceColor == AllianceColor.RED){
-            if (leftMat.redAmount == 0 && rightMat.redAmount == 0 && middleMat.redAmount == 0) {
-                telemetry.addData("No data yet", true);
-                return;
-            }
-            if (leftMat.redAmount > rightMat.redAmount && leftMat.redAmount > middleMat.redAmount) {
-                propFound = true;
+            if (leftMat.redAmount > middleMat.redAmount) {
                 propPosition = PropPosition.LEFT;
-            } else if (rightMat.redAmount > leftMat.redAmount && rightMat.redAmount > middleMat.redAmount) {
-                propFound = true;
-                propPosition = PropPosition.RIGHT;
-            } else if (middleMat.redAmount > rightMat.redAmount && middleMat.redAmount > leftMat.redAmount) {
-                propFound = true;
+            } else if (middleMat.redAmount > leftMat.redAmount) {
                 propPosition = PropPosition.MIDDLE;
-            } else {
-                telemetry.addData("Prop placement detected", false);
             }
         } else {
             throw new RuntimeException("There should be a team color defined at this point");
@@ -109,20 +89,16 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
                 canvas.getWidth() / targetSize.width,
                 canvas.getHeight() / targetSize.height);
         android.graphics.Rect leftRect = leftMat.createAndroidRect(scaleFactor);
-        android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
         android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
 
         canvas.drawRect(leftRect, new Paint());
         canvas.drawRect(middleRect, new Paint());
-        canvas.drawRect(rightRect, new Paint());
     }
 
     public void cameraTelemetry() {
         telemetry.addData("Blue amount Left", leftMat.blueAmount);
-        telemetry.addData("Blue amount Right", rightMat.blueAmount);
         telemetry.addData("Blue amount Middle", middleMat.blueAmount);
         telemetry.addData("Red amount Left", leftMat.redAmount);
-        telemetry.addData("Red amount Right", rightMat.redAmount);
         telemetry.addData("Red amount Middle", middleMat.redAmount);
         telemetry.addData("Frames Processed", framesProcessed);
         telemetry.addData("Prop Position", propPosition);

@@ -13,7 +13,7 @@ public class CameraTestingAutonomous extends LinearOpMode {
     RI3WComputerVisionProcessor.PropPosition propPosition;
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
         while (!isStopRequested()) {
             autoLoop();
