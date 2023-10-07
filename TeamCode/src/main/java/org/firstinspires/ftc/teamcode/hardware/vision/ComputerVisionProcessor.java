@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.RI3W.vision;
+package org.firstinspires.ftc.teamcode.hardware.vision;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -6,13 +6,12 @@ import android.graphics.Paint;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-public class RI3WComputerVisionProcessor implements VisionProcessor {
+public class ComputerVisionProcessor implements VisionProcessor {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
     public PropPosition propPosition = null;
 
@@ -29,11 +28,11 @@ public class RI3WComputerVisionProcessor implements VisionProcessor {
     CameraSubMat leftMat = new CameraSubMat(new Rect(10, 300, 150, 150));
     CameraSubMat middleMat = new CameraSubMat(new Rect(300, 300, 150, 150));
 
-    public RI3WComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
+    public ComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
         this.telemetry = telemetry;
     }
-    public RI3WComputerVisionProcessor(Telemetry telemetry) {
+    public ComputerVisionProcessor(Telemetry telemetry) {
         this.allianceColor = AllianceColor.BLUE;
         this.telemetry = telemetry;
     }
