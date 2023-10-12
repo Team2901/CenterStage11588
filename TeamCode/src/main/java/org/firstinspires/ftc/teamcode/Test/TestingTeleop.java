@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.RI3W;
+package org.firstinspires.ftc.teamcode.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,8 +8,8 @@ import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 
-@TeleOp(name="RI3W Testing Teleop", group="11588")
-public class RI3WTestingTeleop extends OpMode {
+@TeleOp(name="RI3W Testing Teleop", group="Test")
+public class TestingTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
