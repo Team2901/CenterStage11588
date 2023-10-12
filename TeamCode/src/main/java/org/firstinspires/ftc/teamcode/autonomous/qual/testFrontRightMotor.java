@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.qual;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="frontRight", group="11588")
+@Autonomous(name="frontLeft", group="11588")
 public class testFrontRightMotor extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {
