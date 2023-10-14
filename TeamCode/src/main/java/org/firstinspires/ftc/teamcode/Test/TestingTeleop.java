@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.hardware.Qual.QualHardware;
 import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 
-@TeleOp(name="RI3W Testing Teleop", group="Test")
+@TeleOp(name="Qual Testing Teleop", group="Test")
 public class TestingTeleop extends OpMode {
-    public RI3WHardware robot = new RI3WHardware();
+    public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
     double turningPower = 0;
     public enum ClawPosition{Open, Closed}
@@ -31,14 +32,14 @@ public class TestingTeleop extends OpMode {
         } else {
             robot.frontRight.setPower(0);
         }
-        if (gamepad.b.isPressed()) {
+        if (gamepad.x.isPressed()) {
             robot.backRight.setPower(1);
         } else if (gamepad.dpad_right.isPressed()) {
             robot.backRight.setPower(-1);
         } else {
             robot.backRight.setPower(0);
         }
-        if (gamepad.x.isPressed()) {
+        if (gamepad.b.isPressed()) {
             robot.backLeft.setPower(1);
         } else if (gamepad.dpad_left.isPressed()) {
             robot.backLeft.setPower(-1);
@@ -57,18 +58,18 @@ public class TestingTeleop extends OpMode {
         } else if (gamepad.left_bumper.isPressed()) {
             robot.lift.setPower(-0.5);
         } else {
-            robot.lift.setPower(0);
+            //robot.lift.setPower(0);
         }
 //claw related stuff
         switch (currentClawPosition) {
             case Open:
-                robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
+                //robot.claw.setPosition(RI3WHardware.OPENED_POSITION);
                 if (gamepad.right_trigger.isInitialPress()) {
                     currentClawPosition = ClawPosition.Closed;
                 }
                 break;
             case Closed:
-                robot.claw.setPosition(robot.CLOSED_POSITION);
+                //robot.claw.setPosition(robot.CLOSED_POSITION);
                 if (gamepad.left_trigger.isInitialPress()) {
                     currentClawPosition = ClawPosition.Open;
                 }
@@ -77,14 +78,14 @@ public class TestingTeleop extends OpMode {
     }
 
     public void telemetryStuff() {
-        telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
+        //telemetry.addData("Lift Motor", robot.lift.getCurrentPosition());
         telemetry.addData("Front Right Motor", robot.frontRight.getCurrentPosition());
         telemetry.addData("Back Right Motor", robot.backRight.getCurrentPosition());
         telemetry.addData("Front Left Motor", robot.frontLeft.getCurrentPosition());
         telemetry.addData("Back Left Motor", robot.backLeft.getCurrentPosition());
-        telemetry.addData("Servo", robot.claw.getPosition());
-        telemetry.addData("Servo Direction", robot.claw.getDirection());
-        telemetry.addData("Claw", currentClawPosition);
+        //telemetry.addData("Servo", robot.claw.getPosition());
+        //telemetry.addData("Servo Direction", robot.claw.getDirection());
+        //telemetry.addData("Claw", currentClawPosition);
         telemetry.update();
     }
 }
