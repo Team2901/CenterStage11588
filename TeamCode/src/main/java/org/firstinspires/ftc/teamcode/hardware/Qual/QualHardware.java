@@ -100,8 +100,9 @@ public class QualHardware {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Reversing the left motors so the robot goes straigh
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Reversing the left motors so the robot goes straight
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
