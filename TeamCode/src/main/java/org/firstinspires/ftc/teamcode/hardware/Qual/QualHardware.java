@@ -119,8 +119,8 @@ public class QualHardware {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //imu.initialize(parameters);
     }
 
     public double getAngle(){
