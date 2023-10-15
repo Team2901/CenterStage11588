@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.hardware.Qual;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 //import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
 //import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionProcessor;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -23,7 +27,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 public class QualHardware {
     //Math for drive motor encoders
     public static final double TICKS_PER_MOTOR_REV = 537.7;
-    public static final double DRIVE_GEAR_RATIO = 1.0/1.0;
+    public static final double DRIVE_GEAR_RATIO = 1.0;
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
@@ -52,7 +56,11 @@ public class QualHardware {
     public DcMotorEx backRight;
     public DcMotorEx lift;
     //public Servo claw;
-    public BNO055IMU imu;
+
+    // public BNO055IMU imu;
+    public IMU imu;             // Use new generic IMU class added to support both
+                                // BHI260AP and BNO055 chip
+
     //public RI3WComputerVisionProcessor pipeline;
 
     //public OpenCvCamera camera;
@@ -112,21 +120,25 @@ public class QualHardware {
         backRight.setPower(0);
         //claw.setPosition(CLOSED_POSITION);
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
+        // requesting a refernce to the IMU hardware. What chip you have can be determined by
+        // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
+        imu = hardwareMap.get(IMU.class, "imu");
 
-        //imu = hardwareMap.get(BNO055IMU.class, "imu");
-        //imu.initialize(parameters);
+        // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
+        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
+
+        imu.initialize(parameters);
     }
 
     public double getAngle(){
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return AngleUnit.normalizeDegrees(orientation.firstAngle);
+        YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
+        return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
 
     }
 
