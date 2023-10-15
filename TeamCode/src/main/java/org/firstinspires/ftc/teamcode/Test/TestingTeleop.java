@@ -22,34 +22,42 @@ public class TestingTeleop extends OpMode {
         robot.init(this.hardwareMap, telemetry);
     }
 
+    public void help() {
+        telemetry.addLine("Test Individual Motors");
+        telemetry.addLine("Press A to turn FR");
+        telemetry.addLine("Press Y to turn FL");
+        telemetry.addLine("Press X to turn BR");
+        telemetry.addLine("Press B to turn BL");
+
+    }
     @Override
     public void loop() {
         gamepad.update();
         if (gamepad.a.isPressed()) {
-            robot.frontRight.setPower(1);
+            robot.frontRight.setPower(robot.speed);
         } else if (gamepad.dpad_down.isPressed()) {
-            robot.frontRight.setPower(-1);
+            robot.frontRight.setPower(-robot.speed);
         } else {
             robot.frontRight.setPower(0);
         }
         if (gamepad.x.isPressed()) {
-            robot.backRight.setPower(1);
+            robot.backRight.setPower(robot.speed);
         } else if (gamepad.dpad_right.isPressed()) {
-            robot.backRight.setPower(-1);
+            robot.backRight.setPower(-robot.speed);
         } else {
             robot.backRight.setPower(0);
         }
         if (gamepad.b.isPressed()) {
-            robot.backLeft.setPower(1);
+            robot.backLeft.setPower(robot.speed);
         } else if (gamepad.dpad_left.isPressed()) {
-            robot.backLeft.setPower(-1);
+            robot.backLeft.setPower(-robot.speed);
         } else {
             robot.backLeft.setPower(0);
         }
         if (gamepad.y.isPressed()) {
-            robot.frontLeft.setPower(1);
+            robot.frontLeft.setPower(robot.speed);
         } else if (gamepad.dpad_up.isPressed()) {
-            robot.frontLeft.setPower(-1);
+            robot.frontLeft.setPower(-robot.speed);
         } else {
             robot.frontLeft.setPower(0);
         }
@@ -74,6 +82,7 @@ public class TestingTeleop extends OpMode {
                     currentClawPosition = ClawPosition.Open;
                 }
         }
+        help();
         telemetryStuff();
     }
 

@@ -56,6 +56,7 @@ public class QualHardware {
     public DcMotorEx backRight;
     public DcMotorEx lift;
     //public Servo claw;
+    public double speed = .15;
 
     // public BNO055IMU imu;
     public IMU imu;             // Use new generic IMU class added to support both
@@ -108,10 +109,20 @@ public class QualHardware {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Reversing the left motors so the robot goes straight
+        // coachbot
+        // Robot configuration
+        //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
+        //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
+        //    2-frontLeft   (GoBILDA 5202/3/4 series)
+        //    3-backLeft    (GoBILDA 5202/3/4 series)
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // teambot
+        //Reversing the left motors so the robot goes straight
         //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeft.setPower(0);
