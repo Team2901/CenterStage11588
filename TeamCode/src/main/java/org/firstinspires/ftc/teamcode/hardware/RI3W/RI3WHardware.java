@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware.RI3W;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -14,9 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -52,61 +49,24 @@ public class RI3WHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx lift;
     public Servo claw;
     public BNO055IMU imu;
-    public RI3WComputerVisionProcessor pipeline;
+    public ComputerVisionProcessor pipeline;
 
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
-    private RI3WComputerVisionProcessor visionProcessor;
+    private ComputerVisionProcessor visionProcessor;
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
-        init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
-    public void init(HardwareMap hardwareMap, Telemetry telemetry, RI3WComputerVisionProcessor.AllianceColor allianceColor){
-        frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
-        backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
-        backRight = hardwareMap.get(DcMotorEx.class, "backRight");
-        lift = hardwareMap.get(DcMotorEx.class, "lift");
-        claw = hardwareMap.get(Servo.class, "claw");
-//        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
-//
-//
-         pipeline = new RI3WComputerVisionProcessor(telemetry);
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor allianceColor){
+        visionProcessor = new ComputerVisionProcessor(telemetry, allianceColor);
+
+         pipeline = new ComputerVisionProcessor(telemetry);
 
         // Create the vision portal the easy way.
         VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
 
-        //Resetting encoders so they start at 0
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Running without encoders because it makes pid work better
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //Making the drive motors break at 0 so they stop better
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Reversing the left motors so the robot goes straigh
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-        claw.setPosition(CLOSED_POSITION);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
