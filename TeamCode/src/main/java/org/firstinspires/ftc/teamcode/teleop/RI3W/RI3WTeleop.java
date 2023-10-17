@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 
-@TeleOp(name="RI3W Teleop", group="11588")
+@TeleOp(name="RI3W Teleop", group="11588 RI3W")
 public class RI3WTeleop extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ImprovedGamepad gamepad;
