@@ -11,5 +11,8 @@ public class Diagonal extends AbstractAutonomous{
         waitForStart();
         // Go diagonal
         moveDiagonal(24, 45);
+        while (true) {
+
+        }
     }
 }

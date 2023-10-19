@@ -15,6 +15,8 @@ public class AbstractAutonomous extends LinearOpMode {
     public void moveDiagonal(double distanceInches, double thetaDegrees){
         double yComponent = Math.cos(Math.toRadians(thetaDegrees))*distanceInches;
         double xComponent = Math.sin(Math.toRadians(thetaDegrees))*distanceInches;
+        telemetry.addData("Ycomp", yComponent);
+        telemetry.addData("Xcomp", xComponent);
         moveXY(yComponent, xComponent);
     }
     @Override
