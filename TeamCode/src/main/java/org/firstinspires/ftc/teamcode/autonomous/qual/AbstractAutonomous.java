@@ -12,6 +12,11 @@ public class AbstractAutonomous extends LinearOpMode {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
     public RI3WComputerVisionProcessor.AllianceColor teamColor;
     public QualHardware robot = new QualHardware();
+    public void moveDiagonal(double distanceInches, double thetaDegrees){
+        double yComponent = Math.cos(Math.toRadians(thetaDegrees))*distanceInches;
+        double xComponent = Math.sin(Math.toRadians(thetaDegrees))*distanceInches;
+        moveXY(yComponent, xComponent);
+    }
     @Override
     public void runOpMode() throws InterruptedException {
 

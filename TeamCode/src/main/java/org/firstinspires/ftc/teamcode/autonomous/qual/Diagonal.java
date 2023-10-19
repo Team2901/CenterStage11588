@@ -10,6 +10,6 @@ public class Diagonal extends AbstractAutonomous{
         telemetry.update();
         waitForStart();
         // Go diagonal
-        moveXY(24, 12);
+        moveDiagonal(24, 45);
     }
 }
