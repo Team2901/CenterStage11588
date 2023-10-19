@@ -35,10 +35,11 @@ public class AbstractAutonomous extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.frontLeft.setPower(0.5);
-        robot.frontRight.setPower(0.5);
-        robot.backLeft.setPower(0.5);
-        robot.backRight.setPower(0.5);
+        robot.speed = 0.10;
+        robot.frontLeft.setPower(robot.speed);
+        robot.frontRight.setPower(robot.speed);
+        robot.backLeft.setPower(robot.speed);
+        robot.backRight.setPower(robot.speed);
 
         // TODO: change to and instead of or
         while (opModeIsActive() && (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
@@ -58,6 +59,8 @@ public class AbstractAutonomous extends LinearOpMode {
     }
 
     private void telemetryLog() {
+        telemetry.addData("angle",robot.getAngle());
+        telemetry.update();
     }
     public void spikePixel(PropPosition location){
         //right path blue
