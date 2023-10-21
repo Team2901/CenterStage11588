@@ -115,8 +115,10 @@ public class QualHardware {
         //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
         //    2-frontLeft   (GoBILDA 5202/3/4 series)
         //    3-backLeft    (GoBILDA 5202/3/4 series)
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // TODO: uncomment if you want to use coachbot
+        // frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // teambot
         //Reversing the left motors so the robot goes straight
