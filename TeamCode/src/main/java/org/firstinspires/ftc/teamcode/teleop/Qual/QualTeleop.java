@@ -34,8 +34,8 @@ public class QualTeleop extends OpMode {
             turningPower = .75 * gamepad.right_stick_x.getValue();
         }
 
-        double y = .75 * gamepad.left_stick_y.getValue();
-        double x = .75 * gamepad.left_stick_x.getValue();
+        double y = 1 * gamepad.left_stick_y.getValue();
+        double x = 1 * gamepad.left_stick_x.getValue();
         double rx = turningPower;
 
         robot.frontLeft.setPower(y + x + rx);
