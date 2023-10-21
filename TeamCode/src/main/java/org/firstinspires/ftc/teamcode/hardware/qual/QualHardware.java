@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.Qual;
+package org.firstinspires.ftc.teamcode.hardware.qual;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
