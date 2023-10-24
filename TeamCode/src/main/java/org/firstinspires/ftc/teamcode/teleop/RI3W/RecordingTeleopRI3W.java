@@ -12,8 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@TeleOp(name="Recording Teleop", group="11588 RI3W")
-public class RecordingTeleop extends OpMode {
+@TeleOp(name="Recording Teleop", group="11588")
+public class RecordingTeleopRI3W extends OpMode {
     public RI3WHardware robot = new RI3WHardware();
     public ElapsedTime timer = new ElapsedTime();
     public boolean isOpen = true;
@@ -30,7 +30,7 @@ public class RecordingTeleop extends OpMode {
 
     double turningPower = 0;
 
-    public RecordingTeleop() throws FileNotFoundException {
+    public RecordingTeleopRI3W() throws FileNotFoundException {
     }
 
     @Override

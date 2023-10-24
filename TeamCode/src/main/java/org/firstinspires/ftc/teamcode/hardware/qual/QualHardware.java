@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hardware.qual;
 
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -10,17 +11,27 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
+import android.util.Size;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 //import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
 //import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
@@ -31,6 +42,15 @@ public class QualHardware {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
+
+    static final double FX = 1442.66;
+    public static final double FY = 1442.66;
+    public static final double CX = 777.52;
+    public static final double CY = 162.257;
+    public OpenCvCamera camera;
+    public VisionPortal visionPortal;
+    private RI3WComputerVisionProcessor propDetectionProcessor;
+    public AprilTagProcessor aprilTag;
     /*public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
@@ -73,6 +93,16 @@ public class QualHardware {
     }
      */
     public void init(HardwareMap hardwareMap, Telemetry telemetry){
+        aprilTag = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(FX, FY, CX, CY)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .build();
+        propDetectionProcessor = new RI3WComputerVisionProcessor(telemetry);
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessors(aprilTag, propDetectionProcessor)
+                .setCameraResolution(new Size(1280, 720))
+                .build();
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -165,26 +195,15 @@ public class QualHardware {
         //telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
-    /*
     @Override
     public void onOpened() {
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
-     */
 
-    /*
     @Override
     public void onError(int errorCode) {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
-     */
 
-    /*public enum Height {
-        INTAKE,
-        LOW,
-        MID,
-        HIGH,
-        MAX
-    }
-     */
+
 }
