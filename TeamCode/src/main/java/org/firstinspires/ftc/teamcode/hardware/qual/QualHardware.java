@@ -23,19 +23,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-//import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
-//import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
-public class QualHardware {
+public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //Math for drive motor encoders
     public static final double TICKS_PER_MOTOR_REV = 537.7;
     public static final double DRIVE_GEAR_RATIO = 1.0;
@@ -49,7 +47,7 @@ public class QualHardware {
     public static final double CY = 162.257;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
-    private RI3WComputerVisionProcessor propDetectionProcessor;
+    private ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
     /*public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
@@ -97,7 +95,7 @@ public class QualHardware {
                 .setLensIntrinsics(FX, FY, CX, CY)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
-        propDetectionProcessor = new RI3WComputerVisionProcessor(telemetry);
+        propDetectionProcessor = new ComputerVisionProcessor(telemetry);
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .addProcessors(aprilTag, propDetectionProcessor)
