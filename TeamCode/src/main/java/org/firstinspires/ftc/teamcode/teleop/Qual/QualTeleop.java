@@ -2,10 +2,9 @@ package org.firstinspires.ftc.teamcode.teleop.Qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.hardware.Qual.QualHardware;
+import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
 import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 

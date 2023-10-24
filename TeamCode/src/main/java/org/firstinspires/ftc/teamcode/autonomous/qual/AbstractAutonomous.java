@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.hardware.Qual.QualHardware;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
+import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
 import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
 
 public class AbstractAutonomous extends LinearOpMode {
