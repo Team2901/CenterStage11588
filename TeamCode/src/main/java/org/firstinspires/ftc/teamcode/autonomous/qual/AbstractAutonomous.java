@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
 public class AbstractAutonomous extends LinearOpMode {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
-    public RI3WComputerVisionProcessor.AllianceColor teamColor;
+    public ComputerVisionProcessor.AllianceColor teamColor;
     public QualHardware robot = new QualHardware();
     public void moveDiagonal(double distanceInches, double thetaDegrees){
         double yComponent = Math.cos(Math.toRadians(thetaDegrees))*distanceInches;
