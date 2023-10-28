@@ -24,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -86,11 +87,18 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //public VisionPortal visionPortal;
     //private RI3WComputerVisionProcessor visionProcessor;
 
+    // TODO: the pushed version of AprilTagTestingAutonoumous expects
+    // this constructor. However the pushed version the robot class
+    // has the required method commented out.
+    //
+    // Please resolve this inconsistency/error in the pushed code.
+    //
     /*public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
     }
      */
     public void init(HardwareMap hardwareMap, Telemetry telemetry){
+
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(FX, FY, CX, CY)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
@@ -137,21 +145,37 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // coachbot
-        // Robot configuration
-        //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
-        //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
-        //    2-frontLeft   (GoBILDA 5202/3/4 series)
-        //    3-backLeft    (GoBILDA 5202/3/4 series)
-
-        // TODO: uncomment if you want to use coachbot
-        // frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        // teambot
-        //Reversing the left motors so the robot goes straight
-        //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        // The following call to getRobotConfigurationName has been
+        // copied over from prior years Utilities package. It allows
+        // you to determine at runtime what the name of the robot configuration
+        // is and initialize differently for different robots. In this case
+        // the Team Robot and the Coach Robot have their drive motors
+        // mounted differently. And therefore require different
+        // forward/reverse motor choices at initialization.
+        //
+        // Switching which initialization is done at runtime
+        // means you don't have to change the code every time you
+        // switch between robots.
+        //
+        // TODO: determine the correct motor configuration for the
+        // team robot and uncomment the code in the else condition.
+        //
+        String configurationName = ConfigUtilities.getRobotConfigurationName();
+        if (configurationName.equals("coachbot")) {
+            // Robot configuration: coachbot
+            //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
+            //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
+            //    2-frontLeft   (GoBILDA 5202/3/4 series)
+            //    3-backLeft    (GoBILDA 5202/3/4 series)
+            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+        else {
+            // teambot
+            //Reversing the left motors so the robot goes straight
+            //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            //backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
 
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
