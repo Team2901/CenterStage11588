@@ -59,7 +59,8 @@ public class AbstractAutonomous extends LinearOpMode {
         //
         // Please fix this loop and retest the diagonal program.
         //
-        while (opModeIsActive() && (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
+        while (opModeIsActive() &&
+                (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
                 robot.backLeft.isBusy() && robot.backRight.isBusy())){
             telemetryLog();
         }
