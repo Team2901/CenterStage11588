@@ -8,9 +8,13 @@ public class testBackLeftMotor extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, telemetry);
+        waitForStart();
         robot.backLeft.setTargetPosition(1000);
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backLeft.setPower(0.5);
+        while (opModeIsActive() && robot.backLeft.isBusy())  {
+            ;
+        }
     }
 
 }
