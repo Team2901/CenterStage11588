@@ -12,6 +12,9 @@ import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 public class ComputerVisionProcessor implements VisionProcessor {
+
+    public static final int PIXEL_THRESHOLD_CONSTANT = 400;
+
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
     public PropPosition propPosition = null;
 
@@ -21,7 +24,6 @@ public class ComputerVisionProcessor implements VisionProcessor {
     private Mat lastImage = null;
 
     public int framesProcessed = 0;
-    public boolean propFound = false;
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
@@ -51,6 +53,7 @@ public class ComputerVisionProcessor implements VisionProcessor {
             Imgproc.cvtColor(inputFrameRGB, inputFrameRGB, Imgproc.COLOR_RGBA2RGB);
         }
         middleMat.update(inputFrameRGB);
+        rightMat.update(inputFrameRGB);
         framesProcessed++;
         detectPropLocation();
 
@@ -65,22 +68,23 @@ public class ComputerVisionProcessor implements VisionProcessor {
         // is on the right
          if (framesProcessed > 50 && propPosition == null) {
             propPosition = PropPosition.LEFT;
+            return;
         }
         else if (allianceColor == AllianceColor.BLUE) {
-            if (rightMat.blueAmount > middleMat.blueAmount && rightMat.blueAmount > 800) {
+            if (rightMat.blueAmount > PIXEL_THRESHOLD_CONSTANT) {
                 propPosition = PropPosition.RIGHT;
                 return;
-            } else if (middleMat.blueAmount > rightMat.blueAmount && middleMat.blueAmount > 800) {
+            } else if (middleMat.blueAmount > PIXEL_THRESHOLD_CONSTANT) {
                 propPosition = PropPosition.MIDDLE;
                 return;
             }
         }
         else if (allianceColor == AllianceColor.RED){
-            if (rightMat.redAmount > middleMat.redAmount && rightMat.redAmount > 800) {
+            if (rightMat.redAmount > PIXEL_THRESHOLD_CONSTANT) {
                 propPosition = PropPosition.RIGHT;
                 return;
             }
-            else if (middleMat.redAmount > rightMat.redAmount && middleMat.redAmount > 800) {
+            else if (middleMat.redAmount > PIXEL_THRESHOLD_CONSTANT) {
                 propPosition = PropPosition.MIDDLE;
                 return;
             }
@@ -95,20 +99,19 @@ public class ComputerVisionProcessor implements VisionProcessor {
         double scaleFactor = Math.min(
                 canvas.getWidth() / targetSize.width,
                 canvas.getHeight() / targetSize.height);
-        android.graphics.Rect leftRect = rightMat.createAndroidRect(scaleFactor);
+        android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
         android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
 
-        canvas.drawRect(leftRect, new Paint());
+        canvas.drawRect(rightRect, new Paint());
         canvas.drawRect(middleRect, new Paint());
     }
 
     public void cameraTelemetry() {
-        telemetry.addData("Blue amount Left", rightMat.blueAmount);
+        telemetry.addData("Blue amount right", rightMat.blueAmount);
         telemetry.addData("Blue amount Middle", middleMat.blueAmount);
-        telemetry.addData("Red amount Left", rightMat.redAmount);
+        telemetry.addData("Red amount right", rightMat.redAmount);
         telemetry.addData("Red amount Middle", middleMat.redAmount);
         telemetry.addData("Frames Processed", framesProcessed);
-        telemetry.addData("Prop Found", propFound);
         telemetry.addData("Prop Position", propPosition);
         telemetry.update();
     }

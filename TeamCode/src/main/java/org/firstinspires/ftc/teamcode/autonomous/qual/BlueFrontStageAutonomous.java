@@ -14,14 +14,12 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         // If needed, we can call telemetry.clear() too.
         telemetry.setAutoClear(false);
 
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
 
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
-        while (robot.propDetectionProcessor.propFound == false) {
-            telemetry.addLine("Prop Location not determined...");
-        }
+
 
         // TODO: Stop camera now that we have found the prop
 
