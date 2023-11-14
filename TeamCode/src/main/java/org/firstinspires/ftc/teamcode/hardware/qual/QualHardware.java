@@ -4,28 +4,19 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import android.util.Size;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -39,7 +30,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-
+    public static final double DRAGGER_DOWN_POSITION = .45;
+    public static final double DRAGGER_UP_POSITION = .7;
+    public enum DraggerPosition {UP, DOWN}
+    public DraggerPosition draggerPosition = DraggerPosition.UP;
     static final double FX = 1442.66;
     public static final double FY = 1442.66;
     public static final double CX = 777.52;
@@ -75,30 +69,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //public Servo claw;
     public double speed = .15;
 
-    //
-    RevHubOrientationOnRobot.UsbFacingDirection  usbDirection;
-    RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
-    public IMU imu;             // Use new generic IMU class added to support both
-                                // BHI260AP and BNO055 chip
+    // public BNO055IMU imu;
+    public IMU imu;
 
-    //public RI3WComputerVisionProcessor pipeline;
-
-    //public OpenCvCamera camera;
-    //public VisionPortal visionPortal;
-    //private RI3WComputerVisionProcessor visionProcessor;
-
-    // TODO: the pushed version of AprilTagTestingAutonoumous expects
-    // this constructor. However the pushed version the robot class
-    // has the required method commented out.
-    //
-    // Please resolve this inconsistency/error in the pushed code.
-    //
-    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
-        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
-    }
-
-    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor color){
-
+    public Servo dragger;
+    public void init(HardwareMap hardwareMap, Telemetry telemetry){
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(FX, FY, CX, CY)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
@@ -114,7 +89,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
         //lift = hardwareMap.get(DcMotorEx.class, "lift");
-        //claw = hardwareMap.get(Servo.class, "claw");
+        dragger = hardwareMap.get(Servo.class, "dragger");
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -145,46 +120,21 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // The following call to getRobotConfigurationName has been
-        // copied over from prior years Utilities package. It allows
-        // you to determine at runtime what the name of the robot configuration
-        // is and initialize differently for different robots. In this case
-        // the Team Robot and the Coach Robot have their drive motors
-        // mounted differently. And therefore require different
-        // forward/reverse motor choices at initialization.
-        //
-        // Switching which initialization is done at runtime
-        // means you don't have to change the code every time you
-        // switch between robots.
-        //
-        //
-        String configurationName = ConfigUtilities.getRobotConfigurationName();
-        if (configurationName.equals("coachbot")) {
-            // Robot configuration: coachbot
-            //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
-            //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
-            //    2-frontLeft   (GoBILDA 5202/3/4 series)
-            //    3-backLeft    (GoBILDA 5202/3/4 series)
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        // coachbot
+        // Robot configuration
+        //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
+        //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
+        //    2-frontLeft   (GoBILDA 5202/3/4 series)
+        //    3-backLeft    (GoBILDA 5202/3/4 series)
 
-            // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
-            // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
-            // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
-            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-            usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        }
-        else {
-            // teambot
+        // TODO: uncomment if you want to use coachbot
+        // frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            //Reversing the left motors so the robot goes straight
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-            // Set the Rev Hub Orientation
-            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-            usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
-        }
+        // teambot
+        //Reversing the left motors so the robot goes straight
+        //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -195,9 +145,15 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         //claw.setPosition(CLOSED_POSITION);
 
         // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
-        // requesting a reference to the IMU hardware. What chip you have can be determined by
+        // requesting a refernce to the IMU hardware. What chip you have can be determined by
         // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
         imu = hardwareMap.get(IMU.class, "imu");
+
+        // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
+        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
 

@@ -55,9 +55,8 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //
         // Please fix this loop and retest the diagonal program.
         //
-        while (opModeIsActive() &&
-                (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
-                robot.backLeft.isBusy() && robot.backRight.isBusy())){
+        while (opModeIsActive() && (robot.frontLeft.isBusy() || robot.frontRight.isBusy() ||
+                robot.backLeft.isBusy() || robot.backRight.isBusy())){
             telemetryLog();
         }
 
@@ -84,6 +83,17 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         if(location == PropPosition.RIGHT){
 
         }
+    }
+
+    public void whitePixelsToBackstagePath() {
+        moveXY(60, 0);
+        moveXY(0, 27);
+        moveXY(32, 0);
+    }
+
+    public void BackstageToParkPath() {
+        moveXY(0, -24);
+        moveXY(22, 0);
     }
     public void turnToAngle(double turnAngle){
 
