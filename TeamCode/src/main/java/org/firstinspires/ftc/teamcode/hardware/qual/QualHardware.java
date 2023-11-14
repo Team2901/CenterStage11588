@@ -46,7 +46,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double CY = 162.257;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
-    private ComputerVisionProcessor propDetectionProcessor;
+    public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
     /*public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;

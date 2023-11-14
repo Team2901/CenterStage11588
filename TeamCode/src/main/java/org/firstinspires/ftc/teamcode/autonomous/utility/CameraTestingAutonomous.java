@@ -21,6 +21,6 @@ public class CameraTestingAutonomous extends LinearOpMode {
     }
 
     private void autoLoop() {
-        robot.pipeline.cameraTelemetry();
+        //robot.pipeline.cameraTelemetry();
     }
 }

@@ -25,8 +25,8 @@ public class ComputerVisionProcessor implements VisionProcessor {
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
-    CameraSubMat leftMat = new CameraSubMat(new Rect(10, 300, 150, 150));
-    CameraSubMat middleMat = new CameraSubMat(new Rect(300, 300, 150, 150));
+    CameraSubMat rightMat = new CameraSubMat(new Rect(875, 570, 150, 150));
+    CameraSubMat middleMat = new CameraSubMat(new Rect(300, 570, 150, 150));
 
     public ComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
@@ -50,34 +50,42 @@ public class ComputerVisionProcessor implements VisionProcessor {
         if (inputFrameRGB.type() == 24) {
             Imgproc.cvtColor(inputFrameRGB, inputFrameRGB, Imgproc.COLOR_RGBA2RGB);
         }
-        leftMat.update(inputFrameRGB);
         middleMat.update(inputFrameRGB);
         framesProcessed++;
-        setPropLocation();
-        return inputFrameRGB; // Don't think this does anything
+        detectPropLocation();
+
+        cameraTelemetry();
+
+        return inputFrameRGB; // This return value is userContext in call to onDrawFrame()
     }
 
-    public void setPropLocation() {
-        if (propPosition != null) {
-            propFound = true;
-            return;
+    public void detectPropLocation() {
+        // If we have found the prop position before, do nothing
+        // If we have already looked at X frames, assume prop
+        // is on the right
+         if (framesProcessed > 50 && propPosition == null) {
+            propPosition = PropPosition.LEFT;
         }
-        if (framesProcessed > 50) {
-            propPosition = PropPosition.RIGHT;
+        else if (allianceColor == AllianceColor.BLUE) {
+            if (rightMat.blueAmount > middleMat.blueAmount && rightMat.blueAmount > 800) {
+                propPosition = PropPosition.RIGHT;
+                return;
+            } else if (middleMat.blueAmount > rightMat.blueAmount && middleMat.blueAmount > 800) {
+                propPosition = PropPosition.MIDDLE;
+                return;
+            }
         }
-        if (allianceColor == AllianceColor.BLUE) {
-            if (leftMat.blueAmount > middleMat.blueAmount) {
-                propPosition = PropPosition.LEFT;
-            } else if (middleMat.blueAmount > leftMat.blueAmount) {
-                propPosition = PropPosition.MIDDLE;
+        else if (allianceColor == AllianceColor.RED){
+            if (rightMat.redAmount > middleMat.redAmount && rightMat.redAmount > 800) {
+                propPosition = PropPosition.RIGHT;
+                return;
             }
-        } else if (allianceColor == AllianceColor.RED){
-            if (leftMat.redAmount > middleMat.redAmount) {
-                propPosition = PropPosition.LEFT;
-            } else if (middleMat.redAmount > leftMat.redAmount) {
+            else if (middleMat.redAmount > rightMat.redAmount && middleMat.redAmount > 800) {
                 propPosition = PropPosition.MIDDLE;
+                return;
             }
-        } else {
+        }
+        else {
             throw new RuntimeException("There should be a team color defined at this point");
         }
     }
@@ -87,7 +95,7 @@ public class ComputerVisionProcessor implements VisionProcessor {
         double scaleFactor = Math.min(
                 canvas.getWidth() / targetSize.width,
                 canvas.getHeight() / targetSize.height);
-        android.graphics.Rect leftRect = leftMat.createAndroidRect(scaleFactor);
+        android.graphics.Rect leftRect = rightMat.createAndroidRect(scaleFactor);
         android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
 
         canvas.drawRect(leftRect, new Paint());
@@ -95,11 +103,12 @@ public class ComputerVisionProcessor implements VisionProcessor {
     }
 
     public void cameraTelemetry() {
-        telemetry.addData("Blue amount Left", leftMat.blueAmount);
+        telemetry.addData("Blue amount Left", rightMat.blueAmount);
         telemetry.addData("Blue amount Middle", middleMat.blueAmount);
-        telemetry.addData("Red amount Left", leftMat.redAmount);
+        telemetry.addData("Red amount Left", rightMat.redAmount);
         telemetry.addData("Red amount Middle", middleMat.redAmount);
         telemetry.addData("Frames Processed", framesProcessed);
+        telemetry.addData("Prop Found", propFound);
         telemetry.addData("Prop Position", propPosition);
         telemetry.update();
     }

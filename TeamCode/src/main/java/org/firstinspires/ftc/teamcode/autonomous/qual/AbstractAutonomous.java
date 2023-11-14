@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-public class AbstractAutonomous extends LinearOpMode {
+public abstract class AbstractAutonomous extends LinearOpMode {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
     public ComputerVisionProcessor.AllianceColor teamColor;
     public QualHardware robot = new QualHardware();
@@ -17,10 +17,6 @@ public class AbstractAutonomous extends LinearOpMode {
         telemetry.addData("Ycomp", yComponent);
         telemetry.addData("Xcomp", xComponent);
         moveXY(yComponent, xComponent);
-    }
-    @Override
-    public void runOpMode() throws InterruptedException {
-
     }
     public void moveXY(double yInches, double xInches){
         int ticksY = (int) (yInches * robot.TICKS_PER_INCH);
@@ -122,5 +118,6 @@ public class AbstractAutonomous extends LinearOpMode {
         robot.backRight.setPower(0);
         robot.backLeft.setPower(0);
     }
+
 
 }
