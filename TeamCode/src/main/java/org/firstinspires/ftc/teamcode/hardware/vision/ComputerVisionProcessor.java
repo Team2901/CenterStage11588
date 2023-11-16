@@ -13,9 +13,10 @@ import org.opencv.imgproc.Imgproc;
 
 public class ComputerVisionProcessor implements VisionProcessor {
 
-    public static final int PIXEL_THRESHOLD_CONSTANT = 400;
+    public static final int PIXEL_THRESHOLD_CONSTANT = 200;
 
-    public enum PropPosition { LEFT, MIDDLE, RIGHT }
+    public enum PropPosition {LEFT, MIDDLE, RIGHT}
+
     public PropPosition propPosition = null;
 
     public enum AllianceColor {BLUE, RED}
@@ -30,12 +31,8 @@ public class ComputerVisionProcessor implements VisionProcessor {
     CameraSubMat rightMat = new CameraSubMat(new Rect(875, 570, 150, 150));
     CameraSubMat middleMat = new CameraSubMat(new Rect(300, 570, 150, 150));
 
-    public ComputerVisionProcessor(Telemetry telemetry, AllianceColor allianceColor) {
-        this.allianceColor = allianceColor;
-        this.telemetry = telemetry;
-    }
+
     public ComputerVisionProcessor(Telemetry telemetry) {
-        this.allianceColor = AllianceColor.BLUE;
         this.telemetry = telemetry;
     }
 
@@ -55,64 +52,65 @@ public class ComputerVisionProcessor implements VisionProcessor {
         middleMat.update(inputFrameRGB);
         rightMat.update(inputFrameRGB);
         framesProcessed++;
+        cameraTelemetry();
         detectPropLocation();
 
-        cameraTelemetry();
 
         return inputFrameRGB; // This return value is userContext in call to onDrawFrame()
     }
 
     public void detectPropLocation() {
+        if (framesProcessed < 10) {
+            return;
+        }
         // If we have found the prop position before, do nothing
         // If we have already looked at X frames, assume prop
         // is on the right
-         if (framesProcessed > 50 && propPosition == null) {
+        if (framesProcessed > 60 && propPosition == null) {
             propPosition = PropPosition.LEFT;
+            telemetry.addLine("No prop detected in 50 frames: GUESSING LEFT");
             return;
         }
-        else if (allianceColor == AllianceColor.BLUE) {
-            if (rightMat.blueAmount > PIXEL_THRESHOLD_CONSTANT) {
-                propPosition = PropPosition.RIGHT;
-                return;
-            } else if (middleMat.blueAmount > PIXEL_THRESHOLD_CONSTANT) {
+
+        if (allianceColor == AllianceColor.BLUE) {
+            if (middleMat.blueAmount > PIXEL_THRESHOLD_CONSTANT && middleMat.blueAmount > rightMat.blueAmount) {
                 propPosition = PropPosition.MIDDLE;
-                return;
-            }
-        }
-        else if (allianceColor == AllianceColor.RED){
-            if (rightMat.redAmount > PIXEL_THRESHOLD_CONSTANT) {
+            } else if (rightMat.blueAmount > PIXEL_THRESHOLD_CONSTANT && rightMat.blueAmount > middleMat.blueAmount) {
                 propPosition = PropPosition.RIGHT;
-                return;
             }
-            else if (middleMat.redAmount > PIXEL_THRESHOLD_CONSTANT) {
+        } else if (allianceColor == AllianceColor.RED) {
+            if (middleMat.redAmount > PIXEL_THRESHOLD_CONSTANT && middleMat.redAmount > rightMat.redAmount) {
                 propPosition = PropPosition.MIDDLE;
-                return;
+            } else if (rightMat.redAmount > PIXEL_THRESHOLD_CONSTANT && rightMat.redAmount > middleMat.redAmount) {
+                propPosition = PropPosition.RIGHT;
             }
+        } else {
+            throw new RuntimeException("Alliance color must be defined");
         }
-        else {
-            throw new RuntimeException("There should be a team color defined at this point");
+    }
+        @Override
+        public void onDrawFrame (Canvas canvas,int onscreenWidth, int onscreenHeight,
+        float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext){
+            double scaleFactor = Math.min(
+                    canvas.getWidth() / targetSize.width,
+                    canvas.getHeight() / targetSize.height);
+            android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
+            android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
+
+            canvas.drawRect(rightRect, new Paint());
+            canvas.drawRect(middleRect, new Paint());
+        }
+
+        public void cameraTelemetry () {
+            telemetry.addData("Blue amount right", rightMat.blueAmount);
+            telemetry.addData("Blue amount Middle", middleMat.blueAmount);
+            telemetry.addData("Red amount right", rightMat.redAmount);
+            telemetry.addData("Red amount Middle", middleMat.redAmount);
+            telemetry.addData("Red Middle Conditon threasgold", middleMat.redAmount > PIXEL_THRESHOLD_CONSTANT);
+            telemetry.addData("Red Middle Conditon greater", middleMat.redAmount > rightMat.redAmount);
+            telemetry.addData("Frames Processed", framesProcessed);
+            telemetry.addData("Prop Position", propPosition);
+            telemetry.addData("Alliance Color", allianceColor);
+            telemetry.update();
         }
     }
-
-    @Override
-    public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
-        double scaleFactor = Math.min(
-                canvas.getWidth() / targetSize.width,
-                canvas.getHeight() / targetSize.height);
-        android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
-        android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
-
-        canvas.drawRect(rightRect, new Paint());
-        canvas.drawRect(middleRect, new Paint());
-    }
-
-    public void cameraTelemetry() {
-        telemetry.addData("Blue amount right", rightMat.blueAmount);
-        telemetry.addData("Blue amount Middle", middleMat.blueAmount);
-        telemetry.addData("Red amount right", rightMat.redAmount);
-        telemetry.addData("Red amount Middle", middleMat.redAmount);
-        telemetry.addData("Frames Processed", framesProcessed);
-        telemetry.addData("Prop Position", propPosition);
-        telemetry.update();
-    }
-}
