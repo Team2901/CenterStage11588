@@ -70,10 +70,17 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public double speed = .15;
 
     // public BNO055IMU imu;
+
+    RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection;
+    RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
     public Servo dragger;
-    public void init(HardwareMap hardwareMap, Telemetry telemetry){
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
+
         aprilTag = new AprilTagProcessor.Builder()
                 .setLensIntrinsics(FX, FY, CX, CY)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
@@ -133,8 +140,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
         // teambot
         //Reversing the left motors so the robot goes straight
-        //frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
 
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -152,9 +161,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
         // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
         // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
 
         imu.initialize(parameters);
