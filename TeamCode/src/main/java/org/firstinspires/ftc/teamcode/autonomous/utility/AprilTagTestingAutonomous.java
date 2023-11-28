@@ -15,7 +15,7 @@ public class AprilTagTestingAutonomous extends LinearOpMode {
     List<AprilTagDetection> currentDetections;
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry);
         waitForStart();
         autoLoop();
     }

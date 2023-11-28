@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.qual;
 
+
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,6 +33,17 @@ public class QualTeleop extends OpMode {
             turningPower = -.3 * gamepad.left_trigger.getValue();
         } else {
             turningPower = .75 * gamepad.right_stick_x.getValue();
+        }
+
+        if(gamepad.left_bumper.isInitialPress()) {
+            if (robot.draggerPosition == QualHardware.DraggerPosition.UP) {
+                robot.draggerPosition = QualHardware.DraggerPosition.DOWN;
+                robot.dragger.setPosition(QualHardware.DRAGGER_DOWN_POSITION);
+            } else if (robot.draggerPosition == QualHardware.DraggerPosition.DOWN) {
+                robot.draggerPosition = QualHardware.DraggerPosition.UP;
+
+                robot.dragger.setPosition(QualHardware.DRAGGER_UP_POSITION);
+            }
         }
 
         double y = 1 * gamepad.left_stick_y.getValue();

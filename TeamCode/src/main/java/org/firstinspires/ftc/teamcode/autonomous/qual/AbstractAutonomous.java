@@ -37,7 +37,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.speed = 0.10;
+        //robot.speed = 0.10;
         robot.frontLeft.setPower(robot.speed);
         robot.frontRight.setPower(robot.speed);
         robot.backLeft.setPower(robot.speed);
@@ -55,9 +55,8 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //
         // Please fix this loop and retest the diagonal program.
         //
-        while (opModeIsActive() &&
-                (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
-                robot.backLeft.isBusy() && robot.backRight.isBusy())){
+        while (opModeIsActive() && (robot.frontLeft.isBusy() || robot.frontRight.isBusy() ||
+                robot.backLeft.isBusy() || robot.backRight.isBusy())){
             telemetryLog();
         }
 
@@ -78,12 +77,32 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         telemetry.addData("angle",robot.getAngle());
         telemetry.update();
     }
-    public void spikePixel(PropPosition location){
+    public void startToDropPurplePixel(PropPosition location){
         //right path blue
-        moveXY(20.5, 0);
         if(location == PropPosition.RIGHT){
-
         }
+        else if (location == PropPosition.MIDDLE) {
+            moveXY(37, 0);
+        }
+        else {
+        }
+    }
+
+    public void purplePixelToWhitePixelPickup () {
+        moveXY(15, 0);
+        turnToAngle(90);
+        //turns 180 instead of 90
+    }
+    public void whitePixelsToBackstagePath() {
+        moveXY(70, 0);
+        moveXY(0, 27);
+        moveXY(32, 0);
+    }
+
+    public void BackstageToParkPath() {
+        moveXY(0, -30);
+        moveXY(10, 0);
+
     }
     public void turnToAngle(double turnAngle){
 
