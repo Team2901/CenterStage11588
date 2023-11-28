@@ -88,22 +88,49 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }
 
-    public void purplePixelToWhitePixelPickup () {
+    public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(15, 0);
         turnToAngle(90);
         //turns 180 instead of 90
     }
-    public void whitePixelsToBackstagePath() {
+    public void whitePixelsToBackstagePathFrontStage() {
         moveXY(70, 0);
         moveXY(0, 27);
         moveXY(32, 0);
     }
 
-    public void BackstageToParkPath() {
+    public void backstageToParkPathFrontStage() {
         moveXY(0, -30);
         moveXY(10, 0);
-
     }
+
+    public void navigateToBackdropBackStage() {
+        turnToAngle(90);
+        moveXY(32, 0);
+    }
+
+    public void navigateToFrontStageBackStage() {
+        turnToAngle(180);
+        moveXY(0, 5);
+        moveXY(71, 0);
+        moveXY(0, 23);
+        moveXY(54, 0);
+        moveXY(0, -10);
+        moveXY(-12, 0);
+    }
+
+    public void navigateToBackStageBackStage() {
+        moveXY(0, -33);
+        turnToAngle(180);
+        moveXY(97, 0);
+        moveXY(0, -26);
+    }
+
+    public void parkBackStage() {
+        moveXY(0, -24);
+        moveXY(16, 0);
+    }
+
     public void turnToAngle(double turnAngle){
 
         //robot.getAngle is between -180 and 180, starting at 0

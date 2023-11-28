@@ -11,11 +11,11 @@ public class testRedPath extends AbstractAutonomous {
         robot.speed = 0.1;
         startToDropPurplePixel(PropPosition.MIDDLE);
         robot.speed = 0.5;
-        purplePixelToWhitePixelPickup();
+        purplePixelToWhitePixelPickupFrontStage();
         robot.speed = 0.1;
-        whitePixelsToBackstagePath();
+        whitePixelsToBackstagePathFrontStage();
         robot.speed = 0.5;
-        BackstageToParkPath();
+        backstageToParkPathFrontStage();
 
         while (opModeIsActive() && robot.backLeft.isBusy())  {
             ;
