@@ -43,18 +43,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         robot.backLeft.setPower(robot.speed);
         robot.backRight.setPower(robot.speed);
 
-        // TODO: This while loop has a bug which is causing Calvin's diagonal program issues !!!
-        //
-        // The loop below is trying to give the motors time to reach their
-        // destination. It stops waiting if ANY one of the motors reaches
-        // its target.
-        //
-        // The diagonal program is trying to move at 45 degrees which
-        // requires power to only 2 motors. The other 2 motors
-        // are not powered (aka not busy)
-        //
-        // Please fix this loop and retest the diagonal program.
-        //
         while (opModeIsActive() && (robot.frontLeft.isBusy() || robot.frontRight.isBusy() ||
                 robot.backLeft.isBusy() || robot.backRight.isBusy())){
             telemetryLog();
