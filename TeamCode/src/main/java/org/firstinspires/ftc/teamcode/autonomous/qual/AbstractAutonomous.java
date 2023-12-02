@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -152,6 +153,11 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         robot.backRight.setPower(0);
         robot.backLeft.setPower(0);
     }
-
+    public void backStagePath() {
+        navigateToBackdropBackStage();
+        navigateToFrontStageBackStage();
+        navigateToBackStageBackStage();
+        parkBackStage();
+    }
 
 }
