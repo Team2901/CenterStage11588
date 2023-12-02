@@ -94,25 +94,25 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void navigateToBackdropBackStage() {
-        turnToAngle(90);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(-90);
+        }else{
+            turnToAngle(90);
+        }
         moveXY(32, 0);
     }
 
     public void navigateToFrontStageBackStage() {
-        turnToAngle(180);
-        moveXY(0, 5);
-        moveXY(71, 0);
-        moveXY(0, 23);
-        moveXY(54, 0);
-        moveXY(0, -10);
-        moveXY(-12, 0);
+        turnToAngle(270); //Turn to face front stage
+        moveXY(0, 2);
+        moveXY(90, 0); //Drive under truss
     }
 
     public void navigateToBackStageBackStage() {
-        moveXY(0, -33);
-        turnToAngle(180);
-        moveXY(97, 0);
-        moveXY(0, -26);
+        moveXY(0, -33);//Move to center stage door
+        turnToAngle(90);// Turn to face backstage
+        moveXY(86, 0);//Move under stage door to backstage
+        moveXY(0, -26);//positioned in-front of canvas
     }
 
     public void parkBackStage() {

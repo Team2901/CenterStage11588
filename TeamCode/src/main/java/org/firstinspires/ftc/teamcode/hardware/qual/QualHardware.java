@@ -167,7 +167,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
         IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
 
-        imu.initialize(parameters);
+        boolean success = imu.initialize(parameters);
+        if(success){
+            telemetry.addLine("ERROR");
+            telemetry.update();
+        }
     }
 
     public double getAngle(){
