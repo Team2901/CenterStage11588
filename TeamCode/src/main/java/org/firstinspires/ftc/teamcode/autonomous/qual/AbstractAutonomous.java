@@ -130,13 +130,13 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         while(opModeIsActive() && !(turnError < .5 && turnError > -.5)){
             if(turnError >= 0){
                 turnPower = turnError/50;
-                if(turnPower > .75){
-                    turnPower = .75;
+                if(turnPower > robot.speed){
+                    turnPower = robot.speed;
                 }
             }else if(turnError < 0){
                 turnPower = turnError/50;
-                if(turnPower < -.75){
-                    turnPower = -.75;
+                if(turnPower < -robot.speed){
+                    turnPower = -robot.speed;
                 }
             }
             robot.frontLeft.setPower(-turnPower);
