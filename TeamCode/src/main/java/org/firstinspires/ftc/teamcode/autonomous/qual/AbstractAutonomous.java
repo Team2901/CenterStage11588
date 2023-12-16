@@ -1,19 +1,23 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.RI3WHardware;
-import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
+import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-public class AbstractAutonomous extends LinearOpMode {
+public abstract class AbstractAutonomous extends LinearOpMode {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
-    public RI3WComputerVisionProcessor.AllianceColor teamColor;
-    public RI3WHardware robot = new RI3WHardware();
-    @Override
-    public void runOpMode() throws InterruptedException {
-
+    public ComputerVisionProcessor.AllianceColor teamColor;
+    public QualHardware robot = new QualHardware();
+    public void moveDiagonal(double distanceInches, double thetaDegrees){
+        double yComponent = Math.cos(Math.toRadians(thetaDegrees))*distanceInches;
+        double xComponent = Math.sin(Math.toRadians(thetaDegrees))*distanceInches;
+        telemetry.addData("Ycomp", yComponent);
+        telemetry.addData("Xcomp", xComponent);
+        moveXY(yComponent, xComponent);
     }
     public void moveXY(double yInches, double xInches){
         int ticksY = (int) (yInches * robot.TICKS_PER_INCH);
@@ -34,14 +38,14 @@ public class AbstractAutonomous extends LinearOpMode {
         robot.backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.frontLeft.setPower(0.5);
-        robot.frontRight.setPower(0.5);
-        robot.backLeft.setPower(0.5);
-        robot.backRight.setPower(0.5);
+        //robot.speed = 0.10;
+        robot.frontLeft.setPower(robot.speed);
+        robot.frontRight.setPower(robot.speed);
+        robot.backLeft.setPower(robot.speed);
+        robot.backRight.setPower(robot.speed);
 
-        // TODO: change to and instead of or
-        while (opModeIsActive() && (robot.frontLeft.isBusy() && robot.frontRight.isBusy() &&
-                robot.backLeft.isBusy() && robot.backRight.isBusy())){
+        while (opModeIsActive() && (robot.frontLeft.isBusy() || robot.frontRight.isBusy() ||
+                robot.backLeft.isBusy() || robot.backRight.isBusy())){
             telemetryLog();
         }
 
@@ -56,15 +60,66 @@ public class AbstractAutonomous extends LinearOpMode {
         robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    // TODO: The telemetryLog method should be enhanced to print out the
+    // target and current position of each motor.
     private void telemetryLog() {
+        telemetry.addData("angle",robot.getAngle());
+        telemetry.update();
     }
-    public void spikePixel(PropPosition location){
+    public void startToDropPurplePixel(PropPosition location){
         //right path blue
-        moveXY(20.5, 0);
         if(location == PropPosition.RIGHT){
-
+        }
+        else if (location == PropPosition.MIDDLE) {
+            moveXY(37, 0);
+        }
+        else {
         }
     }
+
+    public void purplePixelToWhitePixelPickupFrontStage() {
+        moveXY(15, 0);
+        turnToAngle(90);
+        //turns 180 instead of 90
+    }
+    public void whitePixelsToBackstagePathFrontStage() {
+        moveXY(70, 0);
+        moveXY(0, 27);
+        moveXY(32, 0);
+    }
+
+    public void backstageToParkPathFrontStage() {
+        moveXY(0, -30);
+        moveXY(10, 0);
+    }
+
+    public void navigateToBackdropBackStage() {
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(-90);
+        }else{
+            turnToAngle(90);
+        }
+        moveXY(32, 0);
+    }
+
+    public void navigateToFrontStageBackStage() {
+        turnToAngle(270); //Turn to face front stage
+        moveXY(0, 2);
+        moveXY(90, 0); //Drive under truss
+    }
+
+    public void navigateToBackStageBackStage() {
+        moveXY(0, -33);//Move to center stage door
+        turnToAngle(90);// Turn to face backstage
+        moveXY(86, 0);//Move under stage door to backstage
+        moveXY(0, -26);//positioned in-front of canvas
+    }
+
+    public void parkBackStage() {
+        moveXY(0, -24);
+        moveXY(16, 0);
+    }
+
     public void turnToAngle(double turnAngle){
 
         //robot.getAngle is between -180 and 180, starting at 0
@@ -75,13 +130,13 @@ public class AbstractAutonomous extends LinearOpMode {
         while(opModeIsActive() && !(turnError < .5 && turnError > -.5)){
             if(turnError >= 0){
                 turnPower = turnError/50;
-                if(turnPower > .75){
-                    turnPower = .75;
+                if(turnPower > robot.speed){
+                    turnPower = robot.speed;
                 }
             }else if(turnError < 0){
                 turnPower = turnError/50;
-                if(turnPower < -.75){
-                    turnPower = -.75;
+                if(turnPower < -robot.speed){
+                    turnPower = -robot.speed;
                 }
             }
             robot.frontLeft.setPower(-turnPower);
@@ -97,6 +152,12 @@ public class AbstractAutonomous extends LinearOpMode {
         robot.frontRight.setPower(0);
         robot.backRight.setPower(0);
         robot.backLeft.setPower(0);
+    }
+    public void backStagePath() {
+        navigateToBackdropBackStage();
+        navigateToFrontStageBackStage();
+        navigateToBackStageBackStage();
+        parkBackStage();
     }
 
 }
