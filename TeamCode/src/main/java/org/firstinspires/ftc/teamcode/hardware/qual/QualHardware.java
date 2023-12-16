@@ -1,32 +1,47 @@
 package org.firstinspires.ftc.teamcode.hardware.qual;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-//import org.firstinspires.ftc.teamcode.hardware.RI3W.vision.RI3WComputerVisionProcessor;
-//import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.VisionProcessor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 
-public class QualHardware {
+public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //Math for drive motor encoders
     public static final double TICKS_PER_MOTOR_REV = 537.7;
-    public static final double DRIVE_GEAR_RATIO = 1.0/1.0;
+    public static final double DRIVE_GEAR_RATIO = 1.0;
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
+    public static final double DRAGGER_DOWN_POSITION = .45;
+    public static final double DRAGGER_UP_POSITION = .7;
+    public enum DraggerPosition {UP, DOWN}
+    public DraggerPosition draggerPosition = DraggerPosition.UP;
+    static final double FX = 1442.66;
+    public static final double FY = 1442.66;
+    public static final double CX = 777.52;
+    public static final double CY = 162.257;
+    public OpenCvCamera camera;
+    public VisionPortal visionPortal;
+    public ComputerVisionProcessor propDetectionProcessor;
+    public AprilTagProcessor aprilTag;
     /*public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
@@ -52,24 +67,40 @@ public class QualHardware {
     public DcMotorEx backRight;
     public DcMotorEx lift;
     //public Servo claw;
-    public BNO055IMU imu;
-    //public RI3WComputerVisionProcessor pipeline;
+    public double speed = .15;
 
-    //public OpenCvCamera camera;
-    //public VisionPortal visionPortal;
-    //private RI3WComputerVisionProcessor visionProcessor;
+    // public BNO055IMU imu;
 
-    /*public void init(HardwareMap hardwareMap, Telemetry telemetry) {
-        init(hardwareMap, telemetry, RI3WComputerVisionProcessor.AllianceColor.BLUE);
+    RevHubOrientationOnRobot.UsbFacingDirection usbFacingDirection;
+    RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
+    public IMU imu;
+
+    public Servo dragger;
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
-     */
-    public void init(HardwareMap hardwareMap, Telemetry telemetry){
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
+
+        aprilTag = new AprilTagProcessor.Builder()
+                .setLensIntrinsics(FX, FY, CX, CY)
+                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                .build();
+        propDetectionProcessor = new ComputerVisionProcessor(telemetry);
+        visionPortal = new VisionPortal.Builder()
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .addProcessors(aprilTag, propDetectionProcessor)
+                .setCameraResolution(new Size(1280, 720))
+                .build();
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+
+
+
+        propDetectionProcessor.allianceColor = teamColor;
         //lift = hardwareMap.get(DcMotorEx.class, "lift");
-        //claw = hardwareMap.get(Servo.class, "claw");
+        dragger = hardwareMap.get(Servo.class, "dragger");
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -100,9 +131,24 @@ public class QualHardware {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Reversing the left motors so the robot goes straigh
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        // coachbot
+        // Robot configuration
+        //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
+        //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
+        //    2-frontLeft   (GoBILDA 5202/3/4 series)
+        //    3-backLeft    (GoBILDA 5202/3/4 series)
+
+        // TODO: uncomment if you want to use coachbot
+        // frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // teambot
+        //Reversing the left motors so the robot goes straight
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+
         //lift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeft.setPower(0);
@@ -111,21 +157,28 @@ public class QualHardware {
         backRight.setPower(0);
         //claw.setPosition(CLOSED_POSITION);
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
+        // requesting a refernce to the IMU hardware. What chip you have can be determined by
+        // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
+        imu = hardwareMap.get(IMU.class, "imu");
 
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
+        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
+        IMU.Parameters parameters = new IMU.Parameters(orientationOnRobot);
+
+        boolean success = imu.initialize(parameters);
+        if(success){
+            telemetry.addLine("ERROR");
+            telemetry.update();
+        }
     }
 
     public double getAngle(){
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return AngleUnit.normalizeDegrees(orientation.firstAngle);
+        YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
+        return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
 
     }
 
@@ -139,26 +192,15 @@ public class QualHardware {
         //telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
-    /*
     @Override
     public void onOpened() {
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
-     */
 
-    /*
     @Override
     public void onError(int errorCode) {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
-     */
 
-    /*public enum Height {
-        INTAKE,
-        LOW,
-        MID,
-        HIGH,
-        MAX
-    }
-     */
+
 }

@@ -59,7 +59,7 @@ public class RI3WHardware implements OpenCvCamera.AsyncCameraOpenListener {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
     public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor allianceColor){
-        visionProcessor = new ComputerVisionProcessor(telemetry, allianceColor);
+        visionProcessor = new ComputerVisionProcessor(telemetry);
 
          pipeline = new ComputerVisionProcessor(telemetry);
 
