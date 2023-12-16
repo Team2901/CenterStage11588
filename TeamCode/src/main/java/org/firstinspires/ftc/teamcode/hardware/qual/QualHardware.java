@@ -218,7 +218,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     @Override
     public void onOpened() {
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
-        //FtcDashboard.getInstance().startCameraStream(propDetectionProcessor, 0);
     }
 
     @Override
