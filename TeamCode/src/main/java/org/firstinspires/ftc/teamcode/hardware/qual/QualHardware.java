@@ -225,20 +225,4 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public void onError(int errorCode) {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
-
-    public Rect getRightClipWindow() {
-        return this.propDetectionProcessor.getRightClipWindow();
-    }
-
-    public void setRightClipWindow(Rect rect) {
-        propDetectionProcessor.setRightClipWindow(rect);
-    }
-
-    public void setMiddleClipWindow(Rect rect) {
-        propDetectionProcessor.setMiddleClipWindow(rect);
-    }
-
-    public Rect getMiddleClipWindow() {
-        return propDetectionProcessor.getMiddleClipWindow();
-    }
 }
