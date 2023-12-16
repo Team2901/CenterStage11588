@@ -15,9 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Rect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
@@ -32,6 +34,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
     public static final double DRAGGER_DOWN_POSITION = .45;
     public static final double DRAGGER_UP_POSITION = .7;
+
     public enum DraggerPosition {UP, DOWN}
     public DraggerPosition draggerPosition = DraggerPosition.UP;
     static final double FX = 1442.66;
@@ -88,7 +91,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         propDetectionProcessor = new ComputerVisionProcessor(telemetry);
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessors(aprilTag, propDetectionProcessor)
+                .addProcessor(aprilTag)
+                .addProcessor(propDetectionProcessor)
                 .setCameraResolution(new Size(1280, 720))
                 .build();
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
@@ -129,25 +133,46 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // coachbot
-        // Robot configuration
-        //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
-        //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
-        //    2-frontLeft   (GoBILDA 5202/3/4 series)
-        //    3-backLeft    (GoBILDA 5202/3/4 series)
+        // The following call to getRobotConfigurationName has been
+        // copied over from prior years Utilities package. It allows
+        // you to determine at runtime what the name of the robot configuration
+        // is and initialize differently for different robots. In this case
+        // the Team Robot and the Coach Robot have their drive motors
+        // mounted differently. And therefore require different
+        // forward/reverse motor choices at initialization.
+        //
+        // Switching which initialization is done at runtime
+        // means you don't have to change the code every time you
+        // switch between robots.
+        //
+        //
+        String configurationName = ConfigUtilities.getRobotConfigurationName();
+        if (configurationName.equals("coachbot")) {
+            // Robot configuration: coachbot
+            //    0-frontRight  (GoBILDA 5202/3/4 series)  (reverse)
+            //    1-backRight   (GoBILDA 5202/3/4 series)  (reverse)
+            //    2-frontLeft   (GoBILDA 5202/3/4 series)
+            //    3-backLeft    (GoBILDA 5202/3/4 series)
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            backRight.setDirection(DcMotor.Direction.REVERSE);
 
-        // TODO: uncomment if you want to use coachbot
-        // frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        //backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
+            // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+            // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
+            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
+            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        }
+        else {
+            // teambot
 
-        // teambot
-        //Reversing the left motors so the robot goes straight
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        usbFacingDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+            //Reversing the left motors so the robot goes straight
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+            backLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        //lift.setDirection(DcMotorSimple.Direction.REVERSE);
+            // Set the Rev Hub Orientation
+            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        }
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -193,6 +218,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     @Override
     public void onOpened() {
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+        //FtcDashboard.getInstance().startCameraStream(propDetectionProcessor, 0);
     }
 
     @Override
@@ -200,5 +226,19 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
+    public Rect getRightClipWindow() {
+        return this.propDetectionProcessor.getRightClipWindow();
+    }
 
+    public void setRightClipWindow(Rect rect) {
+        propDetectionProcessor.setRightClipWindow(rect);
+    }
+
+    public void setMiddleClipWindow(Rect rect) {
+        propDetectionProcessor.setMiddleClipWindow(rect);
+    }
+
+    public Rect getMiddleClipWindow() {
+        return propDetectionProcessor.getMiddleClipWindow();
+    }
 }
