@@ -46,6 +46,15 @@ public class QualTeleop extends OpMode {
             }
         }
 
+
+        if (gamepad.left_bumper.isPressed()) {
+            robot.lift.setPower(robot.speed);
+        } else if (gamepad.right_bumper.isPressed()) {
+            robot.lift.setPower(-robot.speed);
+        } else {
+            robot.lift.setPower(0);
+        }
+
         double y = 1 * gamepad.left_stick_y.getValue();
         double x = 1 * gamepad.left_stick_x.getValue();
         double rx = turningPower;
