@@ -34,9 +34,9 @@ public class TestingTeleop extends OpMode {
         }
 
         if (gamepad.y.isInitialPress()) {
-            LSpeed += 1;
+            LSpeed += 0.1;
         } else if (gamepad.a.isInitialPress()) {
-            LSpeed -= 1;
+            LSpeed -= 0.1;
         }
         telemetry.addData("Lift Speed", LSpeed);
 
