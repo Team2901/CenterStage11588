@@ -79,17 +79,29 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(15, 0);
-        turnToAngle(90);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(90);
+        }else{
+            turnToAngle(-90);
+        }
         //turns 180 instead of 90
     }
     public void whitePixelsToBackstagePathFrontStage() {
         moveXY(70, 0);
-        moveXY(0, 27);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, 27);
+        }else{
+            moveXY(0, -27);
+        }
         moveXY(32, 0);
     }
 
     public void backstageToParkPathFrontStage() {
-        moveXY(0, -30);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, -30);
+        }else{
+            moveXY(0, 30);
+        }
         moveXY(10, 0);
     }
 
@@ -103,21 +115,45 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void navigateToFrontStageBackStage() {
-        turnToAngle(270); //Turn to face front stage
-        moveXY(0, 2);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(-270); //Turn to face the front stage
+        }else {
+            turnToAngle(270);
+        }
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, -2);
+        }else{
+            moveXY(0, 2);
+        }
         moveXY(90, 0); //Drive under truss
     }
 
     public void navigateToBackStageBackStage() {
-        moveXY(0, -33);//Move to center stage door
-        turnToAngle(90);// Turn to face backstage
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, 33);//Move to center stage door
+        }else{
+            moveXY(0, -33);
+        }
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(-90);// Turn to face backstage
+        }else{
+            turnToAngle(90);
+        }
         moveXY(86, 0);//Move under stage door to backstage
-        moveXY(0, -26);//positioned in-front of canvas
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, 26);//positioned in-front of canvas
+        }else{
+            moveXY(0, -26);
+        }
     }
 
     public void parkBackStage() {
-        moveXY(0, -24);
-        moveXY(16, 0);
+        if(teamColor == ComputerVisionProcessor.AllianceColor.RED) {
+            moveXY(0, 24);
+        }else{
+            moveXY(0, -24);
+        }
+        moveXY(10, 0);
     }
 
     public void turnToAngle(double turnAngle){
@@ -129,12 +165,12 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         double turnError = AngleUnit.normalizeDegrees(targetAngle - startAngle);
         while(opModeIsActive() && !(turnError < .5 && turnError > -.5)){
             if(turnError >= 0){
-                turnPower = turnError/50;
+                turnPower = turnError/90;
                 if(turnPower > robot.speed){
                     turnPower = robot.speed;
                 }
             }else if(turnError < 0){
-                turnPower = turnError/50;
+                turnPower = turnError/90;
                 if(turnPower < -robot.speed){
                     turnPower = -robot.speed;
                 }
@@ -153,6 +189,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         robot.backRight.setPower(0);
         robot.backLeft.setPower(0);
     }
+
     public void backStagePath() {
         navigateToBackdropBackStage();
         navigateToFrontStageBackStage();

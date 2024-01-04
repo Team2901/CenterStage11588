@@ -160,7 +160,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
         }
         else {
             // teambot

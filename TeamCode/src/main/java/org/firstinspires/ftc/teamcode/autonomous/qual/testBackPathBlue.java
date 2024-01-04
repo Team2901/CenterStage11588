@@ -9,6 +9,7 @@ public class testBackPathBlue extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException{
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.visionPortal.stopStreaming();
         waitForStart();
         robot.speed = 0.5;
         backStagePath();
