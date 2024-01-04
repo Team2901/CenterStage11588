@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 
 @TeleOp(name="Lift Testing Teleop", group="Test")
-public class TestingTeleop extends OpMode {
+public class TestingTeleop2 extends OpMode {
     public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
     double LSpeed = robot.speed;
