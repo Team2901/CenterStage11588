@@ -8,29 +8,36 @@ import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 public class testRedPath extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
-        robot.speed = 0.5;
-        startToDropPurplePixel(PropPosition.MIDDLE);
-        robot.speed = 0.5;
-        purplePixelToWhitePixelPickupFrontStage();
-        robot.speed = 0.5;
-        whitePixelsToBackstagePathFrontStage();
+        telemetry.clear();
+        telemetry.addLine("push a button");
+        telemetry.update();
         while (!gamepad1.a) {idle();}
         robot.speed = 0.5;
-        //backstageToParkPathFrontStage();
-        if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            telemetry.addLine("red");
-            telemetry.update();
-            while (!gamepad1.a) {idle();}
-            moveXY(0, 30);
-        } else {
-            telemetry.addLine("blue");
-            telemetry.update();
-            while (!gamepad1.a) {idle();}
-            moveXY(0, -100);
+        startToDropPurplePixel(PropPosition.MIDDLE);
+        telemetry.clear();
+        telemetry.addLine("push b button");
+        telemetry.update();
+        while (!gamepad1.b) {idle();}
+        robot.speed = 0.5;
+        purplePixelToWhitePixelPickupFrontStage();
+        telemetry.clear();
+        telemetry.addLine("push x button");
+        telemetry.update();
+        while (!gamepad1.x) {idle();}
+        robot.speed = 0.5;
+        whitePixelsToBackstagePathFrontStage();
+        telemetry.clear();
+        telemetry.addLine("push y button");
+        telemetry.update();
+        while (!gamepad1.y) {idle();}
+        robot.speed = 0.5;
+        backstageToParkPathFrontStage();
+        telemetry.clear();
+        telemetry.addLine("push a button");
+        telemetry.update();
 
-        }
 
         while (opModeIsActive() && robot.backLeft.isBusy())  {
             ;

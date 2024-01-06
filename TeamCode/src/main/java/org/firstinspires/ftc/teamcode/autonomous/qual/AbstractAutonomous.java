@@ -80,9 +80,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(15, 0);
         if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(90);
-        }else{
             turnToAngle(-90);
+        }else{
+            turnToAngle(90);
         }
         //turns 180 instead of 90
     }
@@ -93,14 +93,14 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -27);
         }
-        moveXY(32, 0);
+        //moveXY(32, 0);
     }
 
     public void backstageToParkPathFrontStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 30);
         }else{
-            moveXY(0, -100);
+            moveXY(0, -30);
         }
         moveXY(10, 0);
     }
