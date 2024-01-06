@@ -25,18 +25,18 @@ public class RedBackStageAutonomous extends AbstractAutonomous {
         // Move based on the detected prop position
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
             moveXY(24, 0);
-            moveXY(0, -22);
+            moveXY(0, 22);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(34, 0);
-            turnToAngle(90);
+            turnToAngle(-90);
             moveXY(3, 0);
             turnToAngle(360);
             moveXY(-10, 0);
-            moveXY(0, -16);
+            moveXY(0, 16);
             turnToAngle(360);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
             moveXY(25, 0);
-            moveXY(0, -21);
+            moveXY(0, 21);
         } else {
             throw new RuntimeException("Prop position was not found");
         }
