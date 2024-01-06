@@ -225,4 +225,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public void onError(int errorCode) {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
+
+    public ComputerVisionProcessor.AllianceColor getAlliance() {
+        return propDetectionProcessor.allianceColor;
+    }
 }

@@ -14,7 +14,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         // If needed, we can call telemetry.clear() too.
         telemetry.setAutoClear(false);
 
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
 
         // prop detection should have already occurred, but just in case
@@ -35,6 +35,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         } else {
             throw new RuntimeException("Prop position was not found");
         }
+
 
         while (!isStopRequested()) {
             telemetry.update();
