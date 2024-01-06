@@ -154,7 +154,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -24);
         }
-        moveXY(10, 0);
     }
 
     public void turnToAngle(double turnAngle){
