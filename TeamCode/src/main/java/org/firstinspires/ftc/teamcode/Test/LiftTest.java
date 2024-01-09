@@ -9,10 +9,9 @@ import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 
 
 @TeleOp(name="Lift Testing Teleop", group="Test")
-public class TestingTeleop extends OpMode {
+public class LiftTest extends OpMode {
     public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
-    double LSpeed = robot.speed;
 
     @Override
     public void init() {
@@ -26,19 +25,21 @@ public class TestingTeleop extends OpMode {
         gamepad.update();
 
         if (gamepad.left_bumper.isPressed()) {
-            robot.lift.setPower(LSpeed);
+            robot.lift.setPower(robot.liftSpeed);
         } else if (gamepad.right_bumper.isPressed()) {
-            robot.lift.setPower(-LSpeed);
+            robot.lift.setPower(-robot.liftSpeed);
         } else {
             robot.lift.setPower(0);
         }
 
         if (gamepad.y.isInitialPress()) {
-            LSpeed += 0.1;
+            robot.liftSpeed += 0.1;
         } else if (gamepad.a.isInitialPress()) {
-            LSpeed -= 0.1;
+            robot.liftSpeed -= 0.1;
         }
-        telemetry.addData("Lift Speed", LSpeed);
+        telemetry.addData("Lift Speed", robot.liftSpeed);
+        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+        telemetry.update();
 
 
     }

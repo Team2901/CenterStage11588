@@ -45,17 +45,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    /*public static final double OPENED_POSITION = 0.5;
+    public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
-    public static final int LOW_POLE_ENCODER_VALUE = 1635;
-    public static final int MID_POLE_ENCODER_VALUE = 2800;
-    public static final int HIGH_POLE_ENCODER_VALUE = 3853;
-    public static final int MAX_HEIGHT_ENCODER_VALUE = 4350;
-    public static final double KG = 0.046;
-    public static final double KP = 0.566;
-    public static final double KI = 0.011;
-    public static final double KD = 0.008;
+    public static final int MAX_HEIGHT_ENCODER_VALUE = 800;
+    public static final double KG = 0.00;
+    public static final double KP = 0.0;
+    public static final double KI = 0.0;
+    public static final double KD = 0.0;
 
     public static double error = 0.0;
     public static double total = 0.0;
@@ -63,7 +60,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static double iLift = 0.0;
     public static double dLift = 0.0;
     public double iLiftMax = 0.0;
-     */
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
@@ -71,6 +67,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx lift;
     //public Servo claw;
     public double speed = .15;
+    public double liftSpeed = .35;
 
     // public BNO055IMU imu;
 
@@ -206,13 +203,13 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     }
 
     public void telemetry(Telemetry telemetry) {
-        //telemetry.addData("PID Total", total);
-        //telemetry.addData("P Arm", pLift);
-        //telemetry.addData("I Arm", iLift);
-        //telemetry.addData("D Arm", dLift);
-        //telemetry.addData("Proportional Stuff", pLift * KP);
-        //telemetry.addData("Integral Stuff", iLift * KI);
-        //telemetry.addData("Derivative Stuff", dLift * KD);
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Proportional Stuff", pLift * KP);
+        telemetry.addData("Integral Stuff", iLift * KI);
+        telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
     @Override
@@ -224,4 +221,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public void onError(int errorCode) {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
+
+    public enum Height {
+        INTAKE,
+        MAX
+    }
+
 }
