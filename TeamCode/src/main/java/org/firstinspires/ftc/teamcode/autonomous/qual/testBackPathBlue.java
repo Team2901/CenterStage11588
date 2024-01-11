@@ -8,8 +8,9 @@ import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 public class testBackPathBlue extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException{
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
+        //robot.visionPortal.stopStreaming();
         robot.speed = 0.5;
         backStagePath();
     }
