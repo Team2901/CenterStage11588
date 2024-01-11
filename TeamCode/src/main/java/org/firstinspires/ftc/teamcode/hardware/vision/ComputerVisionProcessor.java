@@ -11,6 +11,11 @@ import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+
+/*
+    The Camera Resolution must be 1280x720 and the rects are hard coded to this size
+ */
+
 public class ComputerVisionProcessor implements VisionProcessor {
 
     public static final int PIXEL_THRESHOLD_CONSTANT = 200;

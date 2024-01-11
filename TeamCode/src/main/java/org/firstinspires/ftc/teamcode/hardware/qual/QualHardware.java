@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import android.text.ParcelableSpan;
 import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -67,6 +70,18 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public Servo armLeft;
     public double speed = .15;
     public double liftSpeed = .35;
+
+    final int GROUND_POSITION = 0;
+
+    final int FIRST_POSITION = 0;
+    final int SECOND_POSITION = 0;
+    final int THIRD_POSITION = 0;
+    double integralSum = 0;
+    double lastError = 0;
+
+    int goalPosition = 0;
+    ElapsedTime PIDTimer = new ElapsedTime();
+
 
     // public BNO055IMU imu;
 
@@ -198,15 +213,32 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         }
     }
 
+    //Must be looped
+//    public void PIDLoop() {
+//        int encoderPosition = lift.getCurrentPosition();
+//        error = goalPosition - encoderPosition;
+//        double derivative = (error - lastError) / PIDTimer.seconds();
+//
+//        integralSum = integralSum + (error * PIDTimer.seconds());
+//        double armPower;
+//
+//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+//        lift.setPower(armPower);
+//
+//        lastError = error;
+//
+//        PIDTimer.reset();
+//    }
+
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
 
     }
 
-    public ComputerVisionProcessor.AllianceColor getAlliance(){
-
-    }
+//    public ComputerVisionProcessor.AllianceColor getAlliance(){
+//
+//    }
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("PID Total", total);
