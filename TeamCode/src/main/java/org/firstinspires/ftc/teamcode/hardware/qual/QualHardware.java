@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.hardware.qual;
 
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -19,7 +18,6 @@ import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.Rect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
@@ -65,7 +63,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
-    //public Servo claw;
+    public Servo armRight;
+    public Servo armLeft;
     public double speed = .15;
     public double liftSpeed = .35;
 
@@ -75,7 +74,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
-    public Servo dragger;
+    public Servo hopper;
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
@@ -99,7 +98,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
         propDetectionProcessor.allianceColor = teamColor;
         lift = hardwareMap.get(DcMotorEx.class, "lift");
-        dragger = hardwareMap.get(Servo.class, "dragger");
+        hopper = hardwareMap.get(Servo.class, "hopper");
+        armRight = hardwareMap.get(Servo.class, "armRight");
+        armLeft = hardwareMap.get(Servo.class, "armLeft");
+
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
