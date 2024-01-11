@@ -40,10 +40,10 @@ public class TestingTeleop2 extends OpMode {
 
         if (gamepad.x.isPressed()) {
             robot.armRight.setPosition(+0.2);
-            robot.armLeft.setPosition(+0.2);
+            robot.armLeft.setPosition(-0.2);
         } else if (gamepad.b.isPressed()) {
             robot.armRight.setPosition(-0.2);
-            robot.armLeft.setPosition(-0.2);
+            robot.armLeft.setPosition(+0.2);
         }
 
         telemetry.addData("Lift Speed", robot.liftSpeed);

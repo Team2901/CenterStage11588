@@ -181,11 +181,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
         // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
         // requesting a refernce to the IMU hardware. What chip you have can be determined by
-        // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
+        // using "program and manage" tab on dr iver station, then "manage" on the hamburger menu.
         imu = hardwareMap.get(IMU.class, "imu");
 
         // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
-        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // For the coach bot its mounted Bgackward / usb cable on the right (as seen from back of robot)
         // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
@@ -201,6 +201,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
+
+    }
+
+    public ComputerVisionProcessor.AllianceColor getAlliance(){
 
     }
 
