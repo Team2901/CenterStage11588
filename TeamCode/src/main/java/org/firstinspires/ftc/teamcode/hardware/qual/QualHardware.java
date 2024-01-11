@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.hardware.qual;
 
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import android.text.ParcelableSpan;
 import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,7 +21,6 @@ import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.Rect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
@@ -45,17 +46,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    /*public static final double OPENED_POSITION = 0.5;
+    public static final double OPENED_POSITION = 0.5;
     public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
-    public static final int LOW_POLE_ENCODER_VALUE = 1635;
-    public static final int MID_POLE_ENCODER_VALUE = 2800;
-    public static final int HIGH_POLE_ENCODER_VALUE = 3853;
-    public static final int MAX_HEIGHT_ENCODER_VALUE = 4350;
-    public static final double KG = 0.046;
-    public static final double KP = 0.566;
-    public static final double KI = 0.011;
-    public static final double KD = 0.008;
+    public static final int MAX_HEIGHT_ENCODER_VALUE = 800;
+    public static final double KG = 0.00;
+    public static final double KP = 0.0;
+    public static final double KI = 0.0;
+    public static final double KD = 0.0;
 
     public static double error = 0.0;
     public static double total = 0.0;
@@ -71,6 +69,19 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx lift;
     //public Servo claw;
     public double speed = .15;
+    public double liftSpeed = .35;
+
+    final int GROUND_POSITION = 0;
+
+    final int FIRST_POSITION = 0;
+    final int SECOND_POSITION = 0;
+    final int THIRD_POSITION = 0;
+    double integralSum = 0;
+    double lastError = 0;
+
+    int goalPosition = 0;
+    ElapsedTime PIDTimer = new ElapsedTime();
+
 
     // public BNO055IMU imu;
 
@@ -102,8 +113,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
         propDetectionProcessor.allianceColor = teamColor;
-        //lift = hardwareMap.get(DcMotorEx.class, "lift");
-        dragger = hardwareMap.get(Servo.class, "dragger");
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        hopper = hardwareMap.get(Servo.class, "hopper");
+        armRight = hardwareMap.get(Servo.class, "armRight");
+        armLeft = hardwareMap.get(Servo.class, "armLeft");
+
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -200,6 +214,23 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         }
     }
 
+    //Must be looped
+//    public void PIDLoop() {
+//        int encoderPosition = lift.getCurrentPosition();
+//        error = goalPosition - encoderPosition;
+//        double derivative = (error - lastError) / PIDTimer.seconds();
+//
+//        integralSum = integralSum + (error * PIDTimer.seconds());
+//        double armPower;
+//
+//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+//        lift.setPower(armPower);
+//
+//        lastError = error;
+//
+//        PIDTimer.reset();
+//    }
+
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
@@ -207,13 +238,13 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     }
 
     public void telemetry(Telemetry telemetry) {
-        //telemetry.addData("PID Total", total);
-        //telemetry.addData("P Arm", pLift);
-        //telemetry.addData("I Arm", iLift);
-        //telemetry.addData("D Arm", dLift);
-        //telemetry.addData("Proportional Stuff", pLift * KP);
-        //telemetry.addData("Integral Stuff", iLift * KI);
-        //telemetry.addData("Derivative Stuff", dLift * KD);
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pLift);
+        telemetry.addData("I Arm", iLift);
+        telemetry.addData("D Arm", dLift);
+        telemetry.addData("Proportional Stuff", pLift * KP);
+        telemetry.addData("Integral Stuff", iLift * KI);
+        telemetry.addData("Derivative Stuff", dLift * KD);
     }
 
     @Override
@@ -228,5 +259,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     public ComputerVisionProcessor.AllianceColor getAlliance() {
         return propDetectionProcessor.allianceColor;
+    }
+
+    public enum Height {
+        INTAKE,
+        MAX
     }
 }
