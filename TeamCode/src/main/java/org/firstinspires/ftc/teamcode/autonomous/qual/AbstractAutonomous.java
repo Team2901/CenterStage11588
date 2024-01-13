@@ -102,7 +102,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -30);
         }
-        moveXY(10, 0);
+        moveXY(15, 0);
     }
     //robot is going left, so change one of the first two measurements
 
