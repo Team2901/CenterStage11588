@@ -50,18 +50,18 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double CLOSED_POSITION = 0.15;
     public static final int INTAKE_ENCODER_VALUE = 80;
     public static final int MAX_HEIGHT_ENCODER_VALUE = 800;
-    public static final double KG = 0.00;
-    public static final double KP = 0.0;
-    public static final double KI = 0.0;
-    public static double KD = 0.0;
+    public static double KG = 0.00;
+    public static double KP = 0.0;
 
+    //Leave KI and KD as be, we are sticking with a proportinal controller
+    public static double KI = 0.0;
+    public static double KD = 0.0;
     public static double error = 0.0;
     public static double total = 0.0;
     public static double pLift = 0.0;
     public static double iLift = 0.0;
     public static double dLift = 0.0;
     public double iLiftMax = 0.0;
-
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
@@ -72,15 +72,15 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public double speed = .15;
     public double liftSpeed = .35;
 
-    final int GROUND_POSITION = 0;
+    public final int GROUND_POSITION = 0;
 
-    final int FIRST_POSITION = 0;
-    final int SECOND_POSITION = 0;
-    final int THIRD_POSITION = 0;
+    public final int FIRST_POSITION = 0;
+    public final int SECOND_POSITION = 0;
+    public final int THIRD_POSITION = 0;
     double integralSum = 0;
     double lastError = 0;
 
-    int goalPosition = 0;
+    public int goalPosition = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
 
 
@@ -94,7 +94,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
-
     public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
 
         aprilTag = new AprilTagProcessor.Builder()
@@ -134,14 +133,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        if (lift != null) lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Running without encoders because it makes pid work better
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (lift != null) lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Making the drive motors break at 0 so they stop better
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -176,7 +175,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
         }
         else {
             // teambot
@@ -198,11 +197,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
         // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
         // requesting a refernce to the IMU hardware. What chip you have can be determined by
-        // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
+        // using "program and manage" tab on dr iver station, then "manage" on the hamburger menu.
         imu = hardwareMap.get(IMU.class, "imu");
 
         // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
-        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // For the coach bot its mounted Bgackward / usb cable on the right (as seen from back of robot)
         // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
@@ -217,26 +216,30 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     //Must be looped
     public void PIDLoop() {
-//        int encoderPosition = lift.getCurrentPosition();
-//        error = goalPosition - encoderPosition;
-//        double derivative = (error - lastError) / PIDTimer.seconds();
-//
-//        integralSum = integralSum + (error * PIDTimer.seconds());
-//        double armPower;
-//
-//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
-//        lift.setPower(armPower);
-//
-//        lastError = error;
-//
-//        PIDTimer.reset();
- }
+        int encoderPosition = lift.getCurrentPosition();
+        error = goalPosition - encoderPosition;
+        double derivative = (error - lastError) / PIDTimer.seconds();
+
+        integralSum = integralSum + (error * PIDTimer.seconds());
+        double armPower;
+
+        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+        lift.setPower(armPower);
+
+        lastError = error;
+
+        PIDTimer.reset();
+    }
 
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
 
     }
+
+//    public ComputerVisionProcessor.AllianceColor getAlliance(){
+//
+//    }
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("PID Total", total);
@@ -258,12 +261,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
-    public ComputerVisionProcessor.AllianceColor getAlliance() {
-        return propDetectionProcessor.allianceColor;
-    }
-
     public enum Height {
         INTAKE,
         MAX
     }
+
 }
