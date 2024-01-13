@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.qual;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
@@ -67,18 +68,51 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         telemetry.update();
     }
     public void startToDropPurplePixel(PropPosition location){
-        //right path blue
+        ElapsedTime timer = new ElapsedTime(); //seconds
+        moveXY(37, 0);
+
+
         if(location == PropPosition.RIGHT){
+            turnToAngle(-90);
+            timer.reset();
+            while (opModeIsActive() && (timer.time() < 5)) {
+                idle();
+            }
+            turnToAngle(0);
+
         }
         else if (location == PropPosition.MIDDLE) {
-            moveXY(37, 0);
+            timer.reset();
+            while (opModeIsActive() && (timer.time() < 5)) {
+                idle();
+            }
+
         }
         else {
+            turnToAngle(90);
+            timer.reset();
+            while (opModeIsActive() && (timer.time() < 5)) {
+                idle();
+            }
+
+            turnToAngle(0);
         }
     }
 
     public void purplePixelToWhitePixelPickupFrontStage() {
+        ElapsedTime timer = new ElapsedTime(); //seconds
         moveXY(15, 0);
+        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+            turnToAngle(90);
+        }else{
+            turnToAngle(-90);
+        }
+        moveXY(18, 0);
+        timer.reset();
+        while (opModeIsActive() && (timer.time() < 3)) {
+            idle();
+        }
+        moveXY(-18, 0);
         if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-90);
         }else{
@@ -87,7 +121,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //turns 180 instead of 90
     }
     public void whitePixelsToBackstagePathFrontStage() {
-        moveXY(70, 0);
+        moveXY(80, 0);
         if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 27);
         }else{
@@ -98,13 +132,12 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void backstageToParkPathFrontStage() {
         if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
-            moveXY(0, 30);
+            moveXY(0, 33);
         }else{
             moveXY(0, -30);
         }
         moveXY(15, 0);
     }
-    //robot is going left, so change one of the first two measurements
 
     public void navigateToBackdropBackStage() {
         if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {

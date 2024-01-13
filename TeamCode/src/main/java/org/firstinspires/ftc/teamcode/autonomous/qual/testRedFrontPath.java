@@ -11,7 +11,7 @@ public class testRedFrontPath extends AbstractAutonomous {
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
         robot.speed = 0.5;
-        startToDropPurplePixel(PropPosition.MIDDLE);
+        startToDropPurplePixel(PropPosition.RIGHT);
         purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         backstageToParkPathFrontStage();
