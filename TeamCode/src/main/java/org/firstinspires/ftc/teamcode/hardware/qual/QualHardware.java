@@ -53,7 +53,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double KG = 0.00;
     public static final double KP = 0.0;
     public static final double KI = 0.0;
-    public static final double KD = 0.0;
+    public static double KD = 0.0;
 
     public static double error = 0.0;
     public static double total = 0.0;
@@ -61,13 +61,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static double iLift = 0.0;
     public static double dLift = 0.0;
     public double iLiftMax = 0.0;
-     */
+
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
-    //public Servo claw;
+    public Servo armRight;
+    public Servo armLeft;
     public double speed = .15;
     public double liftSpeed = .35;
 
@@ -89,7 +90,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
-    public Servo dragger;
+    public Servo hopper;
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
@@ -215,7 +216,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     }
 
     //Must be looped
-//    public void PIDLoop() {
+    public void PIDLoop() {
 //        int encoderPosition = lift.getCurrentPosition();
 //        error = goalPosition - encoderPosition;
 //        double derivative = (error - lastError) / PIDTimer.seconds();
@@ -229,7 +230,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 //        lastError = error;
 //
 //        PIDTimer.reset();
-//    }
+ }
 
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();

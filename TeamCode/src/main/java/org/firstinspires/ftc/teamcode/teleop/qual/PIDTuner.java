@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop.Qual;
+package org.firstinspires.ftc.teamcode.teleop.qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
