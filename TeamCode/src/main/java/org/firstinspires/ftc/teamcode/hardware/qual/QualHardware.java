@@ -237,9 +237,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     }
 
-//    public ComputerVisionProcessor.AllianceColor getAlliance(){
-//
-//    }
+    public ComputerVisionProcessor.AllianceColor getAlliance(){
+        return propDetectionProcessor.allianceColor;
+    }
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("PID Total", total);
