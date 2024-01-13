@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-@Autonomous(name="Emergency Red", group="11588")
-public class EmergencyRed extends AbstractAutonomous {
+@Autonomous(name="Emergency Blue Front", group="Emergency")
+public class EmergencyBlueFront extends AbstractAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
     }
     public void emergencyPark() {

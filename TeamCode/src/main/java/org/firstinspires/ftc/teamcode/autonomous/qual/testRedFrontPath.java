@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-@Autonomous(name="testRedFrontPath", group="11588")
+@Autonomous(name="testRedFrontPath", group="Test")
 public class testRedFrontPath extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {

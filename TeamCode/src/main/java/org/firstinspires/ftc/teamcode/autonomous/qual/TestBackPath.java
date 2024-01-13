@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous.qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="backpath test", group="11588")
+@Autonomous(name="backpath test", group="Test")
 public class TestBackPath extends AbstractAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {

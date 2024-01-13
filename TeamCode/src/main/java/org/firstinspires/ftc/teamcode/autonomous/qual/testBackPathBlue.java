@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-@Autonomous(name="testBackPathBlue", group="11588")
+@Autonomous(name="testBackPathBlue", group="Test")
 public class testBackPathBlue extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException{
