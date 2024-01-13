@@ -40,6 +40,7 @@ public class CameraSubMat {
         int top = (int)(rect.y * scaleFactor);
         android.graphics.Rect returnRect = new android.graphics.Rect(left, top, right, bottom);
 
+
         return returnRect;
     }
 }

@@ -97,7 +97,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void backstageToParkPathFrontStage() {
-        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 30);
         }else{
             moveXY(0, -30);
