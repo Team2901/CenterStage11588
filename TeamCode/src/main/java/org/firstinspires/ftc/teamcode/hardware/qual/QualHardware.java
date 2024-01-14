@@ -33,11 +33,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    public static final double DRAGGER_DOWN_POSITION = .45;
-    public static final double DRAGGER_UP_POSITION = .7;
-
-    public enum DraggerPosition {UP, DOWN}
-    public DraggerPosition draggerPosition = DraggerPosition.UP;
     static final double FX = 1442.66;
     public static final double FY = 1442.66;
     public static final double CX = 777.52;
@@ -46,12 +41,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    public static final double OPENED_POSITION = 0.5;
-    public static final double CLOSED_POSITION = 0.15;
-    public static final int INTAKE_ENCODER_VALUE = 80;
-    public static final int MAX_HEIGHT_ENCODER_VALUE = 800;
-    public static double KG = 0.00;
-    public static double KP = 0.0;
+    public final int MAX_LIFT_HEIGHT = 730;
+    public static double KG = 0.12;
+    public static double KP = 0.041;
 
     //Leave KI and KD as be, we are sticking with a proportinal controller
     public static double KI = 0.0;
@@ -67,21 +59,22 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
     public DcMotorEx lift;
-    public Servo armRight;
-    public Servo armLeft;
+
+    public DcMotorEx intake;
+//    public Servo armRight;
+//    public Servo armLeft;
+
+    public Servo hopper;
+    public Servo purplePixelDropper;
     public double speed = .15;
     public double liftSpeed = .35;
-
-    public final int GROUND_POSITION = 0;
-
-    public final int FIRST_POSITION = 0;
-    public final int SECOND_POSITION = 0;
-    public final int THIRD_POSITION = 0;
     double integralSum = 0;
     double lastError = 0;
 
     public int goalPosition = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
+
+    public final double ARM_SERVO_START_POSITION = 0.5;
 
 
     // public BNO055IMU imu;
@@ -90,7 +83,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
-    public Servo hopper;
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
@@ -108,6 +100,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
                 .setCameraResolution(new Size(1280, 720))
                 .build();
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
@@ -115,8 +108,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         propDetectionProcessor.allianceColor = teamColor;
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         hopper = hardwareMap.get(Servo.class, "hopper");
-        armRight = hardwareMap.get(Servo.class, "armRight");
-        armLeft = hardwareMap.get(Servo.class, "armLeft");
+        purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
+//        armRight = hardwareMap.get(Servo.class, "armRight");
+//        armLeft = hardwareMap.get(Servo.class, "armLeft");
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
@@ -127,6 +121,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         /*VisionPortal visionPortal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
          */
+
+//        armRight.setPosition(ARM_SERVO_START_POSITION);
+//        armLeft.setPosition(ARM_SERVO_START_POSITION);
 
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

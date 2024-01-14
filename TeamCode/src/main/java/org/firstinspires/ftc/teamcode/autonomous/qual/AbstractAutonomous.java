@@ -79,7 +79,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(15, 0);
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(90);
         }else{
             turnToAngle(-90);
@@ -88,7 +88,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
     public void whitePixelsToBackstagePathFrontStage() {
         moveXY(70, 0);
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 27);
         }else{
             moveXY(0, -27);
@@ -107,7 +107,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     //robot is going left, so change one of the first two measurements
 
     public void navigateToBackdropBackStage() {
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-90);
         }else{
             turnToAngle(90);
@@ -116,12 +116,12 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void navigateToFrontStageBackStage() {
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-270); //Turn to face the front stage
         }else {
             turnToAngle(270);
         }
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, -2);
         }else{
             moveXY(0, 2);
@@ -130,18 +130,18 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void navigateToBackStageBackStage() {
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 33);//Move to center stage door
         }else{
             moveXY(0, -33);
         }
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-90);// Turn to face backstage
         }else{
             turnToAngle(90);
         }
         moveXY(86, 0);//Move under stage door to backstage
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 26);//positioned in-front of canvas
         }else{
             moveXY(0, -26);
@@ -149,7 +149,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void parkBackStage() {
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 24);
         }else{
             moveXY(0, -24);
