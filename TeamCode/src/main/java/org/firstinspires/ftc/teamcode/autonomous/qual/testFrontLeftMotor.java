@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.qual;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="frontLeft", group="11588")
+@Autonomous(name="frontLeft", group="Test")
 public class testFrontLeftMotor extends AbstractAutonomous {
 
 

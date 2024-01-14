@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-@Autonomous(name="Red Back Stage", group="11588")
-public class RedBackStageAutonomous extends AbstractAutonomous {
+@Autonomous(name="Back Stage Red", group="11588")
+public class BackStageAutonomousRed extends AbstractAutonomous {
     @Override
     public void runOpMode() throws InterruptedException {
         // Since we are updating telemetry from multiple places,
@@ -24,19 +24,16 @@ public class RedBackStageAutonomous extends AbstractAutonomous {
 
         // Move based on the detected prop position
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            moveXY(24, 0);
-            moveXY(0, 22);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(34, 0);
-            turnToAngle(-90);
-            moveXY(3, 0);
-            turnToAngle(360);
-            moveXY(-10, 0);
-            moveXY(0, 16);
-            turnToAngle(360);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
             moveXY(25, 0);
-            moveXY(0, 21);
+            moveXY(0, 12);
+            moveXY(0, -12);
+        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            moveXY(25, 0);
+            moveXY(0, -12);
+            moveXY(0, 12);
+        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
+            moveXY(36, 0);
+            moveXY(-36, 0);
         } else {
             throw new RuntimeException("Prop position was not found");
         }
