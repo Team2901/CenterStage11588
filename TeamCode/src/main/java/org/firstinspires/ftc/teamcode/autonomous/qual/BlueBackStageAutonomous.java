@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
+@Disabled
 @Autonomous(name="Blue Back Stage", group="11588")
 public class BlueBackStageAutonomous extends AbstractAutonomous {
     @Override
