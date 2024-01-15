@@ -103,7 +103,7 @@ public class ComputerVisionProcessor implements VisionProcessor {
             android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
 
             Paint paint = new Paint();
-            paint.setAlpha(155);
+            paint.setAlpha(100);
             canvas.drawRect(rightRect, paint);
             canvas.drawRect(middleRect, paint);
         }

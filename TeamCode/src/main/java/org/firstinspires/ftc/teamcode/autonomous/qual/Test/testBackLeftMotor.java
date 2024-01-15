@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomous.qual;
+package org.firstinspires.ftc.teamcode.autonomous.qual.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="backLeft", group="Test")
+import org.firstinspires.ftc.teamcode.autonomous.qual.AbstractAutonomous;
+
+@Autonomous(name="Test backLeft", group="Test")
 public class testBackLeftMotor extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {
