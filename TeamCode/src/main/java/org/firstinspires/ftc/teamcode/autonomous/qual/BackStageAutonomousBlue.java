@@ -28,16 +28,13 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             moveXY(-25, 0);
             moveXY(0, 12);
             moveXY(0, -12);
-            turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(-25, 0);
             moveXY(0, -12);
             moveXY(0, 12);
-            turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
             moveXY(-36, 0);
             moveXY(11, 0);
-            turnToAngle(180);
         } else {
             throw new RuntimeException("Prop position was not found");
         }
