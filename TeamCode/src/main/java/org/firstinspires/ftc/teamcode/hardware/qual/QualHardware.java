@@ -61,8 +61,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx lift;
 
     public DcMotorEx intake;
-//    public Servo armRight;
-//    public Servo armLeft;
+    public Servo armRight;
+    public Servo armLeft;
 
     public Servo hopper;
     public Servo purplePixelDropper;
@@ -74,7 +74,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public int goalPosition = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
 
-    public final double ARM_SERVO_START_POSITION = 0.5;
+    public final double ARM_SERVO_START_POSITION = -0.1;
 
 
     // public BNO055IMU imu;
@@ -109,8 +109,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         lift = hardwareMap.get(DcMotorEx.class, "lift");
         hopper = hardwareMap.get(Servo.class, "hopper");
         purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
-//        armRight = hardwareMap.get(Servo.class, "armRight");
-//        armLeft = hardwareMap.get(Servo.class, "armLeft");
+        armRight = hardwareMap.get(Servo.class, "armRight");
+        armLeft = hardwareMap.get(Servo.class, "armLeft");
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //

@@ -33,8 +33,8 @@ public class ComputerVisionProcessor implements VisionProcessor {
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
-    CameraSubMat rightMat = new CameraSubMat(new Rect(875, 570, 150, 150));
-    CameraSubMat middleMat = new CameraSubMat(new Rect(300, 570, 150, 150));
+    CameraSubMat rightMat = new CameraSubMat(new Rect(830, 350, 150, 150));
+    CameraSubMat middleMat = new CameraSubMat(new Rect(400, 325, 150, 150));
 
 
     public ComputerVisionProcessor(Telemetry telemetry) {

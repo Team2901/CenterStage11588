@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 @TeleOp(name="Qual Bulldozer Teleop", group="11588 Quals")
 public class QualTeleop extends OpMode {
     public static final double DROPPER_OPEN_POSITION = .5;
+
+    private boolean isFlipped = false;
     public static final int ARM_SERVO_POSITION = 1;
     public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
@@ -42,6 +44,10 @@ public class QualTeleop extends OpMode {
             turningPower = .75 * gamepad.right_stick_x.getValue();
         }
 
+        if (gamepad.b.isInitialPress()) {
+            flipLift();
+        }
+
         if (gamepad.y.isPressed()) {
             robot.intake.setPower(.75);
         } else if (gamepad.x.isPressed()) {
@@ -51,14 +57,6 @@ public class QualTeleop extends OpMode {
         if (gamepad.a.isInitialPress()) {
             robot.purplePixelDropper.setPosition(DROPPER_OPEN_POSITION);
         }
-
-//        if (gamepad.b.isPressed() && robot.armRight.getPosition() == 0) {
-//            robot.armRight.setPosition(ARM_SERVO_POSITION);
-//            robot.armLeft.setPosition(ARM_SERVO_POSITION);
-//        } else {
-//            robot.armRight.setPosition(0);
-//            robot.armLeft.setPosition(0);
-//        }
 
 
         if(gamepad.left_bumper.isPressed() && robot.goalPosition > 5) {
@@ -84,10 +82,19 @@ public class QualTeleop extends OpMode {
         telemetry.addData("Lift Speed", robot.liftSpeed);
         telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
         telemetry.addData("Lift Target", robot.goalPosition);
-//        telemetry.addData("Arm Left servo", robot.armLeft.getPosition());
-//        telemetry.addData("Arm Right servo", robot.armRight.getPosition());
+        telemetry.addData("Arm Left servo", robot.armLeft.getPosition());
+        telemetry.addData("Arm Right servo", robot.armRight.getPosition());
         telemetry.update();
 
+    }
+
+    public void flipLift() {
+        if (!isFlipped) {
+            robot.goalPosition = 150;
+            robot.armRight.setPosition(1);
+            robot.armLeft.setPosition(-1);
+            isFlipped = true;
+        }
     }
 
 //    public double liftPower(int target){

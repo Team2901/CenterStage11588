@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.qual;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
 public abstract class AbstractAutonomous extends LinearOpMode {
     public enum PropPosition { LEFT, MIDDLE, RIGHT }
+    ElapsedTime timer = new ElapsedTime();
     //public ComputerVisionProcessor.AllianceColor teamColor;
     public QualHardware robot = new QualHardware();
     public void moveDiagonal(double distanceInches, double thetaDegrees){
@@ -108,25 +110,33 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void navigateToBackdropBackStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(-90);
-        }else{
             turnToAngle(90);
+        }else{
+            turnToAngle(-90);
         }
         moveXY(32, 0);
     }
 
     public void navigateToFrontStageBackStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(-270); //Turn to face the front stage
+            turnToAngle(270); //Turn to face the front stage
         }else {
-            turnToAngle(270);
+            turnToAngle(-270);
         }
-        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+        /*if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, -2);
         }else{
             moveXY(0, 2);
-        }
+        }*/
         moveXY(90, 0); //Drive under truss
+    }
+
+    public void dropPurplePixel() {
+        robot.purplePixelDropper.setPosition(1);
+        timer.reset();
+        while (timer.milliseconds() < 2000) {
+            idle();
+        }
     }
 
     public void navigateToBackStageBackStage() {
@@ -136,9 +146,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             moveXY(0, -33);
         }
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(-90);// Turn to face backstage
+            turnToAngle(90);// Turn to face backstage
         }else{
-            turnToAngle(90);
+            turnToAngle(-90);
         }
         moveXY(86, 0);//Move under stage door to backstage
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
@@ -192,9 +202,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void backStagePath() {
         navigateToBackdropBackStage();
-        navigateToFrontStageBackStage();
-        navigateToBackStageBackStage();
-        parkBackStage();
+        //navigateToFrontStageBackStage();
+        //navigateToBackStageBackStage();
+        //parkBackStage();
     }
 
 }
