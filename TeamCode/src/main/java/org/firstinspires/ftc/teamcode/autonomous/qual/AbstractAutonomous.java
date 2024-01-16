@@ -110,6 +110,15 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
         moveXY(10, 0);
     }
+
+    public void placePurplePixelGoToBackBoardPark(){
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
+            turnToAngle(90);
+        }else{
+            turnToAngle(-90);
+        }
+        moveXY(86, 0);
+    }
     //robot is going left, so change one of the first two measurements
 
     public void navigateToBackdropBackStage() {

@@ -48,7 +48,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         } else {
             throw new RuntimeException("Prop position was not found");
         }
-
+        placePurplePixelGoToBackBoardPark();
 
         while (!isStopRequested()) {
             telemetry.update();
