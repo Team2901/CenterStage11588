@@ -24,18 +24,32 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         // TODO: Stop camera now that we have found the prop
 
         // Move based on the detected prop position
+        robot.speed = 0.5;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            moveXY(40, 0);
-            turnToAngle(90);
+            moveXY(-25, 0);
+            moveXY(0, 12);
+            dropPurplePixel();
+            moveXY(0, -12);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(40, 0);
-            moveXY(0, 11);
+            moveXY(-25, 0);
+            moveXY(0, -12);
+            dropPurplePixel();
+            moveXY(0, 12);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
-            moveXY(46, 0);
+            moveXY(-30, 0);
+            dropPurplePixel();
+            moveXY(11, 0);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
         } else {
             throw new RuntimeException("Prop position was not found");
         }
 
+        whitePixelsToBackstagePathFrontStage();
 
         while (!isStopRequested()) {
             telemetry.update();

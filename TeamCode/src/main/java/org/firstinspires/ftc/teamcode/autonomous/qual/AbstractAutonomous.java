@@ -68,7 +68,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         telemetry.addData("angle",robot.getAngle());
         telemetry.update();
     }
-    public void startToDropPurplePixel(PropPosition location){
+    /*public void startToDropPurplePixel(PropPosition location){
         //right path blue
         if(location == PropPosition.RIGHT){
         }
@@ -77,7 +77,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
         else {
         }
-    }
+    }*/
 
     public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(15, 0);
@@ -87,6 +87,10 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             turnToAngle(-90);
         }
         //turns 180 instead of 90
+    }
+
+    public void purplePixelToBackstagePathFrontStage() {
+
     }
     public void whitePixelsToBackstagePathFrontStage() {
         moveXY(70, 0);
@@ -205,6 +209,10 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //navigateToFrontStageBackStage();
         //navigateToBackStageBackStage();
         //parkBackStage();
+    }
+    public void frontStagePath(){
+        purplePixelToWhitePixelPickupFrontStage();
+
     }
 
 }

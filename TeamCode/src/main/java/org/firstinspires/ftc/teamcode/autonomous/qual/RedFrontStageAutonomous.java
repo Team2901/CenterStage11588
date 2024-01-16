@@ -14,7 +14,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         // If needed, we can call telemetry.clear() too.
         telemetry.setAutoClear(false);
 
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
 
         // prop detection should have already occurred, but just in case
@@ -26,19 +26,29 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         robot.speed = 0.5;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            startToDropPurplePixel(PropPosition.LEFT);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE){
-            robot.speed = 0.5;
-            startToDropPurplePixel(PropPosition.MIDDLE);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
-            robot.speed = 0.5;
-            startToDropPurplePixel(PropPosition.RIGHT);
+            moveXY(-25, 0);
+            moveXY(0, -12);
+            dropPurplePixel();
+            moveXY(0, 12);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
+        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            moveXY(-25, 0);
+            moveXY(0, 12);
+            dropPurplePixel();
+            moveXY(0, -12);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
+        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
+            moveXY(-30, 0);
+            dropPurplePixel();
+            moveXY(11, 0);
+            robot.purplePixelDropper.setPosition(0);
+            turnToAngle(180);
         } else {
             throw new RuntimeException("Prop position was not found");
         }
-        purplePixelToWhitePixelPickupFrontStage();
-        whitePixelsToBackstagePathFrontStage();
-        backstageToParkPathFrontStage();
+
 
         while (!isStopRequested()) {
             telemetry.update();

@@ -26,16 +26,22 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
             moveXY(-25, 0);
             moveXY(0, -12);
+            dropPurplePixel();
             moveXY(0, 12);
+            robot.purplePixelDropper.setPosition(0);
             turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(25, 0);
             moveXY(0, 12);
+            dropPurplePixel();
             moveXY(0, -12);
+            robot.purplePixelDropper.setPosition(0);
             turnToAngle(180);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
-            moveXY(-36, 0);
-            moveXY(36, 0);
+            moveXY(-30, 0);
+            dropPurplePixel();
+            moveXY(11, 0);
+            robot.purplePixelDropper.setPosition(0);
             turnToAngle(180);
         } else {
             throw new RuntimeException("Prop position was not found");
