@@ -80,11 +80,11 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }*/
 
     public void purplePixelToWhitePixelPickupFrontStage() {
-        moveXY(15, 0);
+        moveXY(-15, 0);
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(90);
-        }else{
             turnToAngle(-90);
+        }else{
+            turnToAngle(90);
         }
         //turns 180 instead of 90
     }
@@ -93,13 +93,13 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     }
     public void whitePixelsToBackstagePathFrontStage() {
-        moveXY(70, 0);
+        moveXY(-70, 0);
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 27);
         }else{
             moveXY(0, -27);
         }
-        moveXY(32, 0);
+        moveXY(-32, 0);
     }
 
     public void backstageToParkPathFrontStage() {
@@ -108,7 +108,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -100);
         }
-        moveXY(10, 0);
+        moveXY(-10, 0);
     }
     //robot is going left, so change one of the first two measurements
 
@@ -136,7 +136,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void dropPurplePixel() {
-        robot.purplePixelDropper.setPosition(1);
+        robot.purplePixelDropper.setPosition(-.75);
         timer.reset();
         while (timer.milliseconds() < 2000) {
             idle();
