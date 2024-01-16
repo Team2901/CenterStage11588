@@ -15,12 +15,7 @@ public class EmergencyBlueFront extends AbstractAutonomous {
     }
     public void emergencyPark() {
         robot.speed = 0.5;
-        moveXY(53, 0);
-        if(robot.getAlliance() == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(-90);
-        }else{
-            turnToAngle(90);
-        }
-        moveXY(83, 0);
+        moveXY(-53, 0);
+        moveXY(0, 93);
     }
 }
