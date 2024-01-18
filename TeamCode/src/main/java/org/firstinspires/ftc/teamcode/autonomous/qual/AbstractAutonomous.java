@@ -106,7 +106,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 30);
         }else{
-            moveXY(0, -100);
+            moveXY(0, -30);
         }
         moveXY(-10, 0);
     }

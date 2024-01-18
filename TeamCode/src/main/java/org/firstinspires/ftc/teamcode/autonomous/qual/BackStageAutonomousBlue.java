@@ -51,7 +51,26 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
         } else {
             throw new RuntimeException("Prop position was not found");
         }
-        backStagePath();
+        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                turnToAngle(90);
+            }else{
+                turnToAngle(-90);
+            }
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(0, -20);
+            }else {
+                moveXY(0, 20);
+            }
+            moveXY(30, 0);
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(0, -15);
+            }else {
+                moveXY(0, 15);
+            }
+        }else{
+            backStagePath();
+        }
 
         while (!isStopRequested()) {
             telemetry.update();
