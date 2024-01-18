@@ -123,11 +123,11 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void navigateToBackdropBackStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(90);
-        }else{
             turnToAngle(-90);
+        }else{
+            turnToAngle(90);
         }
-        moveXY(32, 0);
+        moveXY(-32, 0);
     }
 
     public void navigateToFrontStageBackStage() {
@@ -146,6 +146,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void dropPurplePixel() {
         robot.purplePixelDropper.setPosition(-.75);
+
         timer.reset();
         while (timer.milliseconds() < 2000) {
             idle();
