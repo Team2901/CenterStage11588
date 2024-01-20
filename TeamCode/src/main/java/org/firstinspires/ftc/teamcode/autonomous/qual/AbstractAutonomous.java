@@ -99,7 +99,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -27);
         }
-        moveXY(-32, 0);
+        moveXY(-10, 0);
     }
 
     public void backstageToParkPathFrontStage() {
@@ -108,7 +108,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             moveXY(0, -30);
         }
-        moveXY(-10, 0);
+        moveXY(-8, 0);
     }
 
     public void placePurplePixelGoToBackBoardPark(){
