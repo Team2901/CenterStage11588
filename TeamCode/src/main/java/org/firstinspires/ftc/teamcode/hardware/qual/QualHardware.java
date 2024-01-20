@@ -37,6 +37,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double FY = 1442.66;
     public static final double CX = 777.52;
     public static final double CY = 162.257;
+    public static final double PURPLE_PIXEL_DROPPER_START_POSITION = 0.25;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
@@ -112,6 +113,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         armRight = hardwareMap.get(Servo.class, "armRight");
         armLeft = hardwareMap.get(Servo.class, "armLeft");
 
+
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -185,7 +187,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         }
-
+        purplePixelDropper.setPosition(PURPLE_PIXEL_DROPPER_START_POSITION);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
