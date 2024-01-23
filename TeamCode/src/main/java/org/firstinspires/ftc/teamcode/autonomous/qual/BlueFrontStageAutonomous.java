@@ -47,7 +47,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
             turnToAngle(180);
         }
 
-        purplePixelToWhitePixelPickupFrontStage();
+        //purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         backstageToParkPathFrontStage();
 

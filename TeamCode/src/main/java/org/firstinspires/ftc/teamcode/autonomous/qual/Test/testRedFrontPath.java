@@ -13,7 +13,7 @@ public class testRedFrontPath extends AbstractAutonomous {
         waitForStart();
         robot.speed = 0.5;
         //startToDropPurplePixel(PropPosition.RIGHT);
-        purplePixelToWhitePixelPickupFrontStage();
+        //purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         backstageToParkPathFrontStage();
 

@@ -79,7 +79,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }*/
 
-    public void purplePixelToWhitePixelPickupFrontStage() {
+    /*public void purplePixelToWhitePixelPickupFrontStage() {
         moveXY(-15, 0);
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-90);
@@ -87,9 +87,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             turnToAngle(90);
         }
         //turns 180 instead of 90
-    }
+    } */
     public void whitePixelsToBackstagePathFrontStage() {
-        moveXY(-70, 0);
+        moveXY(-80, 0);
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             moveXY(0, 27);
         }else{
@@ -100,11 +100,11 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void backstageToParkPathFrontStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            moveXY(0, 30);
+            moveXY(0, 27);
         }else{
-            moveXY(0, -30);
+            moveXY(0, -27);
         }
-        moveXY(-8, 0);
+        moveXY(-13, 0);
     }
 
     public void placePurplePixelGoToBackBoardPark(){
@@ -217,7 +217,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //parkBackStage();
     }
     public void frontStagePath(){
-        purplePixelToWhitePixelPickupFrontStage();
+       // purplePixelToWhitePixelPickupFrontStage();
 
     }
 

@@ -40,16 +40,16 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
             moveXY(0, 12);
             moveXY(19, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(180);
+            turnToAngle(-90);
         } else {
             moveXY(-30, 0);
             dropPurplePixel();
             moveXY(11, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(180);
+            turnToAngle(-90);
         }
 
-        purplePixelToWhitePixelPickupFrontStage();
+        //purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         backstageToParkPathFrontStage();
 
