@@ -49,7 +49,9 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
             throw new RuntimeException("Prop position was not found");
         }
 
-        placePurplePixelGoToBackBoardPark();
+        purplePixelToWhitePixelPickupFrontStage();
+        whitePixelsToBackstagePathFrontStage();
+        backstageToParkPathFrontStage();
 
         while (!isStopRequested()) {
             telemetry.update();
