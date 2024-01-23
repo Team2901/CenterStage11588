@@ -69,6 +69,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public Servo purplePixelDropper;
     public double speed = .15;
     public double liftSpeed = .35;
+    public double turnTolerance = 3.0;
     double integralSum = 0;
     double lastError = 0;
 
@@ -76,6 +77,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     ElapsedTime PIDTimer = new ElapsedTime();
 
     public final double ARM_SERVO_START_POSITION = -0.1;
+    public double bestSpeed = 0.5;
 
 
     // public BNO055IMU imu;
@@ -174,7 +176,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
-            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+            usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+            bestSpeed = 0.25;
         }
         else {
             // teambot

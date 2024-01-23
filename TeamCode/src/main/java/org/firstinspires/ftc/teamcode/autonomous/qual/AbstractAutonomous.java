@@ -179,6 +179,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }
 
+
     public void turnToAngle(double turnAngle){
 
         //robot.getAngle is between -180 and 180, starting at 0
@@ -186,7 +187,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         double targetAngle = AngleUnit.normalizeDegrees(turnAngle) + 180;
         double startAngle = robot.getAngle() + 180;
         double turnError = AngleUnit.normalizeDegrees(targetAngle - startAngle);
-        while(opModeIsActive() && !(turnError < .5 && turnError > -.5)){
+        while(opModeIsActive() && !(turnError < robot.turnTolerance && turnError > -robot.turnTolerance)){
             if(turnError >= 0){
                 turnPower = turnError/90;
                 if(turnPower > robot.speed){

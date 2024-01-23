@@ -24,7 +24,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         // TODO: Stop camera now that we have found the prop
 
 
-        robot.speed = 0.5;
+        robot.speed = robot.bestSpeed;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
             moveXY(-25, 0);
             moveXY(0, -12);
