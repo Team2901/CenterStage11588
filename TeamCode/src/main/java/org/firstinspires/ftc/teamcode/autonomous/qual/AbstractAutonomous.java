@@ -88,10 +88,6 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
         //turns 180 instead of 90
     }
-
-    public void purplePixelToBackstagePathFrontStage() {
-
-    }
     public void whitePixelsToBackstagePathFrontStage() {
         moveXY(-70, 0);
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
@@ -127,7 +123,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             turnToAngle(90);
         }
-        moveXY(-32, 0);
+        moveXY(-38, 0);
     }
 
     public void navigateToFrontStageBackStage() {
