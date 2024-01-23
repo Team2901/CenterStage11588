@@ -177,7 +177,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
-            bestSpeed = 0.25;
+            //bestSpeed = 0.25;
         }
         else {
             // teambot
