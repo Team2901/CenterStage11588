@@ -39,14 +39,12 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
             moveXY(0, 12);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             turnToAngle(180);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.MIDDLE) {
+        } else {
             moveXY(-30, 0);
             dropPurplePixel();
             moveXY(11, 0);
             robot.purplePixelDropper.setPosition(0);
             turnToAngle(180);
-        } else {
-            throw new RuntimeException("Prop position was not found");
         }
 
         purplePixelToWhitePixelPickupFrontStage();
