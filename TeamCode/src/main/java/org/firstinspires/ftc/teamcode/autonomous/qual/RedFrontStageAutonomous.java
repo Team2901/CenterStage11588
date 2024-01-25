@@ -16,6 +16,9 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
+        while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
+            idle();
+        }
 
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
@@ -23,33 +26,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         // TODO: Stop camera now that we have found the prop
 
-
-        robot.speed = robot.bestSpeed;
-        if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            moveXY(-25, 0);
-            moveXY(0, 12);
-            dropPurplePixel();
-            moveXY(22, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
-        } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(-25, 0);
-            moveXY(0, -12);
-            dropPurplePixel();
-            moveXY(1, 0);
-            moveXY(0, 12);
-            moveXY(19, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
-        } else {
-            moveXY(-30, 0);
-            dropPurplePixel();
-            moveXY(11, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
-        }
-
-        //purplePixelToWhitePixelPickupFrontStage();
+        purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
             moveXY(0, 6);

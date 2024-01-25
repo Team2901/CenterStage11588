@@ -69,7 +69,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public Servo purplePixelDropper;
     public double speed = .15;
     public double liftSpeed = .35;
-    public double turnTolerance = 3.0;
+    public double turnTolerance = 0.5;
     double integralSum = 0;
     double lastError = 0;
 
