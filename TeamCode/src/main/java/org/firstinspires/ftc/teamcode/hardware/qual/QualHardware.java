@@ -81,6 +81,15 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     double armAngle = 0;
     Height currentArmHeight = Height.RETRACTED;
     Height lastArmHeight = currentArmHeight;
+    public static final double OPEN_CLAW_POSITION = 0;
+    public static final double CLOSED_CLAW_POSITION = 0;
+    public ClawPosition leftClawPositon = ClawPosition.CLOSED;
+    public ClawPosition rightClawPositon = ClawPosition.CLOSED;
+
+    public enum ClawPosition {
+        OPEN,
+        CLOSED
+    }
 
     enum Height {
         EXTENDED,

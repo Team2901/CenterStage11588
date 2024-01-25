@@ -16,6 +16,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
 
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
+        robot.camera.stopStreaming();
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }

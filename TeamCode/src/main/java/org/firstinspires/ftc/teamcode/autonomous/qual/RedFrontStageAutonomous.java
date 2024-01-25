@@ -16,6 +16,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
+        robot.camera.stopStreaming();
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }

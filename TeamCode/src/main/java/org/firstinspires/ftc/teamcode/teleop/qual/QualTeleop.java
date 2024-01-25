@@ -24,6 +24,7 @@ public class QualTeleop extends OpMode {
     Height currentLiftHeight = Height.GROUND;
     int liftTarget = 80;
     Height lastLiftHeight = currentLiftHeight;
+    boolean leftClawOpen = false;
 
 
 
@@ -31,6 +32,7 @@ public class QualTeleop extends OpMode {
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap, telemetry);
+        robot.camera.stopStreaming();
     }
 
     @Override
@@ -44,8 +46,22 @@ public class QualTeleop extends OpMode {
             turningPower = .75 * gamepad.right_stick_x.getValue();
         }
 
-        if (gamepad.b.isInitialPress()) {
-            deploySlides();
+        if(gamepad.x.isInitialPress()) {
+            if (robot.leftClawPositon == QualHardware.ClawPosition.CLOSED) {
+                robot.clawLeft.setPosition(QualHardware.OPEN_CLAW_POSITION);
+                robot.leftClawPositon = QualHardware.ClawPosition.OPEN;
+            } else {
+                robot.clawLeft.setPosition(QualHardware.CLOSED_CLAW_POSITION);
+                robot.leftClawPositon = QualHardware.ClawPosition.CLOSED;
+            }
+        } else if (gamepad.y.isInitialPress()) {
+            if (robot.rightClawPositon == QualHardware.ClawPosition.CLOSED) {
+                robot.clawLeft.setPosition(QualHardware.OPEN_CLAW_POSITION);
+                robot.rightClawPositon = QualHardware.ClawPosition.OPEN;
+            } else {
+                robot.clawLeft.setPosition(QualHardware.CLOSED_CLAW_POSITION);
+                robot.rightClawPositon = QualHardware.ClawPosition.CLOSED;
+            }
         }
 
         if (gamepad.a.isInitialPress()) {
@@ -82,14 +98,14 @@ public class QualTeleop extends OpMode {
 
     }
 
-    public void deploySlides() {
-        if (!slidesDeployed) {
-            robot.goalPosition = 150;
-            robot.clawRight.setPosition(1);
-            robot.clawLeft.setPosition(-1);
-            slidesDeployed = true;
-        }
-    }
+//    public void deploySlides() {
+//        if (!slidesDeployed) {
+//            robot.goalPosition = 150;
+//            robot.clawRight.setPosition(1);
+//            robot.clawLeft.setPosition(-1);
+//            slidesDeployed = true;
+//        }
+//    }
 
 //    public double liftPower(int target){
 //        robot.error = target - robot.lift.getCurrentPosition();
