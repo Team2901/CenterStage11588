@@ -16,6 +16,9 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
+        while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
+            idle();
+        }
 
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
@@ -50,6 +53,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         }
 
         //purplePixelToWhitePixelPickupFrontStage();
+        purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
             moveXY(0, 6);
@@ -66,3 +70,4 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         }
     }
 }
+

@@ -19,6 +19,9 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
 
         robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
         waitForStart();
+        while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
+            idle();
+        }
 
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
@@ -65,3 +68,4 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
         }
     }
 }
+

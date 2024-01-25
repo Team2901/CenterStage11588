@@ -25,11 +25,11 @@ public class TestingTeleop2 extends OpMode {
         gamepad.update();
 
         if (gamepad.left_bumper.isPressed()) {
-            robot.lift.setPower(robot.liftSpeed);
+            robot.arm.setPower(robot.liftSpeed);
         } else if (gamepad.right_bumper.isPressed()) {
-            robot.lift.setPower(-robot.liftSpeed);
+            robot.arm.setPower(-robot.liftSpeed);
         } else {
-            robot.lift.setPower(0);
+            robot.arm.setPower(0);
         }
 
         if (gamepad.y.isInitialPress()) {
@@ -47,7 +47,7 @@ public class TestingTeleop2 extends OpMode {
 //        }
 
         telemetry.addData("Lift Speed", robot.liftSpeed);
-        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+        telemetry.addData("Lift Position", robot.arm.getCurrentPosition());
 //        telemetry.addData("Right Arm Servo", robot.armRight.getPosition());
 //        telemetry.addData("Left Arm Servo", robot.armLeft.getPosition());
         telemetry.update();

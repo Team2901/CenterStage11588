@@ -29,20 +29,20 @@ public class ServoTester extends OpMode {
         }
 
         if(gamepad.a.isInitialPress()) {
-            robot.armLeft.setPosition(robot.armLeft.getPosition() + 0.1);
+            robot.clawLeft.setPosition(robot.clawLeft.getPosition() + 0.1);
         } else if (gamepad.b.isInitialPress()) {
-            robot.armLeft.setPosition(robot.armLeft.getPosition() - 0.1);
+            robot.clawLeft.setPosition(robot.clawLeft.getPosition() - 0.1);
         }
 
         if(gamepad.x.isInitialPress()) {
-            robot.armRight.setPosition(robot.armRight.getPosition() + 0.1);
+            robot.clawRight.setPosition(robot.clawRight.getPosition() + 0.1);
         } else if (gamepad.y.isInitialPress()) {
-            robot.armRight.setPosition(robot.armRight.getPosition() - 0.1);
+            robot.clawRight.setPosition(robot.clawRight.getPosition() - 0.1);
         }
 
 
-        telemetry.addData("Right", robot.armRight.getPosition());
-        telemetry.addData("Left", robot.armLeft.getPosition());
+        telemetry.addData("Right", robot.clawRight.getPosition());
+        telemetry.addData("Left", robot.clawLeft.getPosition());
         telemetry.update();
 
     }

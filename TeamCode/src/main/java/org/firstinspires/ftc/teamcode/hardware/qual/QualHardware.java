@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import android.text.ParcelableSpan;
 import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -33,16 +32,12 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    static final double FX = 1442.66;
-    public static final double FY = 1442.66;
-    public static final double CX = 777.52;
-    public static final double CY = 162.257;
     public static final double PURPLE_PIXEL_DROPPER_START_POSITION = 0.25;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    public final int MAX_LIFT_HEIGHT = 730;
+    public final int MAX_LIFT_HEIGHT = 0;
     public static double KG = 0.12;
     public static double KP = 0.041;
 
@@ -51,32 +46,23 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static double KD = 0.0;
     public static double error = 0.0;
     public static double total = 0.0;
-    public static double pLift = 0.0;
-    public static double iLift = 0.0;
-    public static double dLift = 0.0;
-    public double iLiftMax = 0.0;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
     public DcMotorEx backRight;
-    public DcMotorEx lift;
-
-    public DcMotorEx intake;
-    public Servo armRight;
-    public Servo armLeft;
-
-    public Servo hopper;
+    public DcMotorEx arm;
+    public Servo clawRight;
+    public Servo clawLeft;
     public Servo purplePixelDropper;
     public double speed = .15;
     public double liftSpeed = .35;
-    public double turnTolerance = 3.0;
-    double integralSum = 0;
-    double lastError = 0;
+    public double turnTolerance = 0.5;
+    int lowArmPosition = 0;
+    int zeroAngleTicks = lowArmPosition;
 
     public int goalPosition = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
 
-    public final double ARM_SERVO_START_POSITION = -0.1;
     public double bestSpeed = 0.5;
 
 
@@ -86,13 +72,27 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
+    double kCos = 0.3;
+    double pArm = 0.0;
+    double iArm = 0.0;
+    double dArm = 0.0;
+    double cosArm = 0.0;
+    double iArmMax = .25;
+    double armAngle = 0;
+    Height currentArmHeight = Height.RETRACTED;
+    Height lastArmHeight = currentArmHeight;
+
+    enum Height {
+        EXTENDED,
+        RETRACTED
+    }
+
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
     public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
 
         aprilTag = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(FX, FY, CX, CY)
                 .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
                 .build();
         propDetectionProcessor = new ComputerVisionProcessor(telemetry);
@@ -103,17 +103,15 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
                 .setCameraResolution(new Size(1280, 720))
                 .build();
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
         propDetectionProcessor.allianceColor = teamColor;
-        lift = hardwareMap.get(DcMotorEx.class, "lift");
-        hopper = hardwareMap.get(Servo.class, "hopper");
+        arm = hardwareMap.get(DcMotorEx.class, "lift");
         purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
-        armRight = hardwareMap.get(Servo.class, "armRight");
-        armLeft = hardwareMap.get(Servo.class, "armLeft");
+        clawRight = hardwareMap.get(Servo.class, "armRight");
+        clawLeft = hardwareMap.get(Servo.class, "armLeft");
 
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
@@ -134,14 +132,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Running without encoders because it makes pid work better
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Making the drive motors break at 0 so they stop better
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -218,19 +216,57 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     //Must be looped
     public void PIDLoop() {
-        int encoderPosition = lift.getCurrentPosition();
-        error = goalPosition - encoderPosition;
-        double derivative = (error - lastError) / PIDTimer.seconds();
-
-        integralSum = integralSum + (error * PIDTimer.seconds());
-        double armPower;
-
-        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
-        lift.setPower(armPower);
-
-        lastError = error;
-
+        error = goalPosition - arm.getCurrentPosition();
+        dArm = (error - pArm) / PIDTimer.seconds();
+        iArm = iArm + (error * PIDTimer.seconds());
+        pArm = error;
+        armAngle = recalculateAngle();
+        cosArm = Math.cos(Math.toRadians(armAngle));
+        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * kCos);
         PIDTimer.reset();
+
+        if(currentArmHeight != lastArmHeight){
+            iArm = 0;
+        }
+
+        if(iArm > iArmMax){
+            iArm = iArmMax;
+        }else if(iArm < -iArmMax){
+            iArm = -iArmMax;
+        }
+
+        if(total > .5){
+            total = .5;
+        }
+        if(recalculateAngle() > 60 && total < -.3){
+            total = -.3;
+        }else if(total < .005 && recalculateAngle() < 60){
+            total = .005;
+        }
+        lastArmHeight = currentArmHeight;
+
+        arm.setPower(total);
+//        int encoderPosition = lift.getCurrentPosition();
+//        error = goalPosition - encoderPosition;
+//        double derivative = (error - lastError) / PIDTimer.seconds();
+//
+//        integralSum = integralSum + (error * PIDTimer.seconds());
+//        double armPower;
+//
+//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+//        lift.setPower(armPower);
+//
+//        lastError = error;
+//
+//        PIDTimer.reset();
+    }
+
+    public double recalculateAngle(){
+        //Placeholder variables that will be deleted
+        double rightAngleDiff = 800;
+        double slope = 90/((zeroAngleTicks + rightAngleDiff) - zeroAngleTicks);
+        double newAngle = slope * (arm.getCurrentPosition() - zeroAngleTicks);
+        return newAngle;
     }
 
     public double getAngle(){
@@ -245,12 +281,12 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     public void telemetry(Telemetry telemetry) {
         telemetry.addData("PID Total", total);
-        telemetry.addData("P Arm", pLift);
-        telemetry.addData("I Arm", iLift);
-        telemetry.addData("D Arm", dLift);
-        telemetry.addData("Proportional Stuff", pLift * KP);
-        telemetry.addData("Integral Stuff", iLift * KI);
-        telemetry.addData("Derivative Stuff", dLift * KD);
+        telemetry.addData("P Arm", pArm);
+        telemetry.addData("I Arm", iArm);
+        telemetry.addData("D Arm", dArm);
+        telemetry.addData("Proportional Stuff", pArm * KP);
+        telemetry.addData("Integral Stuff", iArm * KI);
+        telemetry.addData("Derivative Stuff", dArm * KD);
     }
 
     @Override
@@ -263,9 +299,5 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
-    public enum Height {
-        INTAKE,
-        MAX
-    }
 
 }

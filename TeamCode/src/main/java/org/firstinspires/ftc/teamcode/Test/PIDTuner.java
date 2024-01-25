@@ -47,7 +47,7 @@ public class PIDTuner extends OpMode {
         }
         telemetry.addData("KG", robot.KG);
         telemetry.addData("KP", robot.KP);
-        telemetry.addData("Lift Height", robot.lift.getCurrentPosition());
+        telemetry.addData("Lift Height", robot.arm.getCurrentPosition());
         telemetry.addData("Current Target Height", robot.goalPosition);
         telemetry.update();
 
