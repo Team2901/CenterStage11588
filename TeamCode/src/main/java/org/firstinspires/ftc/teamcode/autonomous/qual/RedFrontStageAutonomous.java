@@ -51,6 +51,14 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         //purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
+        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+            moveXY(0, 6);
+            moveXY(0, 21);
+        }
+        else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            moveXY(0, -6);
+            moveXY(0,  33);
+        }
         backstageToParkPathFrontStage();
 
 
