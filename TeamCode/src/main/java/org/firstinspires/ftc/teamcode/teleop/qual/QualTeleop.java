@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.hardware.controller.ImprovedGamepad;
 public class QualTeleop extends OpMode {
     public static final double DROPPER_OPEN_POSITION = .5;
 
-    private boolean isFlipped = false;
+    private boolean slidesDeployed = false;
     public static final int ARM_SERVO_POSITION = 1;
     public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
@@ -45,13 +45,7 @@ public class QualTeleop extends OpMode {
         }
 
         if (gamepad.b.isInitialPress()) {
-            flipLift();
-        }
-
-        if (gamepad.y.isPressed()) {
-            robot.intake.setPower(.75);
-        } else if (gamepad.x.isPressed()) {
-            robot.intake.setPower(-.75);
+            deploySlides();
         }
 
         if (gamepad.a.isInitialPress()) {
@@ -80,20 +74,20 @@ public class QualTeleop extends OpMode {
         telemetry.addData("Right", gamepad.right_stick_y.getValue());
         telemetry.addData("Left", gamepad.left_stick_y.getValue());
         telemetry.addData("Lift Speed", robot.liftSpeed);
-        telemetry.addData("Lift Position", robot.lift.getCurrentPosition());
+        telemetry.addData("Lift Position", robot.arm.getCurrentPosition());
         telemetry.addData("Lift Target", robot.goalPosition);
-        telemetry.addData("Arm Left servo", robot.armLeft.getPosition());
-        telemetry.addData("Arm Right servo", robot.armRight.getPosition());
+        telemetry.addData("Arm Left servo", robot.clawLeft.getPosition());
+        telemetry.addData("Arm Right servo", robot.clawRight.getPosition());
         telemetry.update();
 
     }
 
-    public void flipLift() {
-        if (!isFlipped) {
+    public void deploySlides() {
+        if (!slidesDeployed) {
             robot.goalPosition = 150;
-            robot.armRight.setPosition(1);
-            robot.armLeft.setPosition(-1);
-            isFlipped = true;
+            robot.clawRight.setPosition(1);
+            robot.clawLeft.setPosition(-1);
+            slidesDeployed = true;
         }
     }
 
