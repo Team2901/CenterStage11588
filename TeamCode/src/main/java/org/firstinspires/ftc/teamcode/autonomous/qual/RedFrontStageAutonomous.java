@@ -31,7 +31,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
             dropPurplePixel();
             moveXY(22, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
+            turnToAngle(90);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(-25, 0);
             moveXY(0, -12);
@@ -40,7 +40,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
             moveXY(0, 12);
             moveXY(19, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
+            turnToAngle(90);
         } else {
             moveXY(-30, 0);
             dropPurplePixel();
@@ -60,7 +60,6 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
             moveXY(0,  33);
         }
         backstageToParkPathFrontStage();
-
 
         while (!isStopRequested()) {
             telemetry.update();

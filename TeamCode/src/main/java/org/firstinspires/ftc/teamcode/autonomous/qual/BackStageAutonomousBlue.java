@@ -32,17 +32,17 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             moveXY(-25, 0);
             moveXY(0, 12);
             dropPurplePixel();
-            moveXY(4, 0);
+            moveXY(2, 0);
             moveXY(0, -12);
-            moveXY(-4, 0);
+            moveXY(-2, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(-25, 0);
             moveXY(0, -12);
             dropPurplePixel();
-            moveXY(4, 0);
+            moveXY(2, 0);
             moveXY(0, 12);
-            moveXY(-4, 0);
+            moveXY(-2, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         } else{
             moveXY(-30, 0);
@@ -50,27 +50,7 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             moveXY(11, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         }
-        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                turnToAngle(90);
-            }else{
-                turnToAngle(-90);
-            }
-            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, -20);
-            }else {
-                moveXY(0, 20);
-            }
-            moveXY(30, 0);
-            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, -15);
-            }else {
-                moveXY(0, 15);
-            }
-        }else{
-            backStagePath();
-            moveXY(0, -23);
-        }
+        leftPathExtra();
         if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
             moveXY(0, -6);
             moveXY(0, -17);
