@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -152,7 +151,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }else{
             turnToAngle(-90);
         }
-        moveXY(-38, 0);
+        moveXY(38, 0);
     }
 
     public void navigateToFrontStageBackStage() {
@@ -246,7 +245,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //parkBackStage();
     }
 
-    public void leftPathExtra(){
+    public void backPathAutonomous(){
         if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
             if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
                 turnToAngle(90);
@@ -254,23 +253,62 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 turnToAngle(-90);
             }
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, -20);
+                moveXY(0, -22);
             }else {
-                moveXY(0, 20);
+                moveXY(0, 22);
             }
             moveXY(30, 0);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, -15);
-            }else {
                 moveXY(0, 15);
+            }else {
+                moveXY(0, -15);
+            }
+            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
+                if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                    moveXY(0, 6);
+                    moveXY(0, 17);
+                }
+                else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                    moveXY(0, -6);
+                    moveXY(0, 29);
+                }else{
+                    moveXY(0, 23);
+                }
+            }else{
+                if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                    moveXY(0, -6);
+                    moveXY(0, -17);
+                } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                    moveXY(0, 6);
+                    moveXY(0, -29);
+                }else{
+                    moveXY(0, -23);
+                }
             }
         }else{
             if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
                 backStagePath();
-                moveXY(0, 23);
+                if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                    moveXY(0, 6);
+                    moveXY(0, 17);
+                }
+                else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                    moveXY(0, -6);
+                    moveXY(0, 29);
+                }else{
+                    moveXY(0, 23);
+                }
             }else{
                 backStagePath();
-                moveXY(0, -23);
+                if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                    moveXY(0, -6);
+                    moveXY(0, -17);
+                } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                    moveXY(0, 6);
+                    moveXY(0, -29);
+                }else{
+                    moveXY(0, -23);
+                }
             }
         }
     }

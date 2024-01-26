@@ -19,7 +19,7 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
             idle();
         }
 
-        robot.camera.stopStreaming();
+        robot.visionPortal.stopStreaming();
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 
@@ -49,15 +49,7 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
             moveXY(11, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         }
-        leftPathExtra();
-        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-            moveXY(0, 6);
-            moveXY(0, 17);
-        }
-        else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(0, -6);
-            moveXY(0, 29);
-        }
+        backPathAutonomous();
 
         while (!isStopRequested()) {
             telemetry.update();

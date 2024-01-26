@@ -19,14 +19,13 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }
-
-        robot.camera.stopStreaming();
+        robot.visionPortal.stopStreaming();
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 
 
 
-
+        /*
         robot.speed = robot.bestSpeed;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
             moveXY(-25, 0);
@@ -51,8 +50,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             turnToAngle(-90);
         }
-
-        //purplePixelToWhitePixelPickupFrontStage();
+        */
         purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         backstageToParkPathFrontStage();
