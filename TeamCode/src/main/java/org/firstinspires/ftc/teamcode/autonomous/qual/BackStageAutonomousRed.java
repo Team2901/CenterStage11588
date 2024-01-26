@@ -18,12 +18,11 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }
+
         robot.camera.stopStreaming();
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 
-
-        // TODO: Stop camera now that we have found the prop
 
         // Move based on the detected prop position
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
