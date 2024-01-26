@@ -246,69 +246,57 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     }
 
     public void backPathAutonomous(){
-        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                turnToAngle(90);
+        if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED && robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            turnToAngle(-90);
+            moveXY(0, 24);
+            moveXY(39, 0);
+            moveXY(0, -21);
+            if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                moveXY(0, 6);
+                moveXY(0, 17);
+            }
+            else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                moveXY(0, -6);
+                moveXY(0, 29);
             }else{
-                turnToAngle(-90);
+                moveXY(0, 23);
             }
-            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, -22);
-            }else {
-                moveXY(0, 22);
+        }else if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
+            backStagePath();
+            if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                moveXY(0, 6);
+                moveXY(0, 17);
             }
-            moveXY(30, 0);
-            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(0, 15);
-            }else {
-                moveXY(0, -15);
-            }
-            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
-                if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-                    moveXY(0, 6);
-                    moveXY(0, 17);
-                }
-                else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-                    moveXY(0, -6);
-                    moveXY(0, 29);
-                }else{
-                    moveXY(0, 23);
-                }
+            else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                moveXY(0, -6);
+                moveXY(0, 29);
             }else{
-                if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-                    moveXY(0, -6);
-                    moveXY(0, -17);
-                } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
-                    moveXY(0, 6);
-                    moveXY(0, -29);
-                }else{
-                    moveXY(0, -23);
-                }
+                moveXY(0, 23);
+            }
+        }else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT && robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE){
+            turnToAngle(-90);
+            moveXY(0, 24);
+            moveXY(39, 0);
+            moveXY(0, -21);
+            if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                moveXY(0, -6);
+                moveXY(0, -17);
+            } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                moveXY(0, 6);
+                moveXY(0, -29);
+            }else{
+                moveXY(0,-23);
             }
         }else{
-            if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
-                backStagePath();
-                if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-                    moveXY(0, 6);
-                    moveXY(0, 17);
-                }
-                else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-                    moveXY(0, -6);
-                    moveXY(0, 29);
-                }else{
-                    moveXY(0, 23);
-                }
+            backStagePath();
+            if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                moveXY(0, -6);
+                moveXY(0, -17);
+            } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                moveXY(0, 6);
+                moveXY(0, -29);
             }else{
-                backStagePath();
-                if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-                    moveXY(0, -6);
-                    moveXY(0, -17);
-                } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
-                    moveXY(0, 6);
-                    moveXY(0, -29);
-                }else{
-                    moveXY(0, -23);
-                }
+                moveXY(0, -23);
             }
         }
     }

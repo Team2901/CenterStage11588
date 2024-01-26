@@ -33,27 +33,27 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
         // Move based on the detected prop position
         robot.speed = 0.5;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            moveXY(-25, 0);
-            moveXY(0, 12);
-            moveXY(-2, 0);
-            dropPurplePixel();
-            moveXY(3, 0);
+            moveXY(25, 0);
             moveXY(0, -12);
-            moveXY(-2, 0);
+            moveXY(2, 0);
+            dropPurplePixel();
+            moveXY(-3, 0);
+            moveXY(0, 12);
+            moveXY(2, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(-25, 0);
-            moveXY(0, -12);
-            moveXY(-2, 0);
-            dropPurplePixel();
-            moveXY(3, 0);
+            moveXY(25, 0);
             moveXY(0, 12);
-            moveXY(-2, 0);
+            moveXY(2, 0);
+            dropPurplePixel();
+            moveXY(-3, 0);
+            moveXY(0, -12);
+            moveXY(2, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         } else{
-            moveXY(-30, 0);
+            moveXY(30, 0);
             dropPurplePixel();
-            moveXY(9, 0);
+            moveXY(-9, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         }
         backPathAutonomous();
