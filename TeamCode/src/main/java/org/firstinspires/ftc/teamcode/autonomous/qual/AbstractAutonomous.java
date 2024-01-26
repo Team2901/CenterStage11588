@@ -317,61 +317,61 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         robot.speed = robot.bestSpeed;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE) {
-                moveXY(-28, 0);
-                moveXY(0, 12);
-                dropPurplePixel();
-                moveXY(3, 0);
+                moveXY(28, 0);
                 moveXY(0, -12);
-                moveXY(22, 0);
+                dropPurplePixel();
+                moveXY(-3, 0);
+                moveXY(0, 12);
+                moveXY(-22, 0);
             }
             else {
-                moveXY(-25, 0);
-                moveXY(0, 12);
-                dropPurplePixel();
+                moveXY(25, 0);
                 moveXY(0, -12);
-                moveXY(22, 0);
+                dropPurplePixel();
+                moveXY(0, 12);
+                moveXY(-22, 0);
             }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                turnToAngle(90);
+                turnToAngle(-90);
             }
             else {
-                turnToAngle(-90);
+                turnToAngle(90);
             }
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                moveXY(-28, 0);
-                moveXY(0, -12);
-                dropPurplePixel();
-                moveXY(3, 0);
+                moveXY(28, 0);
                 moveXY(0, 12);
-                moveXY(22, 0);
+                dropPurplePixel();
+                moveXY(-3, 0);
+                moveXY(0, -12);
+                moveXY(-22, 0);
             }
             else {
-                moveXY(-25, 0);
-                moveXY(0, -12);
-                dropPurplePixel();
+                moveXY(25, 0);
                 moveXY(0, 12);
-                moveXY(22, 0);
+                dropPurplePixel();
+                moveXY(0, -12);
+                moveXY(-22, 0);
             }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                turnToAngle(90);
+                turnToAngle(-90);
             }
             else {
-                turnToAngle(-90);
+                turnToAngle(90);
             }
 
         } else { //middle path
-            moveXY(-30, 0);
+            moveXY(30, 0);
             dropPurplePixel();
-            moveXY(11, 0);
+            moveXY(-11, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-                turnToAngle(90);
+                turnToAngle(-90);
             }
             else {
-                turnToAngle(-90);
+                turnToAngle(90);
             }
         }
     }

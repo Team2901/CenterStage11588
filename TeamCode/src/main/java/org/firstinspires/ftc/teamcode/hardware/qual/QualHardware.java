@@ -194,7 +194,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             backLeft.setDirection(DcMotor.Direction.REVERSE);
 
             // Set the Rev Hub Orientation
-            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         }
         purplePixelDropper.setPosition(PURPLE_PIXEL_DROPPER_START_POSITION);
