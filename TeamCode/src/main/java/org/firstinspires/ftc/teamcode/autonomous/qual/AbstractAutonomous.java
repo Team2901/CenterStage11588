@@ -147,9 +147,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
 
     public void navigateToBackdropBackStage() {
         if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            turnToAngle(90);
-        }else{
             turnToAngle(-90);
+        }else{
+            turnToAngle(90);
         }
         moveXY(38, 0);
     }
@@ -249,7 +249,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED && robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             turnToAngle(-90);
             moveXY(0, 24);
-            moveXY(39, 0);
+            moveXY(37, 0);
             moveXY(0, -21);
             if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
                 moveXY(0, 6);
@@ -274,9 +274,9 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 moveXY(0, 23);
             }
         }else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT && robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE){
-            turnToAngle(-90);
+            turnToAngle(90);
             moveXY(0, 24);
-            moveXY(39, 0);
+            moveXY(37, 0);
             moveXY(0, -21);
             if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
                 moveXY(0, -6);
