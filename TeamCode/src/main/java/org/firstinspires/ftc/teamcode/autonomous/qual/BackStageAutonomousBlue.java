@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
+
+import dalvik.system.DelegateLastClassLoader;
 
 @Autonomous(name="Back Stage Blue", group="11588")
 public class BackStageAutonomousBlue extends AbstractAutonomous {
@@ -19,7 +22,10 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }
-        robot.visionPortal.stopStreaming();
+
+        if (robot.camera != null) {
+            robot.camera.stopStreaming();
+        }
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 

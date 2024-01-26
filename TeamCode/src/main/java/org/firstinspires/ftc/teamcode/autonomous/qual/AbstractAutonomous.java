@@ -93,10 +93,10 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     public void whitePixelsToBackstagePathFrontStage() {
         moveXY(60, 0);
         if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            moveXY(0, -23);
+            moveXY(0, -27);
             moveXY(30, 0);
         } else {
-            moveXY(0, 23);
+            moveXY(0, 27);
             moveXY(30, 0);
         }
         if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
