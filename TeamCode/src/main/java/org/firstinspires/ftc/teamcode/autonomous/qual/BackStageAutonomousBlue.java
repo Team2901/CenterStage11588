@@ -22,7 +22,7 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
         }
-
+        robot.camera.stopStreaming();
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 

@@ -148,7 +148,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     public void dropPurplePixel() {
         robot.purplePixelDropper.setPosition(.6);
         timer.reset();
-        while (timer.milliseconds() < 2000) {
+        while (timer.milliseconds() < 2000 && opModeIsActive()) {
             idle();
         }
     }
