@@ -99,28 +99,36 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, boolean initializeCamera) {
+        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE, initializeCamera);
+    }
     public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
+        init(hardwareMap, telemetry, teamColor, true);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor, boolean initializeCamera){
 
-        aprilTag = new AprilTagProcessor.Builder()
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .build();
-        propDetectionProcessor = new ComputerVisionProcessor(telemetry);
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .addProcessor(propDetectionProcessor)
-                .setCameraResolution(new Size(1280, 720))
-                .build();
+        if (initializeCamera) {
+            aprilTag = new AprilTagProcessor.Builder()
+                    .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                    .build();
+            propDetectionProcessor = new ComputerVisionProcessor(telemetry);
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .addProcessor(aprilTag)
+                    .addProcessor(propDetectionProcessor)
+                    .setCameraResolution(new Size(1280, 720))
+                    .build();
+            propDetectionProcessor.allianceColor = teamColor;
+        }
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
 
-        propDetectionProcessor.allianceColor = teamColor;
         arm = hardwareMap.get(DcMotorEx.class, "lift");
         purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
-        //clawRight = hardwareMap.get(Servo.class, "armRight");
-        //clawLeft = hardwareMap.get(Servo.class, "armLeft");
+        clawRight = hardwareMap.get(Servo.class, "armRight");
+        clawLeft = hardwareMap.get(Servo.class, "armLeft");
 
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
