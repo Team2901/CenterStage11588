@@ -119,8 +119,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         propDetectionProcessor.allianceColor = teamColor;
         arm = hardwareMap.get(DcMotorEx.class, "lift");
         purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
-        clawRight = hardwareMap.get(Servo.class, "armRight");
-        clawLeft = hardwareMap.get(Servo.class, "armLeft");
+        //clawRight = hardwareMap.get(Servo.class, "armRight");
+        //clawLeft = hardwareMap.get(Servo.class, "armLeft");
 
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
