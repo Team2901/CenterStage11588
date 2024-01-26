@@ -15,6 +15,6 @@ public class EmergencyRedBack extends AbstractAutonomous {
     }
     public void emergencyPark() {
         robot.speed = 0.5;
-        moveXY(0,-46);
+        moveXY(0,46);
     }
 }
