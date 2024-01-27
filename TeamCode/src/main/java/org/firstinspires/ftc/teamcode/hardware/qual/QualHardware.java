@@ -37,9 +37,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    public final int MAX_LIFT_HEIGHT = 0;
-    public static double KG = 0.12;
-    public static double KP = 0.041;
+    public final int MAX_LIFT_HEIGHT = 800;
+    public final int MID_LIFT_HEIGHT = 500;
+    double lastError = 0;
+    public static double KG = 0.0;
+    public static double KP = 0.05;
 
     //Leave KI and KD as be, we are sticking with a proportinal controller
     public static double KI = 0.0;
@@ -49,10 +51,13 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
+    public DcMotorEx lift;
     public DcMotorEx backRight;
     public DcMotorEx arm;
     public Servo clawRight;
     public Servo clawLeft;
+
+    public Servo planeLauncher;
     public Servo purplePixelDropper;
     public double speed = .15;
     public double liftSpeed = .35;
@@ -72,16 +77,16 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
-    double kCos = 0.3;
     double pArm = 0.0;
     double iArm = 0.0;
     double dArm = 0.0;
     double cosArm = 0.0;
     double iArmMax = .25;
     double armAngle = 0;
+    double integralSum = 0;
     Height currentArmHeight = Height.RETRACTED;
     Height lastArmHeight = currentArmHeight;
-    public static final double OPEN_CLAW_POSITION = 0;
+    public static final double OPEN_CLAW_POSITION = 0.5;
     public static final double CLOSED_CLAW_POSITION = 0;
     public ClawPosition leftClawPositon = ClawPosition.CLOSED;
     public ClawPosition rightClawPositon = ClawPosition.CLOSED;
@@ -115,12 +120,14 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        planeLauncher = hardwareMap.get(Servo.class, "launcher");
 
         propDetectionProcessor.allianceColor = teamColor;
-        arm = hardwareMap.get(DcMotorEx.class, "lift");
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
         purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
-        clawRight = hardwareMap.get(Servo.class, "armRight");
-        clawLeft = hardwareMap.get(Servo.class, "armLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawLeft");
+        clawLeft = hardwareMap.get(Servo.class, "clawRight");
 
 
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
@@ -225,49 +232,49 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     //Must be looped
     public void PIDLoop() {
-        error = goalPosition - arm.getCurrentPosition();
-        dArm = (error - pArm) / PIDTimer.seconds();
-        iArm = iArm + (error * PIDTimer.seconds());
-        pArm = error;
-        armAngle = recalculateAngle();
-        cosArm = Math.cos(Math.toRadians(armAngle));
-        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * kCos);
-        PIDTimer.reset();
-
-        if(currentArmHeight != lastArmHeight){
-            iArm = 0;
-        }
-
-        if(iArm > iArmMax){
-            iArm = iArmMax;
-        }else if(iArm < -iArmMax){
-            iArm = -iArmMax;
-        }
-
-        if(total > .5){
-            total = .5;
-        }
-        if(recalculateAngle() > 60 && total < -.3){
-            total = -.3;
-        }else if(total < .005 && recalculateAngle() < 60){
-            total = .005;
-        }
-        lastArmHeight = currentArmHeight;
-
-        arm.setPower(total);
-//        int encoderPosition = lift.getCurrentPosition();
-//        error = goalPosition - encoderPosition;
-//        double derivative = (error - lastError) / PIDTimer.seconds();
-//
-//        integralSum = integralSum + (error * PIDTimer.seconds());
-//        double armPower;
-//
-//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
-//        lift.setPower(armPower);
-//
-//        lastError = error;
-//
+//        error = goalPosition - arm.getCurrentPosition();
+//        dArm = (error - pArm) / PIDTimer.seconds();
+//        iArm = iArm + (error * PIDTimer.seconds());
+//        pArm = error;
+//        armAngle = recalculateAngle();
+//        cosArm = Math.cos(Math.toRadians(armAngle));
+//        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * KG);
 //        PIDTimer.reset();
+//
+//        if(currentArmHeight != lastArmHeight){
+//            iArm = 0;
+//        }
+//
+//        if(iArm > iArmMax){
+//            iArm = iArmMax;
+//        }else if(iArm < -iArmMax){
+//            iArm = -iArmMax;
+//        }
+//
+//        if(total > .5){
+//            total = .5;
+//        }
+//        if(recalculateAngle() > 60 && total < -.3){
+//            total = -.3;
+//        }else if(total < .005 && recalculateAngle() < 60){
+//            total = .005;
+//        }
+//        lastArmHeight = currentArmHeight;
+//
+//        arm.setPower(total);
+        int encoderPosition = arm.getCurrentPosition();
+        error = goalPosition - encoderPosition;
+        double derivative = (error - lastError) / PIDTimer.seconds();
+
+        integralSum = integralSum + (error * PIDTimer.seconds());
+        double armPower;
+
+        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+        arm.setPower(armPower);
+
+        lastError = error;
+
+        PIDTimer.reset();
     }
 
     public double recalculateAngle(){
