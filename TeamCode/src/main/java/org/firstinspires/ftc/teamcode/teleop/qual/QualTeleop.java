@@ -31,8 +31,8 @@ public class QualTeleop extends OpMode {
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
-        robot.init(this.hardwareMap, telemetry);
-        robot.camera.stopStreaming();
+        robot.init(this.hardwareMap, telemetry, false);
+        //robot.visionPortal.stopStreaming();
     }
 
     @Override

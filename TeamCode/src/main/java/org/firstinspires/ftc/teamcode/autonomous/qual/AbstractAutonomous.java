@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -92,23 +91,48 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //turns 180 instead of 90
     } */
     public void whitePixelsToBackstagePathFrontStage() {
-        moveXY(-60, 0);
+        moveXY(60, 0);
         if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            moveXY(0, 23);
-            moveXY(-30, 0);
+            moveXY(0, -27);
+            moveXY(30, 0);
         } else {
-            moveXY(0, -23);
-            moveXY(-30, 0);
+            moveXY(0, 27);
+            moveXY(30, 0);
         }
+        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+            moveXY(0, 6);
+        }
+        else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            moveXY(0, -6);
+        } // TODO place yellow pixel on backdrop
     }
 
     public void backstageToParkPathFrontStage() {
-        if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
-            moveXY(0, 25);
-        } else {
-            moveXY(0, -25);
+        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(0, -21);
+            }
+            else {
+               moveXY(0, 33);
+            }
         }
-        moveXY(-13, 0);
+        else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(0, -33);
+            }
+            else {
+                moveXY(0, 21);
+            }
+        }
+        else { //middle
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(0, -27);
+            }
+            else {
+                moveXY(0, 27);
+            }
+        }
+        moveXY(13, 0);
     }
 
     public void placePurplePixelGoToBackBoardPark() {
@@ -122,12 +146,12 @@ public abstract class AbstractAutonomous extends LinearOpMode {
     //robot is going left, so change one of the first two measurements
 
     public void navigateToBackdropBackStage() {
-        if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+        if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
             turnToAngle(-90);
-        } else {
+        }else{
             turnToAngle(90);
         }
-        moveXY(-38, 0);
+        moveXY(38, 0);
     }
 
     public void navigateToFrontStageBackStage() {
@@ -221,27 +245,103 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         //parkBackStage();
     }
 
-    public void frontStagePath() {
-        // purplePixelToWhitePixelPickupFrontStage();
-
+    public void backPathAutonomous(){
+        if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED && robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+            turnToAngle(-90);
+            moveXY(0, 24);
+            moveXY(37, 0);
+            moveXY(0, -21);
+            if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                moveXY(0, 6);
+                moveXY(0, 17);
+            }
+            else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                moveXY(0, -6);
+                moveXY(0, 29);
+            }else{
+                moveXY(0, 23);
+            }
+        }else if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
+            backStagePath();
+            if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
+                moveXY(0, 6);
+                moveXY(0, 17);
+            }
+            else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
+                moveXY(0, -6);
+                moveXY(0, 29);
+            }else{
+                moveXY(0, 23);
+            }
+        }else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT && robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE){
+            turnToAngle(90);
+            moveXY(0, 24);
+            moveXY(37, 0);
+            moveXY(0, -21);
+            if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                moveXY(0, -6);
+                moveXY(0, -17);
+            } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                moveXY(0, 6);
+                moveXY(0, -29);
+            }else{
+                moveXY(0,-23);
+            }
+        }else{
+            backStagePath();
+            if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
+                moveXY(0, -6);
+                moveXY(0, -17);
+            } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
+                moveXY(0, 6);
+                moveXY(0, -29);
+            }else{
+                moveXY(0, -23);
+            }
+        }
     }
 
     void purplePixelToWhitePixelPickupFrontStage() {
         robot.speed = robot.bestSpeed;
         if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
-            moveXY(-25, 0);
-            moveXY(0, 12);
-            dropPurplePixel();
-            moveXY(22, 0);
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE) {
+                moveXY(28, 0);
+                moveXY(0, -12);
+                dropPurplePixel();
+                moveXY(-3, 0);
+                moveXY(0, 12);
+                moveXY(-22, 0);
+            }
+            else {
+                moveXY(25, 0);
+                moveXY(0, -12);
+                dropPurplePixel();
+                moveXY(0, 12);
+                moveXY(-22, 0);
+            }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                turnToAngle(-90);
+            }
+            else {
+                turnToAngle(90);
+            }
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
-            moveXY(-25, 0);
-            moveXY(0, -12);
-            dropPurplePixel();
-            moveXY(20, 0);
-            //moveXY(0, 12);
-            //moveXY(19, 0);
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(28, 0);
+                moveXY(0, 12);
+                dropPurplePixel();
+                moveXY(-3, 0);
+                moveXY(0, -12);
+                moveXY(-22, 0);
+            }
+            else {
+                moveXY(25, 0);
+                moveXY(0, 12);
+                dropPurplePixel();
+                moveXY(0, -12);
+                moveXY(-22, 0);
+            }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
                 turnToAngle(-90);
@@ -250,12 +350,17 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 turnToAngle(90);
             }
 
-        } else {
-            moveXY(-30, 0);
+        } else { //middle path
+            moveXY(30, 0);
             dropPurplePixel();
-            moveXY(11, 0);
+            moveXY(-11, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            turnToAngle(-90);
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                turnToAngle(-90);
+            }
+            else {
+                turnToAngle(90);
+            }
         }
     }
 }
