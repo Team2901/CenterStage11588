@@ -18,6 +18,7 @@ public class QualTeleop extends OpMode {
     public static final int ARM_SERVO_POSITION = 1;
     public QualHardware robot = new QualHardware();
     public ImprovedGamepad gamepad;
+    public ImprovedGamepad gamepadTwo;
     double turningPower = 0;
     ElapsedTime PIDTimer = new ElapsedTime();
     public enum Height{GROUND, FIRST, SECOND, THIRD}
@@ -31,6 +32,7 @@ public class QualTeleop extends OpMode {
     @Override
     public void init() {
         gamepad = new ImprovedGamepad(gamepad1, new ElapsedTime(), "Gamepad");
+        gamepadTwo = new ImprovedGamepad(gamepad2, new ElapsedTime(), "Gamepad");
         robot.init(this.hardwareMap, telemetry, false);
         //robot.visionPortal.stopStreaming();
     }
@@ -50,31 +52,33 @@ public class QualTeleop extends OpMode {
             if (robot.leftClawPositon == QualHardware.ClawPosition.CLOSED) {
                 robot.clawLeft.setPosition(QualHardware.OPEN_CLAW_POSITION);
                 robot.leftClawPositon = QualHardware.ClawPosition.OPEN;
-            } else {
-                robot.clawLeft.setPosition(QualHardware.CLOSED_CLAW_POSITION);
-                robot.leftClawPositon = QualHardware.ClawPosition.CLOSED;
-            }
-        } else if (gamepad.y.isInitialPress()) {
-            if (robot.rightClawPositon == QualHardware.ClawPosition.CLOSED) {
-                robot.clawLeft.setPosition(QualHardware.OPEN_CLAW_POSITION);
+                robot.clawRight.setPosition(QualHardware.OPEN_CLAW_POSITION);
                 robot.rightClawPositon = QualHardware.ClawPosition.OPEN;
             } else {
                 robot.clawLeft.setPosition(QualHardware.CLOSED_CLAW_POSITION);
+                robot.leftClawPositon = QualHardware.ClawPosition.CLOSED;
+                robot.clawRight.setPosition(QualHardware.CLOSED_CLAW_POSITION);
                 robot.rightClawPositon = QualHardware.ClawPosition.CLOSED;
             }
         }
 
-        if (gamepad.a.isInitialPress()) {
-            robot.purplePixelDropper.setPosition(DROPPER_OPEN_POSITION);
+        if (gamepadTwo.a.isInitialPress() || gamepad.right_trigger.isInitialPress()) {
+            robot.planeLauncher.setPosition(.5);
         }
 
-
-        if(gamepad.left_bumper.isPressed() && robot.goalPosition > 5) {
-            robot.goalPosition -= 5;
-        } else if(gamepad.right_bumper.isPressed() && robot.goalPosition < robot.MAX_LIFT_HEIGHT) {
-            robot.goalPosition += 5;
+        if (gamepad.right_bumper.isPressed() || gamepadTwo.right_bumper.isPressed()) {
+            robot.lift.setPower(1);
+        } else if (gamepad.left_bumper.isPressed() || gamepadTwo.right_bumper.isPressed()) {
+            robot.lift.setPower(-1);
+        } else {
+            robot.lift.setPower(0);
         }
 
+        if (gamepad.dpad_up.isPressed()) {
+            robot.goalPosition += 1;
+        } else if (gamepad.dpad_down.isPressed()) {
+            robot.goalPosition -= 1;
+        }
         robot.PIDLoop();
 
         double y = 1 * gamepad.left_stick_y.getValue();
