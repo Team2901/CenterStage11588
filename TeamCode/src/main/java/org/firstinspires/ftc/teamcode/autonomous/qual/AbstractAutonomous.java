@@ -353,7 +353,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         } else { //middle path
             moveXY(30, 0);
             dropPurplePixel();
-            moveXY(-11, 0);
+            moveXY(-25, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
                 turnToAngle(-90);
