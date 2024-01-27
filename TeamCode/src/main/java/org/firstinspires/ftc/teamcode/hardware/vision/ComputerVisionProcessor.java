@@ -18,7 +18,7 @@ import org.opencv.imgproc.Imgproc;
 
 public class ComputerVisionProcessor implements VisionProcessor {
 
-    public static final int PIXEL_THRESHOLD_CONSTANT = 200;
+    public static final int PIXEL_THRESHOLD_CONSTANT = 1000;
 
     public enum PropPosition {LEFT, MIDDLE, RIGHT}
 
@@ -76,6 +76,17 @@ public class ComputerVisionProcessor implements VisionProcessor {
             telemetry.addLine("No prop detected in 50 frames: GUESSING LEFT");
             return;
         }
+
+        if (allianceColor == AllianceColor.BLUE) {
+            if (middleMat.blueAmount < PIXEL_THRESHOLD_CONSTANT && rightMat.blueAmount < PIXEL_THRESHOLD_CONSTANT) {
+                propPosition = PropPosition.LEFT;
+            }
+        } else if (allianceColor == AllianceColor.RED) {
+            if (middleMat.redAmount < PIXEL_THRESHOLD_CONSTANT && rightMat.redAmount < PIXEL_THRESHOLD_CONSTANT) {
+                propPosition = PropPosition.LEFT;
+            }
+        }
+
 
         if (allianceColor == AllianceColor.BLUE) {
             if (middleMat.blueAmount > PIXEL_THRESHOLD_CONSTANT && middleMat.blueAmount > rightMat.blueAmount) {
