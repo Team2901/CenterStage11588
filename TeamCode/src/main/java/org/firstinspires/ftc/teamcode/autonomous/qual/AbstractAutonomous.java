@@ -104,7 +104,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
         else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(0, -6);
-        } // TODO place yellow pixel on backdrop
+        } // TODO place yellow pixel on backdrop.
     }
 
     public void backstageToParkPathFrontStage() {
