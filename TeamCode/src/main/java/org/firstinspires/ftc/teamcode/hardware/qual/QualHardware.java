@@ -201,7 +201,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
             OPEN_CLAW_POSITION = 0.16;
-            CLOSED_CLAW_POSITION = 0.259;
+            CLOSED_CLAW_POSITION = 0.25;
         }
         else {
             // teambot
