@@ -170,6 +170,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The following call to getRobotConfigurationName has been
         // copied over from prior years Utilities package. It allows
