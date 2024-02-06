@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.qual.QualHardware;
@@ -26,10 +27,14 @@ public class TestingTeleop2 extends OpMode {
 
         if (gamepad.left_bumper.isPressed()) {
             robot.arm.setPower(robot.liftSpeed);
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else if (gamepad.right_bumper.isPressed()) {
             robot.arm.setPower(-robot.liftSpeed);
+            robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
-            robot.arm.setPower(0);
+            int ticks = robot.arm.getCurrentPosition();
+            robot.arm.setTargetPosition(ticks);
+            robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
         if (gamepad.y.isInitialPress()) {

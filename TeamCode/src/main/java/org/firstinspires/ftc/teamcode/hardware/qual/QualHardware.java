@@ -87,8 +87,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     double integralSum = 0;
     Height currentArmHeight = Height.RETRACTED;
     Height lastArmHeight = currentArmHeight;
-    public static final double OPEN_CLAW_POSITION = 0.5;
-    public static final double CLOSED_CLAW_POSITION = 0;
+    public static double  OPEN_CLAW_POSITION = 0.5;
+    public static double  CLOSED_CLAW_POSITION = 0;
     public ClawPosition leftClawPositon = ClawPosition.CLOSED;
     public ClawPosition rightClawPositon = ClawPosition.CLOSED;
 
@@ -172,6 +172,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The following call to getRobotConfigurationName has been
         // copied over from prior years Utilities package. It allows
@@ -201,7 +202,9 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
-            //bestSpeed = 0.25;
+
+            OPEN_CLAW_POSITION = 0.16;
+            CLOSED_CLAW_POSITION = 0.25;
         }
         else {
             // teambot
