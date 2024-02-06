@@ -203,6 +203,10 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         }
     }
 
+    public void placeOnBackdrop() {
+        return;
+    }
+
 
     public void turnToAngle(double turnAngle) {
 

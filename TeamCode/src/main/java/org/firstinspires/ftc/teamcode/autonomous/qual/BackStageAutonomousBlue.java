@@ -55,6 +55,7 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
         }
         backPathAutonomous();
+        placeOnBackdrop();
 
         while (!isStopRequested()) {
             telemetry.update();

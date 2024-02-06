@@ -34,6 +34,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
             moveXY(0, 6);
             moveXY(0, -33);
         }
+        placeOnBackdrop();
         backstageToParkPathFrontStage();
 
         while (!isStopRequested()) {

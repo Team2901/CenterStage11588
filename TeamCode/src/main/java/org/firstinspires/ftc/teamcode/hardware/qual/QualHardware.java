@@ -33,6 +33,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
     public static final double PURPLE_PIXEL_DROPPER_START_POSITION = 0.25;
+    public static final int TICKS_TO_ANGLES = 0;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
@@ -98,7 +99,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     enum Height {
         EXTENDED,
-        RETRACTED
+        RETRACTED,
+        FLOOR
     }
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -240,49 +242,49 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
     //Must be looped
     public void PIDLoop() {
-//        error = goalPosition - arm.getCurrentPosition();
-//        dArm = (error - pArm) / PIDTimer.seconds();
-//        iArm = iArm + (error * PIDTimer.seconds());
-//        pArm = error;
-//        armAngle = recalculateAngle();
-//        cosArm = Math.cos(Math.toRadians(armAngle));
-//        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * KG);
-//        PIDTimer.reset();
-//
-//        if(currentArmHeight != lastArmHeight){
-//            iArm = 0;
-//        }
-//
-//        if(iArm > iArmMax){
-//            iArm = iArmMax;
-//        }else if(iArm < -iArmMax){
-//            iArm = -iArmMax;
-//        }
-//
-//        if(total > .5){
-//            total = .5;
-//        }
-//        if(recalculateAngle() > 60 && total < -.3){
-//            total = -.3;
-//        }else if(total < .005 && recalculateAngle() < 60){
-//            total = .005;
-//        }
-//        lastArmHeight = currentArmHeight;
-//
-//        arm.setPower(total);
-        int encoderPosition = arm.getCurrentPosition();
-        error = goalPosition - encoderPosition;
-        double derivative = (error - lastError) / PIDTimer.seconds();
-
-        integralSum = integralSum + (error * PIDTimer.seconds());
-        double armPower;
-
-        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
-        arm.setPower(armPower);
-
-        lastError = error;
-
+        error = goalPosition - arm.getCurrentPosition();
+        dArm = (error - pArm) / PIDTimer.seconds();
+        iArm = iArm + (error * PIDTimer.seconds());
+        pArm = error;
+        armAngle = arm.getCurrentPosition() * TICKS_TO_ANGLES;
+        cosArm = Math.cos(Math.toRadians(armAngle));
+        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * KG);
         PIDTimer.reset();
+
+        if(currentArmHeight != lastArmHeight){
+            iArm = 0;
+        }
+
+        if(iArm > iArmMax){
+            iArm = iArmMax;
+        }else if(iArm < -iArmMax){
+            iArm = -iArmMax;
+        }
+
+        if(total > .5){
+            total = .5;
+        }
+        if(arm.getCurrentPosition() * TICKS_TO_ANGLES > 60 && total < -.3){
+            total = -.3;
+        }else if(total < .005 && arm.getCurrentPosition() * TICKS_TO_ANGLES < 60){
+            total = .005;
+        }
+        lastArmHeight = currentArmHeight;
+
+        arm.setPower(total);
+//        int encoderPosition = arm.getCurrentPosition();
+//        error = goalPosition - encoderPosition;
+//        double derivative = (error - lastError) / PIDTimer.seconds();
+//
+//        integralSum = integralSum + (error * PIDTimer.seconds());
+//        double armPower;
+//
+//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+//        arm.setPower(armPower);
+//
+//        lastError = error;
+//
+//        PIDTimer.reset();
     }
 
     public double recalculateAngle(){

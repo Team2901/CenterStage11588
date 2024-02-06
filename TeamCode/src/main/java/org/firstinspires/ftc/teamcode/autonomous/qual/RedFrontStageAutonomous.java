@@ -28,6 +28,7 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
 
         purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
+        placeOnBackdrop();
         backstageToParkPathFrontStage();
 
 
