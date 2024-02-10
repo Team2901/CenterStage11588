@@ -70,6 +70,14 @@ public abstract class AbstractAutonomous extends LinearOpMode {
         telemetry.addData("angle", robot.getAngle());
         telemetry.update();
     }
+    public void lowerArmToFloor(){
+        robot.arm.setTargetPosition(robot.ARM_DROP_POSITION);
+        robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.arm.setPower(robot.armSpeed);
+        while (opModeIsActive() && robot.arm.isBusy());
+            idle();
+    }
+
     /*public void startToDropPurplePixel(PropPosition location){
         //right path blue
         if(location == PropPosition.RIGHT){
@@ -323,7 +331,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 moveXY(0, 12);
                 //moveXY(-22, 0);
             }
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            dropPurplePixel();
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
                 moveXY(26, 0);
                 turnToAngle(90);
@@ -358,7 +366,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 moveXY(0, -12);
                 //moveXY(-22, 0);
             }
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            dropPurplePixel();
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
                 moveXY(26, 0);
                 turnToAngle(90);
@@ -383,7 +391,7 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             dropPurplePixel();
             moveXY(-5, 0);
             //moveXY(-25, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            dropPurplePixel();
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
                 moveXY(0, -20);
                 moveXY(26, 0);

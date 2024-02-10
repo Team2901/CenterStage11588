@@ -35,7 +35,7 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
             moveXY(-3, 0);
             moveXY(0, 12);
             moveXY(1, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(25, 0);
             moveXY(0, 12);
@@ -44,12 +44,12 @@ public class BackStageAutonomousRed extends AbstractAutonomous {
             moveXY(-3, 0);
             moveXY(0, -12);
             moveXY(1, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         } else{
             moveXY(30, 0);
             dropPurplePixel();
             moveXY(-11, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         }
         backPathAutonomous();
         placeOnBackdrop();

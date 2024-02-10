@@ -26,10 +26,10 @@ public class TestingTeleop2 extends OpMode {
         gamepad.update();
 
         if (gamepad.left_bumper.isPressed()) {
-            robot.arm.setPower(robot.liftSpeed);
+            robot.arm.setPower(robot.armSpeed);
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else if (gamepad.right_bumper.isPressed()) {
-            robot.arm.setPower(-robot.liftSpeed);
+            robot.arm.setPower(-robot.armSpeed);
             robot.arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         } else {
             int ticks = robot.arm.getCurrentPosition();
@@ -38,9 +38,9 @@ public class TestingTeleop2 extends OpMode {
         }
 
         if (gamepad.y.isInitialPress()) {
-            robot.liftSpeed += 0.1;
+            robot.armSpeed += 0.1;
         } else if (gamepad.a.isInitialPress()) {
-            robot.liftSpeed -= 0.1;
+            robot.armSpeed -= 0.1;
         }
 
 //        if (gamepad.x.isPressed()) {
@@ -51,12 +51,11 @@ public class TestingTeleop2 extends OpMode {
 //            robot.armLeft.setPosition(+0.2);
 //        }
 
-        telemetry.addData("Lift Speed", robot.liftSpeed);
-        telemetry.addData("Lift Position", robot.arm.getCurrentPosition());
+        telemetry.addData("Arm Speed", robot.armSpeed);
+        telemetry.addData("Arm Position", robot.arm.getCurrentPosition());
 //        telemetry.addData("Right Arm Servo", robot.armRight.getPosition());
 //        telemetry.addData("Left Arm Servo", robot.armLeft.getPosition());
         telemetry.update();
-
 
     }
 }

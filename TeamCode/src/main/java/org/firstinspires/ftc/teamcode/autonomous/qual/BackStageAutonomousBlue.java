@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.autonomous.qual;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
-
-import dalvik.system.DelegateLastClassLoader;
 
 @Autonomous(name="Back Stage Blue", group="11588")
 public class BackStageAutonomousBlue extends AbstractAutonomous {
@@ -38,7 +35,7 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             moveXY(-3, 0);
             moveXY(0, 15);
             moveXY(2, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
             moveXY(25, 0);
             moveXY(0, 12);
@@ -47,12 +44,12 @@ public class BackStageAutonomousBlue extends AbstractAutonomous {
             moveXY(-4, 0);
             moveXY(0, -12);
             moveXY(2, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         } else{
             moveXY(30, 0);
             dropPurplePixel();
             moveXY(-9, 0);
-            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
+            robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         }
         backPathAutonomous();
         placeOnBackdrop();

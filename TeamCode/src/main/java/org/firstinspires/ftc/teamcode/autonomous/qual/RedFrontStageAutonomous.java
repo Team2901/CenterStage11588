@@ -25,7 +25,9 @@ public class RedFrontStageAutonomous extends AbstractAutonomous {
         // init is over and we have started, loop here
 
 
-
+        if (robot.isCoachBot) {
+            lowerArmToFloor();
+        }
         purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
         placeOnBackdrop();

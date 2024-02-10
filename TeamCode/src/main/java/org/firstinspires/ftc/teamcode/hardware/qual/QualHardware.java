@@ -32,7 +32,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    public static final double PURPLE_PIXEL_DROPPER_START_POSITION = 0.25;
+    public static double PURPLE_PIXEL_DROPPER_OPEN_POSITION = 0.25;
+    public static double PURPLE_PIXEL_DROPPER_CLOSED_POSITION = 0;
     public static final int TICKS_TO_ANGLES = 0;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
@@ -61,6 +62,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public Servo planeLauncher;
     public Servo purplePixelDropper;
     public double speed = .15;
+    public double armSpeed = 0.5;
     public double liftSpeed = .35;
     public double turnTolerance = 0.5;
     int lowArmPosition = 0;
@@ -91,6 +93,8 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static double  CLOSED_CLAW_POSITION = 0;
     public ClawPosition leftClawPositon = ClawPosition.CLOSED;
     public ClawPosition rightClawPositon = ClawPosition.CLOSED;
+    public boolean isCoachBot = false;
+    public static int ARM_DROP_POSITION = -4400;
 
     public enum ClawPosition {
         OPEN,
@@ -205,6 +209,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
             OPEN_CLAW_POSITION = 0.16;
             CLOSED_CLAW_POSITION = 0.25;
+            isCoachBot = true;
+            PURPLE_PIXEL_DROPPER_OPEN_POSITION = 0.16;
+            PURPLE_PIXEL_DROPPER_CLOSED_POSITION = 0.25;
+
         }
         else {
             // teambot
@@ -217,7 +225,7 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         }
-        purplePixelDropper.setPosition(PURPLE_PIXEL_DROPPER_START_POSITION);
+        purplePixelDropper.setPosition(PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
