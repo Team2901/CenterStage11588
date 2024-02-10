@@ -257,25 +257,25 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             moveXY(0, -21);
             if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
                 moveXY(0, 6);
-                moveXY(0, 17);
+                moveXY(0, -29);
             }
             else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
                 moveXY(0, -6);
-                moveXY(0, 29);
+                moveXY(0, -17);
             }else{
-                moveXY(0, 23);
+                moveXY(0, -23);
             }
         }else if(robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
             backStagePath();
             if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
                 moveXY(0, 6);
-                moveXY(0, 17);
+                moveXY(0, -29);
             }
             else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
                 moveXY(0, -6);
-                moveXY(0, 29);
+                moveXY(0, -17);
             }else{
-                moveXY(0, 23);
+                moveXY(0, -23);
             }
         }else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT && robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.BLUE){
             turnToAngle(90);
@@ -284,23 +284,23 @@ public abstract class AbstractAutonomous extends LinearOpMode {
             moveXY(0, -21);
             if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
                 moveXY(0, -6);
-                moveXY(0, -17);
+                moveXY(0, 29);
             } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
                 moveXY(0, 6);
-                moveXY(0, -29);
+                moveXY(0, 17);
             }else{
-                moveXY(0,-23);
+                moveXY(0,23);
             }
         }else{
             backStagePath();
             if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT) {
                 moveXY(0, -6);
-                moveXY(0, -17);
+                moveXY(0, 29);
             } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
                 moveXY(0, 6);
-                moveXY(0, -29);
+                moveXY(0, 17);
             }else{
-                moveXY(0, -23);
+                moveXY(0, 23);
             }
         }
     }
@@ -314,21 +314,33 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 dropPurplePixel();
                 moveXY(-3, 0);
                 moveXY(0, 12);
-                moveXY(-22, 0);
+                //moveXY(-22, 0);
             }
             else {
                 moveXY(25, 0);
                 moveXY(0, -12);
                 dropPurplePixel();
                 moveXY(0, 12);
-                moveXY(-22, 0);
+                //moveXY(-22, 0);
             }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(26, 0);
+                turnToAngle(90);
+                moveXY(-20, 0);
+                //Pick up
+                moveXY(0, -55);
                 turnToAngle(-90);
+                moveXY(22,0);
             }
             else {
+                moveXY(26, 0);
+                turnToAngle(-90);
+                moveXY(20, 0);
+                //Pick up
+                moveXY(0, 55);
                 turnToAngle(90);
+                moveXY(22,0);
             }
         } else if (robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT) {
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
@@ -337,33 +349,58 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 dropPurplePixel();
                 moveXY(-3, 0);
                 moveXY(0, -12);
-                moveXY(-22, 0);
+                //moveXY(-22, 0);
             }
             else {
                 moveXY(25, 0);
                 moveXY(0, 12);
                 dropPurplePixel();
                 moveXY(0, -12);
-                moveXY(-22, 0);
+                //moveXY(-22, 0);
             }
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
             if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+                moveXY(26, 0);
+                turnToAngle(90);
+                moveXY(-20, 0);
+                //Pick up
+                moveXY(0, -55);
                 turnToAngle(-90);
+                moveXY(22,0);
             }
             else {
+                moveXY(26, 0);
+                turnToAngle(-90);
+                moveXY(20, 0);
+                //Pick up
+                moveXY(0, 55);
                 turnToAngle(90);
+                moveXY(22,0);
             }
 
         } else { //middle path
             moveXY(30, 0);
             dropPurplePixel();
-            moveXY(-25, 0);
+            moveXY(-5, 0);
+            //moveXY(-25, 0);
             robot.purplePixelDropper.setPosition(robot.PURPLE_PIXEL_DROPPER_START_POSITION);
-            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED) {
+            if (robot.propDetectionProcessor.allianceColor == ComputerVisionProcessor.AllianceColor.RED){
+                moveXY(0, -20);
+                moveXY(26, 0);
+                turnToAngle(90);
+                //Pick up
+                moveXY(0, -55);
                 turnToAngle(-90);
+                moveXY(22,0);
             }
             else {
+                moveXY(0, 20);
+                moveXY(26, 0);
+                turnToAngle(-90);
+                //Pick up
+                moveXY(0, 55);
                 turnToAngle(90);
+                moveXY(22,0);
             }
         }
     }
