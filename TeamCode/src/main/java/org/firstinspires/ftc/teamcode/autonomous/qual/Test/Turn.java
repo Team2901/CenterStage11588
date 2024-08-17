@@ -1,9 +1,11 @@
-package org.firstinspires.ftc.teamcode.autonomous.qual;
+package org.firstinspires.ftc.teamcode.autonomous.qual.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Straight", group="11588")
-public class Straight extends AbstractAutonomous {
+import org.firstinspires.ftc.teamcode.autonomous.qual.AbstractAutonomous;
+
+@Autonomous(name="Test Turn", group="Test")
+public class Turn extends AbstractAutonomous {
 
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap,telemetry);
@@ -11,6 +13,6 @@ public class Straight extends AbstractAutonomous {
         telemetry.update();
         waitForStart();
         robot.speed = 0.5;
-        moveXY(24, 0);
+        turnToAngle(90);
     }
 }

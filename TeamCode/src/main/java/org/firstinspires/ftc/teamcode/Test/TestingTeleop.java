@@ -61,9 +61,9 @@ public class TestingTeleop extends OpMode {
             robot.frontLeft.setPower(0);
         }
         if (gamepad.right_bumper.isPressed()) {
-            robot.lift.setPower(0.5);
+            robot.arm.setPower(0.5);
         } else if (gamepad.left_bumper.isPressed()) {
-            robot.lift.setPower(-0.5);
+            robot.arm.setPower(-0.5);
         } else {
             //robot.lift.setPower(0);
         }

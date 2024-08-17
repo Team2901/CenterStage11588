@@ -11,9 +11,14 @@ import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+
+/*
+    The Camera Resolution must be 1280x720 and the rects are hard coded to this size
+ */
+
 public class ComputerVisionProcessor implements VisionProcessor {
 
-    public static final int PIXEL_THRESHOLD_CONSTANT = 200;
+    public static final int PIXEL_THRESHOLD_CONSTANT = 1000;
 
     public enum PropPosition {LEFT, MIDDLE, RIGHT}
 
@@ -28,8 +33,8 @@ public class ComputerVisionProcessor implements VisionProcessor {
     private boolean init = false;
     Telemetry telemetry;
     Size targetSize;
-    CameraSubMat rightMat = new CameraSubMat(new Rect(875, 570, 150, 150));
-    CameraSubMat middleMat = new CameraSubMat(new Rect(300, 570, 150, 150));
+    CameraSubMat rightMat = new CameraSubMat(new Rect(830, 350, 150, 150));
+    CameraSubMat middleMat = new CameraSubMat(new Rect(400, 325, 150, 150));
 
 
     public ComputerVisionProcessor(Telemetry telemetry) {
@@ -73,6 +78,17 @@ public class ComputerVisionProcessor implements VisionProcessor {
         }
 
         if (allianceColor == AllianceColor.BLUE) {
+            if (middleMat.blueAmount < PIXEL_THRESHOLD_CONSTANT && rightMat.blueAmount < PIXEL_THRESHOLD_CONSTANT) {
+                propPosition = PropPosition.LEFT;
+            }
+        } else if (allianceColor == AllianceColor.RED) {
+            if (middleMat.redAmount < PIXEL_THRESHOLD_CONSTANT && rightMat.redAmount < PIXEL_THRESHOLD_CONSTANT) {
+                propPosition = PropPosition.LEFT;
+            }
+        }
+
+
+        if (allianceColor == AllianceColor.BLUE) {
             if (middleMat.blueAmount > PIXEL_THRESHOLD_CONSTANT && middleMat.blueAmount > rightMat.blueAmount) {
                 propPosition = PropPosition.MIDDLE;
             } else if (rightMat.blueAmount > PIXEL_THRESHOLD_CONSTANT && rightMat.blueAmount > middleMat.blueAmount) {
@@ -97,8 +113,10 @@ public class ComputerVisionProcessor implements VisionProcessor {
             android.graphics.Rect rightRect = rightMat.createAndroidRect(scaleFactor);
             android.graphics.Rect middleRect = middleMat.createAndroidRect(scaleFactor);
 
-            canvas.drawRect(rightRect, new Paint());
-            canvas.drawRect(middleRect, new Paint());
+            Paint paint = new Paint();
+            paint.setAlpha(100);
+            canvas.drawRect(rightRect, paint);
+            canvas.drawRect(middleRect, paint);
         }
 
         public void cameraTelemetry () {

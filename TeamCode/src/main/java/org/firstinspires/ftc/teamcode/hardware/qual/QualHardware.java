@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.hardware.qual;
 
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import android.util.Size;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,7 +20,6 @@ import org.firstinspires.ftc.teamcode.Utilities.ConfigUtilities;
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.opencv.core.Rect;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvCamera;
@@ -32,45 +32,47 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public static final double TICKS_PER_DRIVE_REV = TICKS_PER_MOTOR_REV * DRIVE_GEAR_RATIO;
     public static final double WHEEL_CIRCUMFERENCE = Math.PI * 3.78;
     public static final double TICKS_PER_INCH = TICKS_PER_DRIVE_REV / WHEEL_CIRCUMFERENCE;
-    public static final double DRAGGER_DOWN_POSITION = .45;
-    public static final double DRAGGER_UP_POSITION = .7;
-
-    public enum DraggerPosition {UP, DOWN}
-    public DraggerPosition draggerPosition = DraggerPosition.UP;
-    static final double FX = 1442.66;
-    public static final double FY = 1442.66;
-    public static final double CX = 777.52;
-    public static final double CY = 162.257;
+    public static double PURPLE_PIXEL_DROPPER_OPEN_POSITION = 0.25;
+    public static double PURPLE_PIXEL_DROPPER_CLOSED_POSITION = 0;
+    public static final int TICKS_TO_ANGLES = 0;
     public OpenCvCamera camera;
     public VisionPortal visionPortal;
     public ComputerVisionProcessor propDetectionProcessor;
     public AprilTagProcessor aprilTag;
-    /*public static final double OPENED_POSITION = 0.5;
-    public static final double CLOSED_POSITION = 0.15;
-    public static final int INTAKE_ENCODER_VALUE = 80;
-    public static final int LOW_POLE_ENCODER_VALUE = 1635;
-    public static final int MID_POLE_ENCODER_VALUE = 2800;
-    public static final int HIGH_POLE_ENCODER_VALUE = 3853;
-    public static final int MAX_HEIGHT_ENCODER_VALUE = 4350;
-    public static final double KG = 0.046;
-    public static final double KP = 0.566;
-    public static final double KI = 0.011;
-    public static final double KD = 0.008;
+    public final int MAX_LIFT_HEIGHT = 800;
+    public final int MID_LIFT_HEIGHT = 500;
+    double lastError = 0;
+    public static double KG = 0.0;
+    public static double KP = 0.05;
 
+    //Leave KI and KD as be, we are sticking with a proportinal controller
+    public static double KI = 0.0;
+    public static double KD = 0.0;
     public static double error = 0.0;
     public static double total = 0.0;
-    public static double pLift = 0.0;
-    public static double iLift = 0.0;
-    public static double dLift = 0.0;
-    public double iLiftMax = 0.0;
-     */
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
-    public DcMotorEx backRight;
     public DcMotorEx lift;
-    //public Servo claw;
+    public DcMotorEx backRight;
+    public DcMotorEx arm;
+    public Servo clawRight;
+    public Servo clawLeft;
+
+    public Servo planeLauncher;
+    public Servo purplePixelDropper;
     public double speed = .15;
+    public double armSpeed = 0.5;
+    public double liftSpeed = .35;
+    public double turnTolerance = 0.5;
+    int lowArmPosition = 0;
+    int zeroAngleTicks = lowArmPosition;
+
+    public int goalPosition = 0;
+    ElapsedTime PIDTimer = new ElapsedTime();
+
+    public double bestSpeed = 0.5;
+
 
     // public BNO055IMU imu;
 
@@ -78,32 +80,70 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     public IMU imu;
 
-    public Servo dragger;
+    double pArm = 0.0;
+    double iArm = 0.0;
+    double dArm = 0.0;
+    double cosArm = 0.0;
+    double iArmMax = .25;
+    double armAngle = 0;
+    double integralSum = 0;
+    Height currentArmHeight = Height.RETRACTED;
+    Height lastArmHeight = currentArmHeight;
+    public static double  OPEN_CLAW_POSITION = 0.5;
+    public static double  CLOSED_CLAW_POSITION = 0;
+    public ClawPosition leftClawPositon = ClawPosition.CLOSED;
+    public ClawPosition rightClawPositon = ClawPosition.CLOSED;
+    public boolean isCoachBot = false;
+    public static int ARM_DROP_POSITION = -4400;
+
+    public enum ClawPosition {
+        OPEN,
+        CLOSED
+    }
+
+    enum Height {
+        EXTENDED,
+        RETRACTED,
+        FLOOR
+    }
+
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
     }
-
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, boolean initializeCamera) {
+        init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE, initializeCamera);
+    }
     public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor){
+        init(hardwareMap, telemetry, teamColor, true);
+    }
+    public void init(HardwareMap hardwareMap, Telemetry telemetry, ComputerVisionProcessor.AllianceColor teamColor, boolean initializeCamera){
 
-        aprilTag = new AprilTagProcessor.Builder()
-                .setLensIntrinsics(FX, FY, CX, CY)
-                .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
-                .build();
-        propDetectionProcessor = new ComputerVisionProcessor(telemetry);
-        visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .addProcessor(aprilTag)
-                .addProcessor(propDetectionProcessor)
-                .setCameraResolution(new Size(1280, 720))
-                .build();
+        if (initializeCamera) {
+            aprilTag = new AprilTagProcessor.Builder()
+                    .setOutputUnits(DistanceUnit.INCH, AngleUnit.DEGREES)
+                    .build();
+            propDetectionProcessor = new ComputerVisionProcessor(telemetry);
+            visionPortal = new VisionPortal.Builder()
+                    .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                    .addProcessor(aprilTag)
+                    .addProcessor(propDetectionProcessor)
+                    .setCameraResolution(new Size(1280, 720))
+                    .build();
+            propDetectionProcessor.allianceColor = teamColor;
+        }
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
         frontRight = hardwareMap.get(DcMotorEx.class, "frontRight");
         backLeft = hardwareMap.get(DcMotorEx.class, "backLeft");
         backRight = hardwareMap.get(DcMotorEx.class, "backRight");
+        planeLauncher = hardwareMap.get(Servo.class, "launcher");
 
-        propDetectionProcessor.allianceColor = teamColor;
+        arm = hardwareMap.get(DcMotorEx.class, "arm");
         lift = hardwareMap.get(DcMotorEx.class, "lift");
-        dragger = hardwareMap.get(Servo.class, "dragger");
+        purplePixelDropper = hardwareMap.get(Servo.class, "purplePixelDropper");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+
+
 //        visionProcessor = new RI3WComputerVisionProcessor(allianceColor, telemetry);
 //
 //
@@ -114,25 +154,29 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
                 hardwareMap.get(WebcamName.class, "Webcam 1"), pipeline);
          */
 
+//        armRight.setPosition(ARM_SERVO_START_POSITION);
+//        armLeft.setPosition(ARM_SERVO_START_POSITION);
+
         //Resetting encoders so they start at 0
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        if (lift != null) lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //Running without encoders because it makes pid work better
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (lift != null) lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Making the drive motors break at 0 so they stop better
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // The following call to getRobotConfigurationName has been
         // copied over from prior years Utilities package. It allows
@@ -162,6 +206,13 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
             logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.BACKWARD;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
+
+            OPEN_CLAW_POSITION = 0.16;
+            CLOSED_CLAW_POSITION = 0.25;
+            isCoachBot = true;
+            PURPLE_PIXEL_DROPPER_OPEN_POSITION = 0.16;
+            PURPLE_PIXEL_DROPPER_CLOSED_POSITION = 0.25;
+
         }
         else {
             // teambot
@@ -171,10 +222,10 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
             backLeft.setDirection(DcMotor.Direction.REVERSE);
 
             // Set the Rev Hub Orientation
-            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
             usbFacingDirection  = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         }
-
+        purplePixelDropper.setPosition(PURPLE_PIXEL_DROPPER_OPEN_POSITION);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
@@ -183,11 +234,11 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
 
         // Our Control Hub has the new IMU chip (BHI260AP). Use the new generic IMU class when
         // requesting a refernce to the IMU hardware. What chip you have can be determined by
-        // using "program and manage" tab on driver station, then "manage" on the hamburger menu.
+        // using "program and manage" tab on dr iver station, then "manage" on the hamburger menu.
         imu = hardwareMap.get(IMU.class, "imu");
 
         // Use the new RevHubOrientationOnRobot classes to describe how the control hub is mounted on the robot.
-        // For the coach bot its mounted Backward / usb cable on the right (as seen from back of robot)
+        // For the coach bot its mounted Bgackward / usb cable on the right (as seen from back of robot)
         // Doc: https://github.com/FIRST-Tech-Challenge/FtcRobotController/wiki/Universal-IMU-Interface
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbFacingDirection);
@@ -200,20 +251,79 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         }
     }
 
+    //Must be looped
+    public void PIDLoop() {
+        error = goalPosition - arm.getCurrentPosition();
+        dArm = (error - pArm) / PIDTimer.seconds();
+        iArm = iArm + (error * PIDTimer.seconds());
+        pArm = error;
+        armAngle = arm.getCurrentPosition() * TICKS_TO_ANGLES;
+        cosArm = Math.cos(Math.toRadians(armAngle));
+        total = ((pArm * KP) + (iArm * KI) + (dArm * KD))/100 + (cosArm * KG);
+        PIDTimer.reset();
+
+        if(currentArmHeight != lastArmHeight){
+            iArm = 0;
+        }
+
+        if(iArm > iArmMax){
+            iArm = iArmMax;
+        }else if(iArm < -iArmMax){
+            iArm = -iArmMax;
+        }
+
+        if(total > .5){
+            total = .5;
+        }
+        if(arm.getCurrentPosition() * TICKS_TO_ANGLES > 60 && total < -.3){
+            total = -.3;
+        }else if(total < .005 && arm.getCurrentPosition() * TICKS_TO_ANGLES < 60){
+            total = .005;
+        }
+        lastArmHeight = currentArmHeight;
+
+        arm.setPower(total);
+//        int encoderPosition = arm.getCurrentPosition();
+//        error = goalPosition - encoderPosition;
+//        double derivative = (error - lastError) / PIDTimer.seconds();
+//
+//        integralSum = integralSum + (error * PIDTimer.seconds());
+//        double armPower;
+//
+//        armPower = (KP * error) + (KI * integralSum) + (KD * derivative) + KG;
+//        arm.setPower(armPower);
+//
+//        lastError = error;
+//
+//        PIDTimer.reset();
+    }
+
+    public double recalculateAngle(){
+        //Placeholder variables that will be deleted
+        double rightAngleDiff = 800;
+        double slope = 90/((zeroAngleTicks + rightAngleDiff) - zeroAngleTicks);
+        double newAngle = slope * (arm.getCurrentPosition() - zeroAngleTicks);
+        return newAngle;
+    }
+
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
 
     }
 
+    public ComputerVisionProcessor.AllianceColor getAlliance(){
+        return propDetectionProcessor.allianceColor;
+    }
+
     public void telemetry(Telemetry telemetry) {
-        //telemetry.addData("PID Total", total);
-        //telemetry.addData("P Arm", pLift);
-        //telemetry.addData("I Arm", iLift);
-        //telemetry.addData("D Arm", dLift);
-        //telemetry.addData("Proportional Stuff", pLift * KP);
-        //telemetry.addData("Integral Stuff", iLift * KI);
-        //telemetry.addData("Derivative Stuff", dLift * KD);
+        telemetry.addData("PID Total", total);
+        telemetry.addData("P Arm", pArm);
+        telemetry.addData("I Arm", iArm);
+        telemetry.addData("D Arm", dArm);
+        telemetry.addData("Proportional Stuff", pArm * KP);
+        telemetry.addData("Integral Stuff", iArm * KI);
+        telemetry.addData("Derivative Stuff", dArm * KD);
     }
 
     @Override
@@ -226,7 +336,5 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
         throw new RuntimeException("Something with the camera went wrong - Nick");
     }
 
-    public ComputerVisionProcessor.AllianceColor getAlliance() {
-        return propDetectionProcessor.allianceColor;
-    }
+
 }

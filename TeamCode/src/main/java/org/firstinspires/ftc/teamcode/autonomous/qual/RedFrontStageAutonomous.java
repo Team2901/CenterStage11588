@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.hardware.vision.ComputerVisionProcessor;
 
-@Autonomous(name="Blue Front Stage", group="11588")
-public class BlueFrontStageAutonomous extends AbstractAutonomous {
+@Autonomous(name="Red Front Stage", group="11588")
+public class RedFrontStageAutonomous extends AbstractAutonomous {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -14,7 +14,7 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         // If needed, we can call telemetry.clear() too.
         telemetry.setAutoClear(false);
 
-        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.BLUE);
+        robot.init(hardwareMap, telemetry, ComputerVisionProcessor.AllianceColor.RED);
         waitForStart();
         while (robot.propDetectionProcessor.propPosition == null && opModeIsActive()) {
             idle();
@@ -24,18 +24,15 @@ public class BlueFrontStageAutonomous extends AbstractAutonomous {
         // prop detection should have already occurred, but just in case
         // init is over and we have started, loop here
 
+
+        if (robot.isCoachBot) {
+            lowerArmToFloor();
+        }
         purplePixelToWhitePixelPickupFrontStage();
         whitePixelsToBackstagePathFrontStage();
-        if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.LEFT){
-            moveXY(0, -6);
-            moveXY(0, -21);
-        }
-        else if(robot.propDetectionProcessor.propPosition == ComputerVisionProcessor.PropPosition.RIGHT){
-            moveXY(0, 6);
-            moveXY(0, -33);
-        }
         placeOnBackdrop();
         backstageToParkPathFrontStage();
+
 
         while (!isStopRequested()) {
             telemetry.update();
