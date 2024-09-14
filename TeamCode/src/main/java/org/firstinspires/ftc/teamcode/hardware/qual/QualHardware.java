@@ -22,8 +22,6 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-//import org.openftc.easyopencv.OpenCvCamera;
-//import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     //Math for drive motor encoders
@@ -309,7 +307,6 @@ public class QualHardware implements OpenCvCamera.AsyncCameraOpenListener {
     public double getAngle(){
         YawPitchRollAngles angles = imu.getRobotYawPitchRollAngles();
         return AngleUnit.normalizeDegrees(angles.getYaw(AngleUnit.DEGREES));
-
     }
 
     public ComputerVisionProcessor.AllianceColor getAlliance(){

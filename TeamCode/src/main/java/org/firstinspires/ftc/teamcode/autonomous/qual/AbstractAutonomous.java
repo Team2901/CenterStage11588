@@ -346,7 +346,8 @@ public abstract class AbstractAutonomous extends LinearOpMode {
                 turnToAngle(-90);
                 moveXY(20, 0);
                 //Pick up
-                moveXY(0, 55);
+                moveXY(0, 55)
+                ;
                 turnToAngle(90);
                 moveXY(22,0);
             }
